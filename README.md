@@ -6,8 +6,9 @@ Proof of concept for a Canonical Plugin with improvements for WordPress Multisit
 
 The easiest way to start is to use the [WordPress Environment](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) package.
 ```
-$ http://github.com/inpsyde/multisite-improvements
+$ git clone http://github.com/inpsyde/multisite-improvements
 $ cd multisite-improvements
+$ composer install
 $ npm -g i @wordpress/env
 $ wp-env start
 ```
