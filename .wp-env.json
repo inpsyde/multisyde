@@ -3,6 +3,6 @@
     "multisite": true,
     "plugins": [
         ".",
-        "WordPress/query-monitor"
+        "https://downloads.wordpress.org/plugin/query-monitor.zip"
     ]
 }
