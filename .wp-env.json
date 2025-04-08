@@ -1,0 +1,8 @@
+{
+    "core": null,
+    "multisite": true,
+    "plugins": [
+        ".",
+        "WordPress/query-monitor"
+    ]
+}

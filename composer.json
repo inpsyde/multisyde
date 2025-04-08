@@ -1,0 +1,38 @@
+{
+    "name": "syde/multisite-improvements",
+    "description": "Proof of concept for a Canonical Plugin with improvements for WordPress Multisite",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Syde\\MultisiteImprovements\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Syde"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.0",
+        "szepeviktor/phpstan-wordpress": "dev-master",
+        "phpstan/extension-installer": "1.4.x-dev",
+        "brain/monkey": "^2.0@dev"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
+        "phpcs:fix": "vendor/bin/phpcbf -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "qa": [
+            "@phpcs",
+            "@phpstan"
+        ]
+    }
+}
