@@ -3,14 +3,12 @@
     "description": "Proof of concept for a Canonical Plugin with improvements for WordPress Multisite",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "autoload": {
-        "psr-4": {
-            "Syde\\MultisiteImprovements\\": "src/"
-        }
-    },
     "authors": [
         {
-            "name": "Syde"
+            "name": "Syde",
+            "email": "hello@syde.com",
+            "homepage": "https://syde.com",
+            "role": "Company"
         }
     ],
     "minimum-stability": "dev",
