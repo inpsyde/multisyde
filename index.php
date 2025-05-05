@@ -15,3 +15,11 @@
  *
  * @package multisite-improvements
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+require __DIR__ . '/src/class-multisite-improvements.php';
+
+Multisite_Improvements::init();
