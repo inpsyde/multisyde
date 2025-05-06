@@ -1,11 +1,29 @@
-<?php declare( strict_types=1 );
+<?php
+/**
+ * Multisite Improvements Tests
+ *
+ * @package multisite-improvements-tests
+ */
 
+declare( strict_types=1 );
+
+namespace Syde\MultisiteImprovementsTests;
+
+use Mockery;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Generic unit test case for Multisite Improvements.
+ */
 class UnitTestCase extends TestCase {
 
+	/**
+	 * Set up the test case.
+	 *
+	 * @return void
+	 */
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -22,6 +40,11 @@ class UnitTestCase extends TestCase {
 		Functions\when( 'wp_kses_allowed_html' )->justReturn( array() );
 	}
 
+	/**
+	 * Tear down the test case.
+	 *
+	 * @return void
+	 */
 	protected function tearDown(): void {
 		Mockery::close();
 		Monkey\tearDown();
