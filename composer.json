@@ -11,7 +11,20 @@
             "role": "Company"
         }
     ],
-    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Syde\\MultisiteImprovements\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Syde\\MultisiteImprovementsTests\\": "tests/phpunit/"
+        }
+    },
+    "minimum-stability": "stable",
+    "platform": {
+        "php": ">=7.4"
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -22,15 +35,24 @@
         "wp-coding-standards/wpcs": "^3.0",
         "szepeviktor/phpstan-wordpress": "dev-master",
         "phpstan/extension-installer": "1.4.x-dev",
-        "brain/monkey": "^2.0@dev"
+        "brain/monkey": "^2.0@dev",
+        "phpunit/phpunit": "^10"
     },
     "scripts": {
-        "phpcs": "vendor/bin/phpcs -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
-        "phpcs:fix": "vendor/bin/phpcbf -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
+        "tests:php": "vendor/bin/phpunit",
+        "lint:php": "vendor/bin/phpcs .",
+        "fix:php": "vendor/bin/phpcbf .",
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "tests": ["@tests:php"],
+        "lint": ["@lint:php"],
         "qa": [
-            "@phpcs",
+            "@lint",
             "@phpstan"
+        ],
+        "git-release": "bin/git-release.sh",
+        "build": [
+            "@composer install --no-dev",
+            "@git-release"
         ]
     }
 }

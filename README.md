@@ -1,6 +1,8 @@
 # Multisite Improvements
 
-Proof of concept for a Canonical Plugin with improvements for WordPress Multisite
+A WordPress plugin that explores potential enhancements for WordPress Multisite.
+
+Developed as part of Syde’s initiative to improve the Multisite experience by addressing usability, transparency, and network administration challenges.
 
 ## How to start
 

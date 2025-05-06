@@ -2,9 +2,9 @@
 /**
  * Plugin Name:       Multisite Improvements
  * Plugin URI:        https://github.com/inpsyde/multisite-improvements
- * Description:       Proof of concept for a Canonical Plugin with improvements for WordPress Multisite
+ * Description:       A WordPress plugin that explores potential enhancements for WordPress Multisite.
  * Version:           1.0.0
- * Requires at least: 6.7
+ * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Syde
  * Author URI:        https://syde.com
@@ -16,10 +16,10 @@
  * @package multisite-improvements
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+declare(strict_types=1);
+
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+    require __DIR__ . '/vendor/autoload.php';
 }
 
-require __DIR__ . '/src/class-multisite-improvements.php';
-
-Multisite_Improvements::init();
+Syde\MultisiteImprovements\Loader::init();
