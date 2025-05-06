@@ -3,6 +3,7 @@
 .gitignore
 .phpcs.cache
 .phpcs.xml.dist
+.phpunit.cache
 .wp-env.json
 /.git
 /.github
