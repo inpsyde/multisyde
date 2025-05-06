@@ -17,7 +17,6 @@
 /tests
 CODEOWNERS
 README.md
-composer.json
 composer.lock
 multisite-improvements.zip
 phpstan.neon.dist

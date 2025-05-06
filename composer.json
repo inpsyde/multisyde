@@ -49,6 +49,7 @@
             "@lint",
             "@phpstan"
         ],
+        "i18n:pot": "wp i18n make-pot . languages/multisite-improvements.pot",
         "git-release": "bin/git-release.sh",
         "build": [
             "@composer install --no-dev",

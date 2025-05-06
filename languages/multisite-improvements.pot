@@ -1,0 +1,40 @@
+# Copyright (C) 2025 Syde
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Multisite Improvements 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/multisite-improvements\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-05-06T14:14:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: multisite-improvements\n"
+
+#. Plugin Name of the plugin
+#: index.php
+msgid "Multisite Improvements"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: index.php
+msgid "https://github.com/inpsyde/multisite-improvements"
+msgstr ""
+
+#. Description of the plugin
+#: index.php
+msgid "A WordPress plugin that explores potential enhancements for WordPress Multisite."
+msgstr ""
+
+#. Author of the plugin
+#: index.php
+msgid "Syde"
+msgstr ""
+
+#. Author URI of the plugin
+#: index.php
+msgid "https://syde.com"
+msgstr ""
