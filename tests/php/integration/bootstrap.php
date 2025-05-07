@@ -5,6 +5,10 @@
  * @package multisite-improvements-integration-tests
  */
 
+if ( ! defined( 'MULTISITE' ) ) {
+    define( 'MULTISITE', true );
+}
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {
