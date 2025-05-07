@@ -1,7 +1,7 @@
 name: Code Style
 on: [push]
 jobs:
-  unit-tests:
+  code-style:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
