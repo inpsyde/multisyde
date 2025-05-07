@@ -37,7 +37,8 @@
         "szepeviktor/phpstan-wordpress": "dev-master",
         "phpstan/extension-installer": "1.4.x-dev",
         "brain/monkey": "^2.0@dev",
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^1.0"
     },
     "scripts": {
         "tests:unit:php": "vendor/bin/phpunit",
