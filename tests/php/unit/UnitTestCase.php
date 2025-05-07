@@ -1,13 +1,13 @@
 <?php
 /**
- * Multisite Improvements Tests
+ * Generic Test Class
  *
- * @package multisite-improvements-tests
+ * @package multisite-improvements-unit-tests
  */
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsTests;
+namespace Syde\MultisiteImprovementsUnitTests;
 
 use Mockery;
 use Brain\Monkey;

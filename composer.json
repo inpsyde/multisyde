@@ -18,7 +18,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Syde\\MultisiteImprovementsTests\\": "tests/phpunit/"
+            "Syde\\MultisiteImprovementsUnitTests\\": "tests/php/unit/",
+            "Syde\\MultisiteImprovementsIntegrationTests\\": "tests/php/integration/"
         }
     },
     "minimum-stability": "stable",
@@ -36,15 +37,17 @@
         "szepeviktor/phpstan-wordpress": "dev-master",
         "phpstan/extension-installer": "1.4.x-dev",
         "brain/monkey": "^2.0@dev",
-        "phpunit/phpunit": "^10"
+        "phpunit/phpunit": "^9.6"
     },
     "scripts": {
-        "tests:php": "vendor/bin/phpunit",
+        "test:unit:php": "vendor/bin/phpunit",
+        "test:integration:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements ./vendor/bin/phpunit -c phpunit-integration-tests.xml.dist",
+        "tests": ["@test:unit:php", "@test:integration:php"],
         "lint:php": "vendor/bin/phpcs .",
-        "fix:php": "vendor/bin/phpcbf .",
-        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
-        "tests": ["@tests:php"],
         "lint": ["@lint:php"],
+        "fix:php": "vendor/bin/phpcbf .",
+        "fix": ["@fix:php"],
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
             "@lint",
             "@phpstan"

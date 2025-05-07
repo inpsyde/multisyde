@@ -3,11 +3,12 @@
 .gitignore
 .phpcs.cache
 .phpcs.xml.dist
-.phpunit.cache
+.phpunit.result.cache
 .wp-env.json
 /.git
 /.github
 /.idea
+/.phpunit.cache
 /.phpunit.cache
 /.vscode
 /.wordpress-org
@@ -21,4 +22,5 @@ README.md
 composer.lock
 multisite-improvements.zip
 phpstan.neon.dist
-phpunit.xml
+phpunit-integration-tests.xml.dist
+phpunit.xml.dist

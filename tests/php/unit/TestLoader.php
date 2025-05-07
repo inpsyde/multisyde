@@ -2,12 +2,12 @@
 /**
  * Loader Tests
  *
- * @package multisite-improvements-tests
+ * @package multisite-improvements-unit-tests
  */
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsTests;
+namespace Syde\MultisiteImprovementsUnitTests;
 
 use Syde\MultisiteImprovements\Loader;
 

@@ -1,6 +1,7 @@
 .idea/
 .phpcs.cache
-.phpunit.cache
+.phpunit.result.cache
+/.phpunit.cache
 composer.lock
 multisite-improvements.zip
 multisite-improvements/
