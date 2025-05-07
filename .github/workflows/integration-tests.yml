@@ -1,4 +1,4 @@
-name: UnitTests
+name: Integration Tests
 on: [push]
 jobs:
   unit-tests:
@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: 20
       - name: Install Node dependencies
-        run: |
-          npm ci
+        run: npm ci
+      - name: Start WordPress Environment
+        run: npm run wp-env start
       - name: Run Testsuite
-        run: | 
-          composer run-script tests:integration
+        run: composer run-script tests:integration
