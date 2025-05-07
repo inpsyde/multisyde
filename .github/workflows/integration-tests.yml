@@ -17,5 +17,12 @@ jobs:
         run: npm ci
       - name: Start WordPress Environment
         run: npm run wp-env start
+      - name: Wait for WordPress to be ready
+        run: |
+          for i in {1..30}; do
+            curl -sSf http://localhost:8888/wp-login.php > /dev/null && break
+            echo "Waiting for WordPress environment to be ready..."
+            sleep 5
+          done
       - name: Run Testsuite
         run: composer run-script tests:integration
