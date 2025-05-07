@@ -1,8 +1,9 @@
 .idea/
 .phpcs.cache
 .phpunit.result.cache
-/.phpunit.cache
+.phpunit.cache
 composer.lock
 multisite-improvements.zip
 multisite-improvements/
+node_modules/
 vendor/

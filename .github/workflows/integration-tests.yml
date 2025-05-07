@@ -8,5 +8,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Composer dependencies
         run: composer install
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Node dependencies
+        run: |
+          npm ci
       - name: Run Testsuite
-        run: composer run-script tests:unit
+        run: | 
+          composer run-script tests:integration
