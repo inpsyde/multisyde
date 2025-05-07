@@ -1,3 +1,9 @@
-composer.lock
 .idea/
-/vendor/
+.phpcs.cache
+.phpunit.result.cache
+.phpunit.cache
+composer.lock
+multisite-improvements.zip
+multisite-improvements/
+node_modules/
+vendor/

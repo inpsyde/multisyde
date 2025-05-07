@@ -5,10 +5,12 @@
  * @package Multisite_Improvements
  */
 
+namespace Syde\MultisiteImprovements;
+
 /**
  * Class Multisite_Improvements
  */
-class Multisite_Improvements {
+class Loader {
 
 	/**
 	 * Hook into WordPress.

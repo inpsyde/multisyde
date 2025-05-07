@@ -11,7 +11,21 @@
             "role": "Company"
         }
     ],
-    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Syde\\MultisiteImprovements\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Syde\\MultisiteImprovementsUnitTests\\": "tests/php/unit/",
+            "Syde\\MultisiteImprovementsIntegrationTests\\": "tests/php/integration/"
+        }
+    },
+    "minimum-stability": "stable",
+    "platform": {
+        "php": ">=7.4"
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -22,15 +36,28 @@
         "wp-coding-standards/wpcs": "^3.0",
         "szepeviktor/phpstan-wordpress": "dev-master",
         "phpstan/extension-installer": "1.4.x-dev",
-        "brain/monkey": "^2.0@dev"
+        "brain/monkey": "^2.0@dev",
+        "phpunit/phpunit": "^9.6"
     },
     "scripts": {
-        "phpcs": "vendor/bin/phpcs -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
-        "phpcs:fix": "vendor/bin/phpcbf -p ./*.php src/ --standard=vendor/wp-coding-standards/wpcs/WordPress --extensions=php",
+        "tests:unit:php": "vendor/bin/phpunit",
+        "tests:unit": ["@tests:unit:php"],
+        "tests:integration:php": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements ./vendor/bin/phpunit -c phpunit-integration-tests.xml.dist",
+        "tests:integration": ["@tests:integration:php"],
+        "lint:php": "vendor/bin/phpcs .",
+        "lint": ["@lint:php"],
+        "fix:php": "vendor/bin/phpcbf .",
+        "fix": ["@fix:php"],
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
-            "@phpcs",
+            "@lint",
             "@phpstan"
+        ],
+        "i18n:pot": "wp i18n make-pot . languages/multisite-improvements.pot",
+        "git-release": "bin/git-release.sh",
+        "build": [
+            "@composer install --no-dev",
+            "@git-release"
         ]
     }
 }

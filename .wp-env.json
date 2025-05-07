@@ -4,5 +4,8 @@
     "plugins": [
         ".",
         "https://downloads.wordpress.org/plugin/query-monitor.zip"
-    ]
+    ],
+    "mappings": {
+        "wp-cli.yml": "./tests/wp-env/wp-cli.yml"
+    }
 }
