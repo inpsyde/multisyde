@@ -1,17 +1,17 @@
 # Multisite Improvements
 
-A WordPress plugin that explores potential enhancements for WordPress Multisite.
+A WordPress plugin that explores potential improvements for WordPress Multisite.
 
 Developed as part of Syde’s initiative to improve the Multisite experience by addressing usability, transparency, and network administration challenges.
 
 ## Vision and Purpose
 
-Multisite Improvements is a proof-of-concept plugin created by Syde to explore and demonstrate enhancements to the WordPress Multisite experience.
+Multisite Improvements is a proof-of-concept plugin created by Syde to explore and demonstrate improvements to the WordPress Multisite experience.
 
 Multisite is a powerful but often overlooked feature of WordPress. Our goal is to bring more visibility, usability, and flexibility to network administrators and developers working with Multisite networks - through small, focused improvements that solve real-world pain points.
 
 This plugin exists to:
-* Identify and prototype practical enhancements for WordPress Multisite
+* Identify and prototype practical improvements for WordPress Multisite
 * Spark conversations around long-standing issues and missing features
 * Contribute ideas and feedback that may eventually inform core development
 * Provide value to Network Admins and developers through improved workflows
