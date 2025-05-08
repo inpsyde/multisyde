@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Syde\MultisiteImprovementsUnitTests;
 
 use Syde\MultisiteImprovements\Loader;
+use Brain\Monkey\Functions;
 
 /**
  * Test the Loader class.
@@ -20,13 +21,24 @@ use Syde\MultisiteImprovements\Loader;
 class TestLoader extends UnitTestCase {
 
 	/**
-	 * Test the init method.
+	 * Test the init method in a multisite.
 	 *
 	 * @return void
 	 */
-	public function test_init(): void {
-		$this->expectNotToPerformAssertions();
+	public function test_init_multisite(): void {
+		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( true );
 
-		Loader::init();
+		$this->assertTrue( Loader::init() );
+	}
+
+	/**
+	 * Test the init method in a single-site.
+	 *
+	 * @return void
+	 */
+	public function test_init_singlesite(): void {
+		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( false );
+
+		$this->assertFalse( Loader::init() );
 	}
 }

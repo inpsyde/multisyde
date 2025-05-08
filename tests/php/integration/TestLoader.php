@@ -20,22 +20,12 @@ use Syde\MultisiteImprovements\Loader;
 class TestLoader extends UnitTestCase {
 
 	/**
-	 * Test if the installation is a multisite
-	 *
-	 * @return void
-	 */
-	public function test_is_multisite(): void {
-		$this->assertTrue( is_multisite() );
-	}
-
-	/**
 	 * Test the init method.
 	 *
 	 * @return void
 	 */
 	public function test_init(): void {
-		$this->expectNotToPerformAssertions();
-
-		Loader::init();
+		// Should return true if the test-env is a multisite.
+		$this->assertTrue( Loader::init() );
 	}
 }

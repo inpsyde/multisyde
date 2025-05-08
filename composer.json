@@ -43,7 +43,7 @@
     "scripts": {
         "tests:unit:php": "vendor/bin/phpunit",
         "tests:unit": ["@tests:unit:php"],
-        "tests:integration:php": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements ./vendor/bin/phpunit -c phpunit-integration-tests.xml.dist",
+        "tests:integration:php": "npm run-script wp-env -- run tests-cli --env-cwd=wp-content/plugins/multisite-improvements ./vendor/bin/phpunit -c phpunit-integration-tests.xml.dist",
         "tests:integration": ["@tests:integration:php"],
         "lint:php": "vendor/bin/phpcs .",
         "lint": ["@lint:php"],
