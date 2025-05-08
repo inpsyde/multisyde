@@ -6,7 +6,7 @@
  */
 
 if ( ! defined( 'MULTISITE' ) ) {
-    define( 'MULTISITE', true );
+	define( 'MULTISITE', true );
 }
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );

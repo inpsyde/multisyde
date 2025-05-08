@@ -6,16 +6,39 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
+
       - name: Composer dependencies
         run: composer install
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
+
       - name: Install Node dependencies
         run: npm ci
+
       - name: Start WordPress Environment
         run: npm run wp-env start
+
+      - name: Wait for WordPress to be ready
+        run: |
+          for i in {1..30}; do
+            curl -sSf http://localhost:8888/wp-login.php > /dev/null && break
+            echo "Waiting for WordPress environment to be ready..."
+            sleep 5
+          done
+
+      - name: Install WordPress Multisite (for tests-cli)
+        run: |
+          npx wp-env run tests-cli wp core multisite-install \
+            --url=localhost:8889 \
+            --title="Test Network" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@example.com \
+            --skip-email
+
       - name: Run Testsuite
         run: composer run-script tests:integration
