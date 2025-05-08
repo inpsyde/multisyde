@@ -15,8 +15,15 @@ class Loader {
 	/**
 	 * Hook into WordPress.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public static function init(): void {
+	public static function init(): bool {
+		if ( ! function_exists( 'is_multisite' ) ) {
+			return false;
+		}
+
+		// Load any other functionality here!
+
+		return true;
 	}
 }
