@@ -20,7 +20,7 @@ jobs:
         run: npm ci
 
       - name: Start WordPress Environment
-        run: npm run wp-env -- start
+        run: npm run wp-env start
 
       - name: Run Testsuite
         run: composer run-script tests:integration
