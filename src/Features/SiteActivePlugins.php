@@ -131,7 +131,7 @@ final class SiteActivePlugins implements LoadableFeature {
 					'notice'      => self::NOTICE_DEACTIVATION,
 					'plugin_file' => rawurlencode( $plugin_file ),
 					'site_count'  => count( $site_ids ),
-					'_wpnonce'      => wp_create_nonce( self::get_nonce_action( $plugin_file ) ),
+					'_wpnonce'    => wp_create_nonce( self::get_nonce_action( $plugin_file ) ),
 				),
 				network_admin_url( 'plugins.php' )
 			)

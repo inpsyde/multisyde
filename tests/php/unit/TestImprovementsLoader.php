@@ -41,7 +41,7 @@ class TestImprovementsLoader extends UnitTestCase {
 	 */
 	public function test_load_multisite(): void {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( true );
-        Functions\expect( 'is_network_admin' )->once()->with()->andReturn( false );
+		Functions\expect( 'is_network_admin' )->once()->with()->andReturn( false );
 
 		ImprovementsLoader::load();
 
