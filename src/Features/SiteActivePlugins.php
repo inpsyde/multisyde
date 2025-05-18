@@ -171,7 +171,7 @@ final class SiteActivePlugins implements LoadableFeature {
 		if ( isset( $this->active_plugins[ $plugin_file ] ) ) {
 			$count = count( $this->active_plugins[ $plugin_file ] );
 			/* translators: 1: Plugin Name, 2: Number of sites. */
-			$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvement' );
+			$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvements' );
 			$title       = sprintf(
 				$translation,
 				self::get_plugin_name( $plugin_file ),
@@ -182,7 +182,7 @@ final class SiteActivePlugins implements LoadableFeature {
 				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
 				esc_attr( $title ),
 				esc_attr( self::get_plugin_id( $plugin_file ) ),
-				esc_html__( 'Sites deactivate', 'multisite-improvement' )
+				esc_html__( 'Sites deactivate', 'multisite-improvements' )
 			);
 
 			$before = array_slice( $links, 0, 1 );
