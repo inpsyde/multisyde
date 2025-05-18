@@ -2,12 +2,13 @@
 .gitattributes
 .gitignore
 .phpcs.cache
-/.phpunit.cache
+.phpcs.xml.dist
 .phpunit.result.cache
 .wp-env.json
 /.git
 /.github
 /.idea
+/.phpunit.cache
 /.vscode
 /.wordpress-org
 /bin
@@ -23,5 +24,6 @@ integration.xml.dist
 multisite-improvements.zip
 package-lock.json
 package.json
+patchwork.json
 phpstan.neon.dist
 phpunit.xml.dist
