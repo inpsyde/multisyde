@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Multisite Improvements
  * Plugin URI:        https://github.com/inpsyde/multisite-improvements
- * Description:       A WordPress plugin that explores potential enhancements for WordPress Multisite.
+ * Description:       A WordPress plugin that explores potential improvements for WordPress Multisite.
  * Version:           1.0.0
  * Requires at least: 6.8
  * Requires PHP:      7.4
@@ -22,4 +22,4 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-Syde\MultisiteImprovements\Loader::init();
+Syde\MultisiteImprovements\ImprovementsLoader::init();
