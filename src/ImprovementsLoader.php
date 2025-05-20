@@ -21,6 +21,7 @@ class ImprovementsLoader {
 	 */
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'load' ) );
+		add_action( 'network_admin_menu', array( FeaturePresenter::class, 'add_network_admin_menu' ) );
 	}
 
 	/**
@@ -33,6 +34,6 @@ class ImprovementsLoader {
 			return;
 		}
 
-		FeatureRegistry::load_all();
+		FeatureRegistry::load();
 	}
 }

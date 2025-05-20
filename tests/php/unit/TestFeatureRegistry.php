@@ -13,18 +13,15 @@ use Syde\MultisiteImprovements\FeatureRegistry;
 
 /**
  * Test the FeatureRegistry class.
- *
- * @internal
- * @coversDefaultClass \Syde\MultisiteImprovements\FeatureRegistry
  */
-class TestFeatureRegistry extends UnitTestCase {
+final class TestFeatureRegistry extends UnitTestCase {
 
 	/**
 	 * Test the static get_all method.
 	 *
 	 * @return void
 	 */
-	public function test_init() {
-		$this->assertCount( 1, FeatureRegistry::get_all() );
+	public function test_get_presentable_classes() {
+		$this->assertCount( 1, FeatureRegistry::get_presentable_classes() );
 	}
 }

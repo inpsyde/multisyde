@@ -40,19 +40,19 @@
     },
     "require-dev": {
         "wp-coding-standards/wpcs": "^3.0",
-        "szepeviktor/phpstan-wordpress": "dev-master",
-        "phpstan/extension-installer": "1.4.x-dev",
-        "brain/monkey": "^2.0@dev",
-        "phpunit/phpunit": "^10.5.46",
-        "yoast/phpunit-polyfills": "^2.0.4"
-    },
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "yoast/phpunit-polyfills": "^3.1",
+        "phpunit/phpunit": "^9.6",
+        "brain/monkey": "^2.0@dev"},
     "scripts": {
-        "tests:unit": "vendor/bin/phpunit -c phpunit.xml.dist --display-deprecations",
+        "tests:unit": "vendor/bin/phpunit -c phpunit.xml.dist",
         "tests:integration": "vendor/bin/phpunit -c integration.xml.dist",
         "tests": [
             "@tests:unit",
             "@tests:integration"
         ],
+        "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit -c phpunit.xml.dist --coverage-html tests/coverage",
         "lint": "vendor/bin/phpcs .",
         "fix": "vendor/bin/phpcbf .",
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",

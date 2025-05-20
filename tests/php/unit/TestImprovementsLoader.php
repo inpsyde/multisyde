@@ -15,11 +15,8 @@ use Brain\Monkey\Actions;
 
 /**
  * Test the ImprovementsLoader class.
- *
- * @internal
- * @coversDefaultClass \Syde\MultisiteImprovements\ImprovementsLoader
  */
-class TestImprovementsLoader extends UnitTestCase {
+final class TestImprovementsLoader extends UnitTestCase {
 
 	/**
 	 * Test the init method.
@@ -28,24 +25,22 @@ class TestImprovementsLoader extends UnitTestCase {
 	 */
 	public function test_init() {
 		Actions\expectAdded( 'init' );
+		Actions\expectAdded( 'network_admin_menu' );
 
 		ImprovementsLoader::init();
-
-		$this->expectNotToPerformAssertions();
 	}
 
 	/**
 	 * Test the load method in a multisite.
 	 *
+	 * @runInSeparateProcess
 	 * @return void
 	 */
 	public function test_load_multisite(): void {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( true );
-		Functions\expect( 'is_network_admin' )->once()->with()->andReturn( false );
+		Functions\expect( 'is_network_admin' )->once()->andReturn( false );
 
 		ImprovementsLoader::load();
-
-		$this->expectNotToPerformAssertions();
 	}
 
 	/**
@@ -57,7 +52,5 @@ class TestImprovementsLoader extends UnitTestCase {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( false );
 
 		ImprovementsLoader::load();
-
-		$this->expectNotToPerformAssertions();
 	}
 }

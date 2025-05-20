@@ -7,12 +7,14 @@
 
 namespace Syde\MultisiteImprovements\Features;
 
+use Syde\MultisiteImprovements\FeatureInformation;
 use Syde\MultisiteImprovements\LoadableFeature;
+use Syde\MultisiteImprovements\PresentableFeature;
 
 /**
  * Class SiteActivePlugins
  */
-final class SiteActivePlugins implements LoadableFeature {
+final class SiteActivePlugins implements LoadableFeature, PresentableFeature {
 
 	const ACTION_DEACTIVATION = 'bulk_deactivate';
 	const NOTICE_DEACTIVATION = 'bulk_deactivated';
@@ -34,12 +36,12 @@ final class SiteActivePlugins implements LoadableFeature {
 			return;
 		}
 
-		$obj = new self();
-
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'add_thickbox' ) );
 		add_action( 'network_admin_notices', array( __CLASS__, 'maybe_show_notice' ) );
+		add_action( 'load-plugins.php', array( __CLASS__, 'bulk_deactivate' ) );
 
-		add_action( 'load-plugins.php', array( $obj, 'bulk_deactivate' ) );
+		$obj = new self();
+
 		add_action( 'load-plugins.php', array( $obj, 'populate_active_plugins' ) );
 		add_action( 'admin_print_styles-plugins.php', array( $obj, 'print_row_styles' ) );
 		add_action( 'admin_footer', array( $obj, 'print_thickbox_content' ) );
@@ -53,7 +55,8 @@ final class SiteActivePlugins implements LoadableFeature {
 	 * @return void
 	 */
 	public static function add_thickbox(): void {
-		if ( get_current_screen()->id !== 'plugins-network' ) {
+		$screen = get_current_screen();
+		if ( is_null( $screen ) || 'plugins-network' !== $screen->id ) {
 			return;
 		}
 		add_thickbox();
@@ -77,7 +80,7 @@ final class SiteActivePlugins implements LoadableFeature {
 		}
 
 		$_nonce = sanitize_key( wp_unslash( $_GET['_wpnonce'] ?? '' ) );
-		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, self::get_nonce_action( $plugin_file ) ) ) {
+		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ) ) {
 			return;
 		}
 
@@ -94,7 +97,7 @@ final class SiteActivePlugins implements LoadableFeature {
 			esc_html(
 				sprintf(
 					$message,
-					self::get_plugin_name( $plugin_file ),
+					get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
 					$site_count
 				)
 			)
@@ -106,7 +109,7 @@ final class SiteActivePlugins implements LoadableFeature {
 	 *
 	 * @return void
 	 */
-	public function bulk_deactivate(): void {
+	public static function bulk_deactivate(): void {
 		if ( ! current_user_can( 'manage_network_plugins' ) ||
 			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ?? '' ) ) ) {
 			return;
@@ -114,7 +117,7 @@ final class SiteActivePlugins implements LoadableFeature {
 
 		$plugin_file = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ?? '' ) );
 		$_nonce      = sanitize_key( wp_unslash( $_POST['_wpnonce'] ?? '' ) );
-		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, self::get_nonce_action( $plugin_file ) ) ) {
+		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ) ) {
 			return;
 		}
 
@@ -131,7 +134,7 @@ final class SiteActivePlugins implements LoadableFeature {
 					'notice'      => self::NOTICE_DEACTIVATION,
 					'plugin_file' => rawurlencode( $plugin_file ),
 					'site_count'  => count( $site_ids ),
-					'_wpnonce'    => wp_create_nonce( self::get_nonce_action( $plugin_file ) ),
+					'_wpnonce'    => wp_create_nonce( sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ),
 				),
 				network_admin_url( 'plugins.php' )
 			)
@@ -147,8 +150,15 @@ final class SiteActivePlugins implements LoadableFeature {
 	public function populate_active_plugins(): void {
 		$this->active_plugins = array();
 
-		foreach ( self::get_active_sites() as $site_id ) {
-			$active_plugins = self::get_active_plugins_by( $site_id );
+		foreach ( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) {
+			$active_plugins = array_filter(
+				(array) get_blog_option( $site_id, 'active_plugins', array() ),
+				function ( $key ) {
+					return ! is_plugin_active_for_network( $key );
+				},
+				ARRAY_FILTER_USE_KEY
+			);
+
 			foreach ( $active_plugins as $plugin ) {
 				if ( ! isset( $this->active_plugins[ $plugin ] ) ) {
 					$this->active_plugins[ $plugin ] = array();
@@ -174,14 +184,14 @@ final class SiteActivePlugins implements LoadableFeature {
 			$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvements' );
 			$title       = sprintf(
 				$translation,
-				self::get_plugin_name( $plugin_file ),
+				get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
 				$count
 			);
 
 			$site_active_link = sprintf(
 				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
 				esc_attr( $title ),
-				esc_attr( self::get_plugin_id( $plugin_file ) ),
+				esc_attr( md5( $plugin_file ) ),
 				esc_html__( 'Sites deactivate', 'multisite-improvements' )
 			);
 
@@ -225,12 +235,13 @@ final class SiteActivePlugins implements LoadableFeature {
 	 * @return void
 	 */
 	public function print_thickbox_content(): void {
-		if ( get_current_screen()->id !== 'plugins-network' ) {
+		$screen = get_current_screen();
+		if ( is_null( $screen ) || 'plugins-network' !== $screen->id ) {
 			return;
 		}
 
 		foreach ( $this->active_plugins as $plugin_file => $site_ids ) {
-			echo '<div id="' . esc_attr( $this->get_plugin_id( $plugin_file ) ) . '" style="display:none">';
+			echo '<div id="' . esc_attr( md5( $plugin_file ) ) . '" style="display:none">';
 
 			echo '<p>' . esc_html__(
 				'Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site.',
@@ -238,7 +249,7 @@ final class SiteActivePlugins implements LoadableFeature {
 			) . '</p>';
 
 			echo '<form method="post" action="' . esc_url( add_query_arg( array() ) ) . '">';
-			wp_nonce_field( self::get_nonce_action( $plugin_file ) );
+			wp_nonce_field( sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_DEACTIVATION ) . '" />';
 			echo '<input type="hidden" name="plugin_file" value="' . esc_attr( $plugin_file ) . '" />';
 
@@ -264,72 +275,17 @@ final class SiteActivePlugins implements LoadableFeature {
 	}
 
 	/**
-	 * Get the all active plugins for a site that are not networkwide active.
+	 * Returns the feature information.
 	 *
-	 * @param int $site_id The blog ID.
-	 * @return string[] The active plugins for the site.
+	 * @return FeatureInformation
 	 */
-	public static function get_active_plugins_by( int $site_id ): array {
-		$active_plugins = (array) get_blog_option( $site_id, 'active_plugins', array() );
-
-		return array_filter(
-			$active_plugins,
-			function ( $key ) {
-				return ! is_plugin_active_for_network( $key );
-			},
-			ARRAY_FILTER_USE_KEY
-		);
-	}
-
-	/**
-	 * Gets the nonce action name.
-	 *
-	 * @param string $plugin_file The plugin file.
-	 *
-	 * @return string
-	 */
-	protected static function get_nonce_action( string $plugin_file ): string {
-		return sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file );
-	}
-
-	/**
-	 * Gets and array of ids for all active sites.
-	 *
-	 * @return int[] The active plugins for all sites.
-	 */
-	public static function get_active_sites(): array {
-		return get_sites(
+	public static function get_feature_information(): FeatureInformation {
+		return new FeatureInformation(
+			__( 'Site Active Plugins', 'multisite-improvements' ),
+			__( 'Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites.', 'multisite-improvements' ),
 			array(
-				'archived' => 0,
-				'spam'     => 0,
-				'deleted'  => 0,
-				'public'   => 1,
-				'fields'   => 'ids',
+				'https://core.trac.wordpress.org/ticket/53255',
 			)
 		);
-	}
-
-	/**
-	 * Gets the plugin id from the plugin file path.
-	 *
-	 * @param string $plugin_file The plugin (relative) file path.
-	 *
-	 * @return string The plugin id.
-	 */
-	public static function get_plugin_id( string $plugin_file ): string {
-		return md5( $plugin_file );
-	}
-
-	/**
-	 * Gets the plugin's name from the plugin file path.
-	 *
-	 * @param string $plugin_file The plugin (relative) file path.
-	 *
-	 * @return string
-	 */
-	public static function get_plugin_name( string $plugin_file ): string {
-		$plugin_path = trailingslashit( WP_PLUGIN_DIR ) . $plugin_file;
-
-		return get_plugin_data( $plugin_path )['Name'];
 	}
 }

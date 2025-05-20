@@ -25,24 +25,27 @@ final class FeatureRegistry {
 	);
 
 	/**
-	 * Load all registered improvements.
+	 * Load the loadable improvements.
 	 *
 	 * @return void
 	 */
-	public static function load_all(): void {
-		foreach ( self::$improvements as $class ) {
-			if ( is_subclass_of( $class, LoadableFeature::class ) ) {
-				$class::init();
-			}
+	public static function load(): void {
+		foreach ( self::$improvements as $class_name ) {
+			$class_name::init();
 		}
 	}
 
 	/**
-	 * Get the list of improvements.
+	 * Get a list of presentable improvements.
 	 *
-	 * @return class-string<LoadableFeature>[]
+	 * @return class-string<PresentableFeature>[]
 	 */
-	public static function get_all(): array {
-		return self::$improvements;
+	public static function get_presentable_classes(): array {
+		return array_filter(
+			self::$improvements,
+			static function ( string $class_name ) {
+				return is_subclass_of( $class_name, PresentableFeature::class );
+			},
+		);
 	}
 }

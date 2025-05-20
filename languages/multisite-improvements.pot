@@ -9,13 +9,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-06T14:14:46+00:00\n"
+"POT-Creation-Date: 2025-05-20T17:20:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: multisite-improvements\n"
 
 #. Plugin Name of the plugin
 #: index.php
+#: src/FeaturePresenter.php:28
+#: src/FeaturePresenter.php:29
+#: src/FeaturePresenter.php:46
 msgid "Multisite Improvements"
 msgstr ""
 
@@ -26,7 +29,7 @@ msgstr ""
 
 #. Description of the plugin
 #: index.php
-msgid "A WordPress plugin that explores potential enhancements for WordPress Multisite."
+msgid "A WordPress plugin that explores potential improvements for WordPress Multisite."
 msgstr ""
 
 #. Author of the plugin
@@ -37,4 +40,62 @@ msgstr ""
 #. Author URI of the plugin
 #: index.php
 msgid "https://syde.com"
+msgstr ""
+
+#: src/FeaturePresenter.php:47
+msgid "This plugin provides various improvements for WordPress multisite installations."
+msgstr ""
+
+#: src/FeaturePresenter.php:49
+msgid "Available Features"
+msgstr ""
+
+#: src/FeaturePresenter.php:52
+msgid "No features registered."
+msgstr ""
+
+#: src/FeaturePresenter.php:57
+msgid "Title"
+msgstr ""
+
+#: src/FeaturePresenter.php:58
+msgid "Description"
+msgstr ""
+
+#: src/FeaturePresenter.php:59
+msgid "Tickets"
+msgstr ""
+
+#. translators: 1: Plugin Name, 2: Number of sites.
+#: src/Features/SiteActivePlugins.php:88
+msgid "The plugin \"%1$s\" has been deactivated on %2$d site."
+msgid_plural "The plugin \"%1$s\" has been deactivated on %2$d sites."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: Plugin Name, 2: Number of sites.
+#: src/Features/SiteActivePlugins.php:184
+msgid "\"%1$s\" is active in %2$d site"
+msgid_plural "\"%1$s\" is active in %2$d sites"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Features/SiteActivePlugins.php:195
+msgid "Sites deactivate"
+msgstr ""
+
+#: src/Features/SiteActivePlugins.php:246
+msgid "Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site."
+msgstr ""
+
+#: src/Features/SiteActivePlugins.php:271
+msgid "Deactivate on selected sites"
+msgstr ""
+
+#: src/Features/SiteActivePlugins.php:284
+msgid "Site Active Plugins"
+msgstr ""
+
+#: src/Features/SiteActivePlugins.php:285
+msgid "Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites."
 msgstr ""
