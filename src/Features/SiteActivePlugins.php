@@ -172,36 +172,38 @@ final class SiteActivePlugins implements LoadableFeature, PresentableFeature {
 	/**
 	 * Adds action links for site active plugins to the network admin plugin page.
 	 *
-	 * @param string[] $links The action links.
-	 * @param string   $plugin_file The plugin file path.
+	 * @param array<string, string> $links The action links.
+	 * @param string                $plugin_file The plugin file path.
 	 *
-	 * @return string[]
+	 * @return array<string, string> The modified action links.
 	 */
 	public function add_action_link( array $links, string $plugin_file ): array {
-		if ( isset( $this->active_plugins[ $plugin_file ] ) ) {
-			$count = count( $this->active_plugins[ $plugin_file ] );
-			/* translators: 1: Plugin Name, 2: Number of sites. */
-			$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvements' );
-			$title       = sprintf(
-				$translation,
-				get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
-				$count
-			);
+		if ( ! isset( $this->active_plugins[ $plugin_file ] ) ) {
+			return $links;
+		}
 
-			$site_active_link = sprintf(
+		$count = count( $this->active_plugins[ $plugin_file ] );
+		/* translators: 1: Plugin Name, 2: Number of sites. */
+		$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvements' );
+		$title       = sprintf(
+			$translation,
+			get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
+			$count
+		);
+
+		$sites_deactivate_link = array(
+			'site_deactivate' => sprintf(
 				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
 				esc_attr( $title ),
 				esc_attr( md5( $plugin_file ) ),
 				esc_html__( 'Sites deactivate', 'multisite-improvements' )
-			);
+			),
+		);
 
-			$before = array_slice( $links, 0, 1 );
-			$after  = array_slice( $links, 1 );
+		$before = array_slice( $links, 0, 1 );
+		$after  = array_slice( $links, 1 );
 
-			$links = array_merge( $before, array( $site_active_link ), $after );
-		}
-
-		return $links;
+		return array_merge( $before, $sites_deactivate_link, $after );
 	}
 
 	/**

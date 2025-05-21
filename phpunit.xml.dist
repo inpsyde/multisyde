@@ -5,6 +5,10 @@
          colors="true"
          bootstrap="tests/php/unit/bootstrap.php"
 >
+  <php>
+    <const name="WP_PLUGIN_DIR" value="/var/www/html/wp-content/plugins"/>
+  </php>
+
   <testsuites>
     <testsuite name="Unit tests">
       <directory prefix="Test" suffix=".php">tests/php/unit</directory>

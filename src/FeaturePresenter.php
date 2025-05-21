@@ -48,9 +48,7 @@ final class FeaturePresenter {
 
 		echo '<h2>' . esc_html__( 'Available Features', 'multisite-improvements' ) . '</h2>';
 
-		if ( empty( $features ) ) {
-			echo '<p>' . esc_html__( 'No features registered.', 'multisite-improvements' ) . '</p>';
-		} else {
+		if ( ! empty( $features ) ) {
 			echo '<table class="widefat fixed striped">';
 			echo '<thead>';
 			echo '<tr>';
