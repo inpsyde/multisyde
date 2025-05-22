@@ -5,7 +5,7 @@
  * @package multisite-improvements
  */
 
-namespace Syde\MultisiteImprovements\Features;
+namespace Syde\MultisiteImprovements\Modules\SiteActivePlugins;
 
 use Syde\MultisiteImprovements\FeatureInformation;
 use Syde\MultisiteImprovements\LoadableFeature;
@@ -14,7 +14,7 @@ use Syde\MultisiteImprovements\PresentableFeature;
 /**
  * Class SiteActivePlugins
  */
-final class SiteActivePlugins implements LoadableFeature, PresentableFeature {
+final class Feature implements LoadableFeature, PresentableFeature {
 
 	const ACTION_DEACTIVATION = 'bulk_deactivate';
 	const NOTICE_DEACTIVATION = 'bulk_deactivated';

@@ -7,9 +7,10 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsUnitTests;
+namespace Syde\MultisiteImprovementsUnitTests\src;
 
 use Syde\MultisiteImprovements\FeatureRegistry;
+use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
 
 /**
  * Test the FeatureRegistry class.

@@ -16,10 +16,10 @@
             "role": "Developer"
         }
     ],
-
     "autoload": {
         "psr-4": {
-            "Syde\\MultisiteImprovements\\": "src/"
+            "Syde\\MultisiteImprovements\\": "src/",
+            "Syde\\MultisiteImprovements\\Modules\\": "modules/"
         }
     },
     "autoload-dev": {

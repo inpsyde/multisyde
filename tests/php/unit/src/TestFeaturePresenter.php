@@ -7,12 +7,13 @@
 
 declare(strict_types = 1);
 
-namespace Syde\MultisiteImprovementsUnitTests;
+namespace Syde\MultisiteImprovementsUnitTests\src;
 
-use Brain\Monkey\Functions;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
+use Brain\Monkey\Functions;
 use Syde\MultisiteImprovements\FeaturePresenter;
+use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
 
 /**
  * Test the FeaturePresenter class.

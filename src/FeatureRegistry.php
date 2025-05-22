@@ -7,8 +7,8 @@
 
 namespace Syde\MultisiteImprovements;
 
-use Syde\MultisiteImprovements\Features\GetSiteBy;
-use Syde\MultisiteImprovements\Features\SiteActivePlugins;
+use Syde\MultisiteImprovements\Modules\GetSiteBy\Feature as GetSiteBy;
+use Syde\MultisiteImprovements\Modules\SiteActivePlugins\Feature as SiteActivePlugin;
 
 /**
  * Class FeatureRegistry
@@ -21,8 +21,8 @@ final class FeatureRegistry {
 	 * @var class-string<LoadableFeature>[]
 	 */
 	private static array $improvements = array(
-		SiteActivePlugins::class,
 		GetSiteBy::class,
+		SiteActivePlugin::class,
 		// Add more improvements here.
 	);
 

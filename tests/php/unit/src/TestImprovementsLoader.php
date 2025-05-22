@@ -7,11 +7,12 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsUnitTests;
+namespace Syde\MultisiteImprovementsUnitTests\src;
 
-use Syde\MultisiteImprovements\ImprovementsLoader;
-use Brain\Monkey\Functions;
 use Brain\Monkey\Actions;
+use Brain\Monkey\Functions;
+use Syde\MultisiteImprovements\ImprovementsLoader;
+use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
 
 /**
  * Test the ImprovementsLoader class.

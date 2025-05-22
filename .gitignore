@@ -2,6 +2,7 @@
 .phpcs.cache
 .phpunit.result.cache
 .phpunit.cache
+.DS_Store
 composer.lock
 multisite-improvements.zip
 multisite-improvements/

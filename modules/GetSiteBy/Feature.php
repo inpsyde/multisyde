@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovements\Features;
+namespace Syde\MultisiteImprovements\Modules\GetSiteBy;
 
 use Syde\MultisiteImprovements\FeatureInformation;
 use Syde\MultisiteImprovements\LoadableFeature;
@@ -16,7 +16,7 @@ use Syde\MultisiteImprovements\PresentableFeature;
 /**
  * Class GetSiteBy
  */
-class GetSiteBy implements LoadableFeature, PresentableFeature {
+class Feature implements LoadableFeature, PresentableFeature {
 
 	/**
 	 * Load the feature.
@@ -25,7 +25,7 @@ class GetSiteBy implements LoadableFeature, PresentableFeature {
 	 */
 	public static function init(): void {
 		if ( ! function_exists( 'get_site_by' ) ) {
-			require_once __DIR__ . '/../Patches/40180.php';
+			require_once __DIR__ . '/patches/40180.php';
 		}
 	}
 

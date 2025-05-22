@@ -45,7 +45,7 @@ function get_site_by( $field, $value, $network_id = null ) {
 				}
 
 				if ( is_subdomain_install() ) {
-					$args['domain'] = trim( $value, '/' ) . '.' . preg_replace( '|^www\.|', '', $network->domain );
+					$args['domain'] = trim( $value, '/' ) . 'Patches' . preg_replace( '|^www\.|', '', $network->domain );
 					$args['path']   = $network->path;
 				} else {
 					$args['domain'] = $network->domain;

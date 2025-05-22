@@ -7,16 +7,16 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsUnitTests\Features;
+namespace Syde\MultisiteImprovementsUnitTests\modules\SiteActivePlugins;
 
-use Syde\MultisiteImprovements\Features\SiteActivePlugins;
-use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
 use Brain\Monkey\Functions;
+use Syde\MultisiteImprovements\Modules\SiteActivePlugins\Feature;
+use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
 
 /**
  * Test the SiteActivePlugins class.
  */
-final class TestSiteActivePlugins extends UnitTestCase {
+final class TestFeature extends UnitTestCase {
 
 	/**
 	 * Test the init method.
@@ -27,7 +27,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	public function test_init(): void {
 		Functions\expect( 'is_network_admin' )->once()->andReturn( true );
 
-		SiteActivePlugins::init();
+		Feature::init();
 	}
 
 	/**
@@ -39,7 +39,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'get_current_screen' )->once()->andReturn( (object) array( 'id' => 'plugins-network' ) );
 		Functions\expect( 'add_thickbox' )->once();
 
-		SiteActivePlugins::add_thickbox();
+		Feature::add_thickbox();
 	}
 
 	/**
@@ -53,7 +53,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'get_current_screen' )->once()->andReturn( $wp_screen );
 		Functions\expect( 'add_thickbox' )->never();
 
-		SiteActivePlugins::add_thickbox();
+		Feature::add_thickbox();
 	}
 
 	/**
@@ -64,7 +64,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	public function test_maybe_show_notice_no_network(): void {
 		Functions\expect( 'is_network_admin' )->once()->andReturn( false );
 
-		SiteActivePlugins::maybe_show_notice();
+		Feature::maybe_show_notice();
 
 		$this->expectOutputString( '' );
 	}
@@ -79,7 +79,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'sanitize_key' )->once()->andReturnFirstArg();
 		Functions\expect( 'wp_unslash' )->once()->andReturnFirstArg();
 
-		SiteActivePlugins::maybe_show_notice();
+		Feature::maybe_show_notice();
 
 		$this->expectOutputString( '' );
 	}
@@ -92,7 +92,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	public function test_bulk_deactivate_no_network_admin(): void {
 		Functions\expect( 'current_user_can' )->once()->with( 'manage_network_plugins' )->andReturn( false );
 
-		SiteActivePlugins::bulk_deactivate();
+		Feature::bulk_deactivate();
 	}
 
 	/**
@@ -101,7 +101,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	 * @return void
 	 */
 	public function test_add_action_link_no_active_plugins(): void {
-		$obj         = new SiteActivePlugins();
+		$obj         = new Feature();
 		$links       = array(
 			'deactivate' => '<a href="https://example.com/wp-admin/plugins.php?action=deactivate&amp;plugin=plugin/plugin.php" class="edit">Deactivate</a>',
 		);
@@ -165,7 +165,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( false );
 		Functions\expect( 'get_plugin_data' )->once()->andReturn( $plugin_data );
 
-		$obj = new SiteActivePlugins();
+		$obj = new Feature();
 		$obj->populate_active_plugins();
 
 		$this->assertSame( $expected_links, $obj->add_action_link( $given_links, $active_plugins[0] ) );
@@ -177,7 +177,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	 * @return void
 	 */
 	public function test_print_row_styles_empty(): void {
-		( new SiteActivePlugins() )->print_row_styles();
+		( new Feature() )->print_row_styles();
 
 		$this->expectOutputString( '' );
 	}
@@ -192,7 +192,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins', array() )->andReturn( array( 'plugin/plugin.php' ) );
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( false );
 
-		$obj = new SiteActivePlugins();
+		$obj = new Feature();
 		$obj->populate_active_plugins();
 		$obj->print_row_styles();
 
@@ -205,7 +205,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	public function test_print_thickbox_content_not_plugins_network(): void {
 		Functions\expect( 'get_current_screen' )->once()->andReturn( (object) array( 'id' => 'plugins' ) );
 
-		$obj = new SiteActivePlugins();
+		$obj = new Feature();
 		$obj->print_thickbox_content();
 
 		$this->expectOutputString( '' );
@@ -219,7 +219,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 	public function test_print_thickbox_content_populated(): void {
 		Functions\expect( 'get_current_screen' )->once()->andReturn( (object) array( 'id' => 'plugins-network' ) );
 
-		$obj = new SiteActivePlugins();
+		$obj = new Feature();
 		$obj->print_thickbox_content();
 	}
 
@@ -244,7 +244,7 @@ final class TestSiteActivePlugins extends UnitTestCase {
 		Functions\expect( 'get_admin_url' )->once()->with( 1, 'plugins.php' )->andReturn( '/abc/wp-admin/plugins.php' );
 		Functions\expect( 'submit_button' )->once()->andReturn( '<button type="submit" class="button button-primary">Deactivate on selected sites</button>' );
 
-		$obj = new SiteActivePlugins();
+		$obj = new Feature();
 		$obj->populate_active_plugins();
 		$obj->print_thickbox_content();
 
