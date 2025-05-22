@@ -19,6 +19,17 @@ final class FeaturePresenter {
 	const ICON_URL = 'dashicons-heart';
 
 	/**
+	 * Initializes the feature presenter.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		add_action( 'network_admin_menu', array( __CLASS__, 'add_network_admin_menu' ) );
+
+		add_filter( 'admin_footer_text', array( __CLASS__, 'get_admin_footer_text' ) );
+	}
+
+	/**
 	 * Adds the feature overview page to the menu.
 	 *
 	 * @return void
@@ -80,5 +91,24 @@ final class FeaturePresenter {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Overrides the admin footer text.
+	 *
+	 * @param string $text The original footer text.
+	 *
+	 * @return string
+	 */
+	public static function get_admin_footer_text( string $text ): string {
+		$screen = get_current_screen();
+		if ( is_null( $screen ) || 'toplevel_page_multisite-improvements-network' !== $screen->id ) {
+			return $text;
+		}
+
+		/* translators: 1: dashicon, 2: opening HTML tag for a link, 3: closing HTML tags for a link. */
+		$translation = __( 'Made with %1$s by %2$sSyde%3$s.', 'multisite-improvements' );
+
+		return sprintf( $translation, '<span class="dashicons dashicons-heart"></span>', '<a href="https://syde.com" target="_blank" rel="noopener noreferrer">', '</a>' );
 	}
 }

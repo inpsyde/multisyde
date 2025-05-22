@@ -25,7 +25,6 @@ final class TestImprovementsLoader extends UnitTestCase {
 	 */
 	public function test_init() {
 		Actions\expectAdded( 'init' );
-		Actions\expectAdded( 'network_admin_menu' );
 
 		ImprovementsLoader::init();
 	}
