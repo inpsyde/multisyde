@@ -9,13 +9,13 @@ declare( strict_types=1 );
 
 namespace Syde\MultisiteImprovementsIntegrationTests;
 
-use Syde\MultisiteImprovements\Loader;
+use Syde\MultisiteImprovements\ImprovementsLoader;
 
 /**
  * Test the Loader class.
  *
  * @internal
- * @coversDefaultClass \Syde\MultisiteImprovements\Loader
+ * @coversDefaultClass \Syde\MultisiteImprovements\ImprovementsLoader
  */
 class TestLoader extends UnitTestCase {
 
@@ -26,6 +26,6 @@ class TestLoader extends UnitTestCase {
 	 */
 	public function test_init(): void {
 		// Should return true if the test-env is a multisite.
-		$this->assertTrue( Loader::init() );
+		$this->assertTrue( ImprovementsLoader::init() );
 	}
 }

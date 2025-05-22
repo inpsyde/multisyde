@@ -1,8 +1,23 @@
 {
-    "scripts": {
-        "wp-env": "wp-env"
-    },
+    "name": "multisite-improvements",
+    "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
+    "license": "GPL-2.0-or-later",
+    "author": "Syde",
+    "keywords": [
+        "multisite", "network admin", "enhancements", "usability", "admin tools"
+    ],
     "devDependencies": {
-        "@wordpress/env": "^10.22.0"
+        "@wordpress/env": "^10.23.0"
+    },
+    "engines": {
+        "node": ">=20.19.1",
+        "npm": ">=10.8.2"
+    },
+    "scripts": {
+        "preinstall": "npx check-node-version --package",
+        "prewp-env": "npx check-node-version --package",
+        "wp-env": "wp-env",
+        "test-php-unit": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements/ composer test:unit",
+        "test-php-integration": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements/ composer test:integration"
     }
 }

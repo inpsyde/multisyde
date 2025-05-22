@@ -1,6 +1,6 @@
 {
     "name": "syde/multisite-improvements",
-    "description": "Proof of concept for a Canonical Plugin with improvements for WordPress Multisite",
+    "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -9,8 +9,14 @@
             "email": "hello@syde.com",
             "homepage": "https://syde.com",
             "role": "Company"
+        },
+        {
+            "name": "Dennis Ploetner",
+            "email": "re@lloc.de",
+            "role": "Developer"
         }
     ],
+
     "autoload": {
         "psr-4": {
             "Syde\\MultisiteImprovements\\": "src/"
@@ -34,21 +40,21 @@
     },
     "require-dev": {
         "wp-coding-standards/wpcs": "^3.0",
-        "szepeviktor/phpstan-wordpress": "dev-master",
-        "phpstan/extension-installer": "1.4.x-dev",
-        "brain/monkey": "^2.0@dev",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "yoast/phpunit-polyfills": "^3.1",
         "phpunit/phpunit": "^9.6",
-        "yoast/phpunit-polyfills": "^1.0"
-    },
+        "brain/monkey": "^2.0@dev"},
     "scripts": {
-        "tests:unit:php": "vendor/bin/phpunit",
-        "tests:unit": ["@tests:unit:php"],
-        "tests:integration:php": "npm run-script wp-env -- run tests-cli --env-cwd=wp-content/plugins/multisite-improvements ./vendor/bin/phpunit -c phpunit-integration-tests.xml.dist",
-        "tests:integration": ["@tests:integration:php"],
-        "lint:php": "vendor/bin/phpcs .",
-        "lint": ["@lint:php"],
-        "fix:php": "vendor/bin/phpcbf .",
-        "fix": ["@fix:php"],
+        "tests:unit": "vendor/bin/phpunit -c phpunit.xml.dist",
+        "tests:integration": "vendor/bin/phpunit -c integration.xml.dist",
+        "tests": [
+            "@tests:unit",
+            "@tests:integration"
+        ],
+        "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit -c phpunit.xml.dist --coverage-html tests/coverage",
+        "lint": "vendor/bin/phpcs .",
+        "fix": "vendor/bin/phpcbf .",
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
             "@lint",

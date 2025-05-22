@@ -5,12 +5,18 @@
          colors="true"
          testdox="false"
          bootstrap="tests/php/integration/bootstrap.php"
+         displayDetailsOnIncompleteTests="true"
+         displayDetailsOnSkippedTests="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         cacheDirectory=".phpunit.cache"
 >
 	<php>
-		<ini name="error_reporting" value="32767" />
-		<ini name="display_errors" value="1" />
-		<ini name="display_startup_errors" value="1" />
-	</php>
+        <const name="WP_TESTS_MULTISITE" value="1" />
+   	</php>
 
 	<testsuites>
 		<testsuite name="Integration tests">
@@ -18,9 +24,9 @@
 		</testsuite>
 	</testsuites>
 
-	<coverage>
+	<source>
 		<include>
 			  <directory suffix=".php">src/</directory>
 		</include>
-	</coverage>
+	</source>
 </phpunit>

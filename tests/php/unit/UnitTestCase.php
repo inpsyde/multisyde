@@ -9,15 +9,17 @@ declare( strict_types=1 );
 
 namespace Syde\MultisiteImprovementsUnitTests;
 
-use Mockery;
 use Brain\Monkey;
-use Brain\Monkey\Functions;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Generic unit test case for Multisite Improvements.
+ * Class UnitTestCase
  */
 class UnitTestCase extends TestCase {
+
+	use MockeryPHPUnitIntegration;
 
 	/**
 	 * Set up the test case.
@@ -26,18 +28,9 @@ class UnitTestCase extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-
 		Monkey\setUp();
-
-		Functions\when( '__' )->returnArg();
-		Functions\when( 'esc_attr' )->returnArg();
-		Functions\when( 'esc_html' )->returnArg();
-		Functions\when( 'esc_html__' )->returnArg();
-		Functions\when( 'esc_url' )->returnArg();
-		Functions\when( 'wp_kses' )->returnArg();
-		Functions\when( 'wp_kses_post' )->returnArg();
-		Functions\when( 'sanitize_text_field' )->returnArg();
-		Functions\when( 'wp_kses_allowed_html' )->justReturn( array() );
+		Monkey\Functions\stubTranslationFunctions();
+		Monkey\Functions\stubEscapeFunctions();
 	}
 
 	/**
@@ -46,8 +39,8 @@ class UnitTestCase extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		Mockery::close();
 		Monkey\tearDown();
+		Mockery::close();
 
 		parent::tearDown();
 	}
