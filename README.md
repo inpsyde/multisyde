@@ -18,6 +18,10 @@ This plugin exists to:
 
 We believe that even small changes - clearer UI, better network tools, developer helpers - can make a big impact in complex Multisite setups. This plugin is our way of testing those ideas out in the open.
 
+## Features
+
+Each [feature](./modules/README.md) is self-contained and documented in its respective directory under `modules/`, where you can find more details, including usage instructions and implementation notes.
+
 ## How to start
 
 The easiest way to start is to use the [WordPress Environment](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) package.
