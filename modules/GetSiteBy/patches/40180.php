@@ -2,7 +2,7 @@
 /**
  * This should go into ms-blogs.php.
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 /**

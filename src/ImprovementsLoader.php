@@ -2,7 +2,7 @@
 /**
  * Class loads plugin functionality.
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 declare( strict_types=1 );
@@ -24,7 +24,7 @@ class ImprovementsLoader {
 	}
 
 	/**
-	 * Load the multisite improvements.
+	 * Load the multisyde improvements.
 	 *
 	 * @return void
 	 */

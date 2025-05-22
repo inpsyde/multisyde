@@ -1,4 +1,4 @@
-﻿=== Multisite Improvements ===
+﻿=== Multisyde ===
 
 Contributors: realloc
 Tags: multisite, network admin, enhancements, usability, admin tools
@@ -27,9 +27,9 @@ Option 1: Install via Network Admin
 * Once uploaded, click Install Now, then Network Activate.
 
 Option 2: Manual Installation
-* Download or clone the plugin into your /wp-content/plugins/ directory: /wp-content/plugins/multisite-improvements
+* Download or clone the plugin into your /wp-content/plugins/ directory: /wp-content/plugins/multisyde
 * Go to Network Admin → Plugins (/wp-admin/network/plugins.php).
-* Locate Multisite Improvements in the list and click "Network Activate".
+* Locate Multisyde in the list and click "Network Activate".
 
 This plugin is intended for WordPress Multisites and must be activated network-wide.
 

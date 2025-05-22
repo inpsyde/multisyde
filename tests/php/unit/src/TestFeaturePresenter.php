@@ -2,7 +2,7 @@
 /**
  * This class tests the FeaturePresenter class.
  *
- * @package multisite-improvements-unit-tests
+ * @package multisyde-unit-tests
  */
 
 declare(strict_types = 1);
@@ -39,10 +39,10 @@ class TestFeaturePresenter extends UnitTestCase {
 	 */
 	public function test_add_network_admin_menu() {
 		Functions\expect( 'add_menu_page' )->once()->with(
-			'Multisite Improvements',
-			'Multisite Improvements',
+			'Multisyde',
+			'Multisyde',
 			'manage_network',
-			'multisite-improvements',
+			'multisyde',
 			array( 'Syde\MultisiteImprovements\FeaturePresenter', 'render_overview_page' ),
 			'dashicons-heart',
 		);
@@ -58,6 +58,6 @@ class TestFeaturePresenter extends UnitTestCase {
 	public function test_render_overview_page(): void {
 		FeaturePresenter::render_overview_page();
 
-		$this->expectOutputRegex( '/.*Multisite Improvements.*This plugin provides various improvements for WordPress multisite installations.*/' );
+		$this->expectOutputRegex( '/.*Multisyde.*This plugin provides various improvements for WordPress multisite installations.*/' );
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * Loader Tests
  *
- * @package multisite-improvements-integration-tests
+ * @package multisyde-integration-tests
  */
 
 declare( strict_types=1 );

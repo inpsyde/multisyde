@@ -2,7 +2,7 @@
 /**
  * FeatureInformation class
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 namespace Syde\MultisiteImprovements;

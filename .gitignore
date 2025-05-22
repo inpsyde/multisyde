@@ -4,8 +4,8 @@
 .phpunit.cache
 .DS_Store
 composer.lock
-multisite-improvements.zip
-multisite-improvements/
+multisyde.zip
+multisyde/
 node_modules/
 tests/coverage/
 vendor/

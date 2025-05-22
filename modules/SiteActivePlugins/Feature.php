@@ -2,7 +2,7 @@
 /**
  * Class implements functionality active plugins for sites in the network admin dashboard.
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 namespace Syde\MultisiteImprovements\Modules\SiteActivePlugins;
@@ -89,7 +89,7 @@ final class Feature implements LoadableFeature, PresentableFeature {
 			'The plugin "%1$s" has been deactivated on %2$d site.',
 			'The plugin "%1$s" has been deactivated on %2$d sites.',
 			$site_count,
-			'multisite-improvements'
+			'multisyde'
 		);
 
 		printf(
@@ -184,7 +184,7 @@ final class Feature implements LoadableFeature, PresentableFeature {
 
 		$count = count( $this->active_plugins[ $plugin_file ] );
 		/* translators: 1: Plugin Name, 2: Number of sites. */
-		$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisite-improvements' );
+		$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisyde' );
 		$title       = sprintf(
 			$translation,
 			get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
@@ -196,7 +196,7 @@ final class Feature implements LoadableFeature, PresentableFeature {
 				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
 				esc_attr( $title ),
 				esc_attr( md5( $plugin_file ) ),
-				esc_html__( 'Sites deactivate', 'multisite-improvements' )
+				esc_html__( 'Sites deactivate', 'multisyde' )
 			),
 		);
 
@@ -247,7 +247,7 @@ final class Feature implements LoadableFeature, PresentableFeature {
 
 			echo '<p>' . esc_html__(
 				'Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site.',
-				'multisite-improvements'
+				'multisyde'
 			) . '</p>';
 
 			echo '<form method="post" action="' . esc_url( add_query_arg( array() ) ) . '">';
@@ -270,7 +270,7 @@ final class Feature implements LoadableFeature, PresentableFeature {
 			}
 			echo '</ul>';
 
-			submit_button( __( 'Deactivate on selected sites', 'multisite-improvements' ) );
+			submit_button( __( 'Deactivate on selected sites', 'multisyde' ) );
 			echo '</form>';
 			echo '</div>';
 		}
@@ -283,8 +283,8 @@ final class Feature implements LoadableFeature, PresentableFeature {
 	 */
 	public static function get_feature_information(): FeatureInformation {
 		return new FeatureInformation(
-			__( 'Site Active Plugins', 'multisite-improvements' ),
-			__( 'Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites.', 'multisite-improvements' ),
+			__( 'Site Active Plugins', 'multisyde' ),
+			__( 'Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites.', 'multisyde' ),
 			array(
 				'https://core.trac.wordpress.org/ticket/53255',
 			)

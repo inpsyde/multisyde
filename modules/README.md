@@ -1,4 +1,4 @@
-# Multisite Improvements
+# Multisyde
 
 This plugin provides various improvements for WordPress multisite installations.
 

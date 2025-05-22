@@ -2,7 +2,7 @@
 /**
  * FeaturePresenter class
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 namespace Syde\MultisiteImprovements;
@@ -12,7 +12,7 @@ namespace Syde\MultisiteImprovements;
  */
 final class FeaturePresenter {
 
-	const MENU_SLUG = 'multisite-improvements';
+	const MENU_SLUG = 'multisyde';
 
 	const CAPABILITY = 'manage_network';
 
@@ -36,8 +36,8 @@ final class FeaturePresenter {
 	 */
 	public static function add_network_admin_menu(): void {
 		add_menu_page(
-			__( 'Multisite Improvements', 'multisite-improvements' ),
-			__( 'Multisite Improvements', 'multisite-improvements' ),
+			__( 'Multisyde', 'multisyde' ),
+			__( 'Multisyde', 'multisyde' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
 			array( __CLASS__, 'render_overview_page' ),
@@ -54,18 +54,18 @@ final class FeaturePresenter {
 		$features = FeatureRegistry::get_presentable_classes();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Multisite Improvements', 'multisite-improvements' ) . '</h1>';
-		echo '<p>' . esc_html__( 'This plugin provides various improvements for WordPress multisite installations.', 'multisite-improvements' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Multisyde', 'multisyde' ) . '</h1>';
+		echo '<p>' . esc_html__( 'This plugin provides various improvements for WordPress multisite installations.', 'multisyde' ) . '</p>';
 
-		echo '<h2>' . esc_html__( 'Available Features', 'multisite-improvements' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Available Features', 'multisyde' ) . '</h2>';
 
 		if ( ! empty( $features ) ) {
 			echo '<table class="widefat fixed striped">';
 			echo '<thead>';
 			echo '<tr>';
-			echo '<th scope="col" id="title" class="manage-column column-title" abbr="Title">' . esc_html__( 'Title', 'multisite-improvements' ) . '</th>';
-			echo '<th scope="col" id="description"  class="manage-column column-description" abbr="Description">' . esc_html__( 'Description', 'multisite-improvements' ) . '</th>';
-			echo '<th scope="col" id="tickets" class="manage-column column-tickets" abbr="Tickets">' . esc_html__( 'Tickets', 'multisite-improvements' ) . '</th>';
+			echo '<th scope="col" id="title" class="manage-column column-title" abbr="Title">' . esc_html__( 'Title', 'multisyde' ) . '</th>';
+			echo '<th scope="col" id="description"  class="manage-column column-description" abbr="Description">' . esc_html__( 'Description', 'multisyde' ) . '</th>';
+			echo '<th scope="col" id="tickets" class="manage-column column-tickets" abbr="Tickets">' . esc_html__( 'Tickets', 'multisyde' ) . '</th>';
 			echo '</tr>';
 			echo '</thead>';
 			echo '<tbody>';
@@ -102,12 +102,12 @@ final class FeaturePresenter {
 	 */
 	public static function get_admin_footer_text( string $text ): string {
 		$screen = get_current_screen();
-		if ( is_null( $screen ) || 'toplevel_page_multisite-improvements-network' !== $screen->id ) {
+		if ( is_null( $screen ) || 'toplevel_page_multisyde-network' !== $screen->id ) {
 			return $text;
 		}
 
 		/* translators: 1: dashicon, 2: opening HTML tag for a link, 3: closing HTML tags for a link. */
-		$translation = __( 'Made with %1$s by %2$sSyde%3$s.', 'multisite-improvements' );
+		$translation = __( 'Made with %1$s by %2$sSyde%3$s.', 'multisyde' );
 
 		return sprintf( $translation, '<span class="dashicons dashicons-heart"></span>', '<a href="https://syde.com" target="_blank" rel="noopener noreferrer">', '</a>' );
 	}

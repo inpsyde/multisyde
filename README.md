@@ -1,4 +1,4 @@
-# Multisite Improvements
+# Multisyde
 
 A WordPress plugin that explores potential improvements for WordPress Multisite.
 
@@ -6,7 +6,7 @@ Developed as part of Syde’s initiative to improve the Multisite experience by 
 
 ## Vision and Purpose
 
-Multisite Improvements is a proof-of-concept plugin created by Syde to explore and demonstrate improvements to the WordPress Multisite experience.
+Multisyde is a proof-of-concept plugin created by Syde to explore and demonstrate improvements to the WordPress Multisite experience.
 
 Multisite is a powerful but often overlooked feature of WordPress. Our goal is to bring more visibility, usability, and flexibility to network administrators and developers working with Multisite networks - through small, focused improvements that solve real-world pain points.
 
@@ -26,8 +26,8 @@ Each [feature](./modules/README.md) is self-contained and documented in its resp
 
 The easiest way to start is to use the [WordPress Environment](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) package.
 ```
-$ git clone git@github.com:inpsyde/multisite-improvements.git
-$ cd multisite-improvements
+$ git clone git@github.com:inpsyde/multisyde.git
+$ cd multisyde
 $ composer install
 $ npm -g i @wordpress/env
 $ wp-env start

@@ -2,7 +2,7 @@
 /**
  * Generic Test Class
  *
- * @package multisite-improvements-unit-tests
+ * @package multisyde-unit-tests
  */
 
 declare( strict_types=1 );

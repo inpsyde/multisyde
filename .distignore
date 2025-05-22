@@ -14,14 +14,14 @@
 /bin
 /build
 /docs
-/multisite-improvements
+/multisyde
 /node_modules
 /tests
 CODEOWNERS
 README.md
 composer.lock
 integration.xml.dist
-multisite-improvements.zip
+multisyde.zip
 package-lock.json
 package.json
 patchwork.json

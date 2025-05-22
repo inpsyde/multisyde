@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Multisite Improvements
- * Plugin URI:        https://github.com/inpsyde/multisite-improvements
+ * Plugin Name:       Multisyde
+ * Plugin URI:        https://github.com/inpsyde/multisyde
  * Description:       A WordPress plugin that explores potential improvements for WordPress Multisite.
  * Version:           1.0.0
  * Requires at least: 6.8
@@ -10,10 +10,10 @@
  * Author URI:        https://syde.com
  * License:           GPLv2 or later
  * License URI:       /LICENSE
- * Text Domain:       multisite-improvements
+ * Text Domain:       multisyde
  * Domain Path:       /languages/
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 declare(strict_types=1);

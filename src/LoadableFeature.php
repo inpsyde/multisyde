@@ -2,7 +2,7 @@
 /**
  * Loadable classes should implement this interface.
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 declare(strict_types=1);

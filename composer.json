@@ -1,5 +1,5 @@
 {
-    "name": "syde/multisite-improvements",
+    "name": "syde/multisyde",
     "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
     "type": "project",
     "license": "GPL-2.0-or-later",
@@ -60,7 +60,7 @@
             "@lint",
             "@phpstan"
         ],
-        "i18n:pot": "wp i18n make-pot . languages/multisite-improvements.pot",
+        "i18n:pot": "wp i18n make-pot . languages/multisyde.pot",
         "git-release": "bin/git-release.sh",
         "build": [
             "@composer install --no-dev",

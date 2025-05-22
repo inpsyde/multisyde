@@ -1,5 +1,5 @@
 {
-    "name": "multisite-improvements",
+    "name": "multisyde",
     "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
     "license": "GPL-2.0-or-later",
     "author": "Syde",
@@ -17,7 +17,7 @@
         "preinstall": "npx check-node-version --package",
         "prewp-env": "npx check-node-version --package",
         "wp-env": "wp-env",
-        "test-php-unit": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements/ composer test:unit",
-        "test-php-integration": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisite-improvements/ composer test:integration"
+        "test-php-unit": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde/ composer test:unit",
+        "test-php-integration": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde/ composer test:integration"
     }
 }

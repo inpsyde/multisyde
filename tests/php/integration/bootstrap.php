@@ -2,7 +2,7 @@
 /**
  * Bootstrap Integration tests
  *
- * @package multisite-improvements-integration-tests
+ * @package multisyde-integration-tests
  */
 
 define( 'TESTS_PLUGIN_DIR', dirname( __DIR__, 3 ) );

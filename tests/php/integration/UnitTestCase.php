@@ -2,7 +2,7 @@
 /**
  * Generic Test Class
  *
- * @package multisite-improvements-integration-tests
+ * @package multisyde-integration-tests
  */
 
 declare( strict_types=1 );
@@ -12,6 +12,6 @@ namespace Syde\MultisiteImprovementsIntegrationTests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Generic unit test case for Multisite Improvements.
+ * Generic unit test case for Multisyde.
  */
 class UnitTestCase extends TestCase {}

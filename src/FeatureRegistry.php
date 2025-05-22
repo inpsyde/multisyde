@@ -2,7 +2,7 @@
 /**
  * The Feature Registry provides a way to load and manage all the available features.
  *
- * @package multisite-improvements
+ * @package multisyde
  */
 
 namespace Syde\MultisiteImprovements;

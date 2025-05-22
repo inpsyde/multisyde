@@ -4,5 +4,5 @@
  *
  * Use this file to customize the plugin's bootstrap process.
  *
- * @package multisite-improvements-unit-tests
+ * @package multisyde-unit-tests
  */
