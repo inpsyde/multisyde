@@ -1,23 +1,22 @@
 <?php
 /**
- * ImprovementsLoader Tests
+ * Multisyde Tests
  *
  * @package multisyde-unit-tests
  */
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsUnitTests\src;
+namespace Syde\MultisydeUnitTests;
 
 use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
-use Syde\MultisiteImprovements\ImprovementsLoader;
-use Syde\MultisiteImprovementsUnitTests\UnitTestCase;
+use Syde\Multisyde\Multisyde;
 
 /**
  * Test the ImprovementsLoader class.
  */
-final class TestImprovementsLoader extends UnitTestCase {
+final class TestMultisyde extends UnitTestCase {
 
 	/**
 	 * Test the init method.
@@ -27,7 +26,7 @@ final class TestImprovementsLoader extends UnitTestCase {
 	public function test_init() {
 		Actions\expectAdded( 'init' );
 
-		ImprovementsLoader::init();
+		Multisyde::init();
 	}
 
 	/**
@@ -40,7 +39,7 @@ final class TestImprovementsLoader extends UnitTestCase {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( true );
 		Functions\expect( 'is_network_admin' )->once()->andReturn( false );
 
-		ImprovementsLoader::load();
+		Multisyde::load();
 	}
 
 	/**
@@ -51,6 +50,6 @@ final class TestImprovementsLoader extends UnitTestCase {
 	public function test_load_singlesite(): void {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( false );
 
-		ImprovementsLoader::load();
+		Multisyde::load();
 	}
 }

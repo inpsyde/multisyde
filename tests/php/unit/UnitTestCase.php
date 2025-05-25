@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsUnitTests;
+namespace Syde\MultisydeUnitTests;
 
 use Brain\Monkey;
 use Mockery;

@@ -5,12 +5,12 @@
  * @package multisyde
  */
 
-namespace Syde\MultisiteImprovements;
+namespace Syde\Multisyde;
 
 /**
  * This class is responsible for presenting the features of the plugin in the network admin menu.
  */
-final class FeaturePresenter {
+final class Presenter {
 
 	const MENU_SLUG = 'multisyde';
 
@@ -19,14 +19,33 @@ final class FeaturePresenter {
 	const ICON_URL = 'dashicons-heart';
 
 	/**
+	 * Instance of Modules class to access the features.
+	 *
+	 * @var Modules $modules
+	 */
+	protected Modules $modules;
+
+	/**
+	 * Constructor for Presenter class.
+	 *
+	 * @param Modules $modules Instance of Modules class to access the features.
+	 */
+	public function __construct( Modules $modules ) {
+		$this->modules = $modules;
+	}
+
+	/**
 	 * Initializes the feature presenter.
 	 *
+	 * @param Modules $modules Instance of Modules class to access the features.
 	 * @return void
 	 */
-	public static function init() {
-		add_action( 'network_admin_menu', array( __CLASS__, 'add_network_admin_menu' ) );
+	public static function init( Modules $modules ) {
+		$obj = new self( $modules );
 
-		add_filter( 'admin_footer_text', array( __CLASS__, 'get_admin_footer_text' ) );
+		add_action( 'network_admin_menu', array( $obj, 'add_network_admin_menu' ) );
+
+		add_filter( 'admin_footer_text', array( $obj, 'get_admin_footer_text' ) );
 	}
 
 	/**
@@ -34,13 +53,13 @@ final class FeaturePresenter {
 	 *
 	 * @return void
 	 */
-	public static function add_network_admin_menu(): void {
+	public function add_network_admin_menu(): void {
 		add_menu_page(
 			__( 'Multisyde', 'multisyde' ),
 			__( 'Multisyde', 'multisyde' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
-			array( __CLASS__, 'render_overview_page' ),
+			array( $this, 'render_overview_page' ),
 			self::ICON_URL,
 		);
 	}
@@ -50,16 +69,15 @@ final class FeaturePresenter {
 	 *
 	 * @return void
 	 */
-	public static function render_overview_page(): void {
-		$features = FeatureRegistry::get_presentable_classes();
-
+	public function render_overview_page(): void {
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Multisyde', 'multisyde' ) . '</h1>';
 		echo '<p>' . esc_html__( 'This plugin provides various improvements for WordPress multisite installations.', 'multisyde' ) . '</p>';
 
 		echo '<h2>' . esc_html__( 'Available Features', 'multisyde' ) . '</h2>';
 
-		if ( ! empty( $features ) ) {
+		$features_abouts = $this->modules->get_presentable_features();
+		if ( ! empty( $features_abouts ) ) {
 			echo '<table class="widefat fixed striped">';
 			echo '<thead>';
 			echo '<tr>';
@@ -70,15 +88,15 @@ final class FeaturePresenter {
 			echo '</thead>';
 			echo '<tbody>';
 
-			foreach ( $features as $feature ) {
-				$feature_info = $feature::get_feature_information();
+			foreach ( $features_abouts as $about ) {
+				$feature = $about::get();
 
 				echo '<tr>';
-				echo '<td class="title column-title column-primary" data-colname="Title"><strong>' . esc_html( $feature_info->title ) . '</strong></td>';
-				echo '<td class="description column-description" data-colname="Description">' . esc_html( $feature_info->description ) . '</td>';
+				echo '<td class="title column-title column-primary" data-colname="Title"><strong>' . esc_html( $feature->title ) . '</strong></td>';
+				echo '<td class="description column-description" data-colname="Description">' . esc_html( $feature->description ) . '</td>';
 				echo '<td class="tickets column-tickets has-row-actions" data-colname="Tickets">';
 
-				foreach ( $feature_info->tickets as $ticket ) {
+				foreach ( $feature->tickets as $ticket ) {
 					echo '<span class="ticket"><a href="' . esc_url( $ticket ) . '" target="_blank">' . esc_html( $ticket ) . '</a></span><br>';
 				}
 

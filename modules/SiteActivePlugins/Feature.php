@@ -5,16 +5,14 @@
  * @package multisyde
  */
 
-namespace Syde\MultisiteImprovements\Modules\SiteActivePlugins;
+namespace Syde\Multisyde\Modules\SiteActivePlugins;
 
-use Syde\MultisiteImprovements\FeatureInformation;
-use Syde\MultisiteImprovements\LoadableFeature;
-use Syde\MultisiteImprovements\PresentableFeature;
+use Syde\Multisyde\LoadableFeature;
 
 /**
  * Class SiteActivePlugins
  */
-final class Feature implements LoadableFeature, PresentableFeature {
+final class Feature implements LoadableFeature {
 
 	const ACTION_DEACTIVATION = 'bulk_deactivate';
 	const NOTICE_DEACTIVATION = 'bulk_deactivated';
@@ -274,20 +272,5 @@ final class Feature implements LoadableFeature, PresentableFeature {
 			echo '</form>';
 			echo '</div>';
 		}
-	}
-
-	/**
-	 * Returns the feature information.
-	 *
-	 * @return FeatureInformation
-	 */
-	public static function get_feature_information(): FeatureInformation {
-		return new FeatureInformation(
-			__( 'Site Active Plugins', 'multisyde' ),
-			__( 'Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites.', 'multisyde' ),
-			array(
-				'https://core.trac.wordpress.org/ticket/53255',
-			)
-		);
 	}
 }

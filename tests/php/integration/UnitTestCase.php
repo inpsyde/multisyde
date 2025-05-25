@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsIntegrationTests;
+namespace Syde\MultisydeIntegrationTests;
 
 use PHPUnit\Framework\TestCase;
 

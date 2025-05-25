@@ -7,9 +7,9 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovementsIntegrationTests;
+namespace Syde\MultisydeIntegrationTests;
 
-use Syde\MultisiteImprovements\ImprovementsLoader;
+use Syde\Multisyde\Multisyde;
 
 /**
  * Test the Loader class.
@@ -26,6 +26,6 @@ class TestLoader extends UnitTestCase {
 	 */
 	public function test_init(): void {
 		// Should return true if the test-env is a multisite.
-		$this->assertTrue( ImprovementsLoader::init() );
+		$this->assertTrue( Multisyde::init() );
 	}
 }

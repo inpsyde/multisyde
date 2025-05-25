@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Syde\MultisiteImprovements;
+namespace Syde\Multisyde;
 
 /**
  * Interface LoadableFeature

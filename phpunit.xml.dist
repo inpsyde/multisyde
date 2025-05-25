@@ -12,12 +12,17 @@
   <testsuites>
     <testsuite name="Unit tests">
       <directory prefix="Test" suffix=".php">tests/php/unit</directory>
+      <directory prefix="Test" suffix=".php">modules/*/tests/unit</directory>
     </testsuite>
   </testsuites>
 
   <coverage>
     <include>
-      <directory suffix=".php">src/</directory>
+      <directory suffix=".php">src</directory>
+      <directory suffix=".php">modules</directory>
     </include>
+    <exclude>
+      <directory suffix=".php">modules/*/tests</directory>
+    </exclude>
   </coverage>
 </phpunit>

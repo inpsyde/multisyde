@@ -5,12 +5,12 @@
  * @package multisyde
  */
 
-namespace Syde\MultisiteImprovements;
+namespace Syde\Multisyde;
 
 /**
  * This class is used to store information about a feature.
  */
-final class FeatureInformation {
+final class Summary {
 
 	/**
 	 * Title of the feature.

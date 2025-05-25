@@ -7,12 +7,12 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisiteImprovements;
+namespace Syde\Multisyde;
 
 /**
  * Class Loader
  */
-class ImprovementsLoader {
+class Multisyde {
 
 	/**
 	 * Hook into WordPress.
@@ -33,7 +33,6 @@ class ImprovementsLoader {
 			return;
 		}
 
-		FeatureRegistry::load();
-		FeaturePresenter::init();
+		Presenter::init( ( new Modules() )->load() );
 	}
 }
