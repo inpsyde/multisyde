@@ -12,7 +12,7 @@ namespace Syde\Multisyde\Modules\GetSiteBy;
 use Syde\Multisyde\LoadableFeature;
 
 /**
- * Class Feature
+ * Feature Class GetSiteBy
  */
 class Feature implements LoadableFeature {
 

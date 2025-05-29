@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-26T08:05:48+00:00\n"
+"POT-Creation-Date: 2025-05-29T09:12:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: multisyde\n"
@@ -48,6 +48,24 @@ msgstr ""
 
 #: modules/GetSiteBy/About.php:28
 msgid "Provides a utility function to retrieve a site object from the multisite network using a specific field such as ID, slug, domain, path, or full URL. This makes it easier to locate subsites without relying on raw SQL or manual loops."
+msgstr ""
+
+#: modules/LastUserLogin/About.php:27
+msgid "Last User Login"
+msgstr ""
+
+#: modules/LastUserLogin/About.php:28
+msgid "Adds a sortable “Last Login” column to the Network Users screen and tracks when users last logged into the network."
+msgstr ""
+
+#: modules/LastUserLogin/Feature.php:45
+#: modules/LastUserLogin/Feature.php:58
+msgid "Last Login"
+msgstr ""
+
+#: modules/LastUserLogin/Feature.php:86
+#: modules/LastUserLogin/Feature.php:87
+msgid "Never"
 msgstr ""
 
 #: modules/SiteActivePlugins/About.php:27
