@@ -10,7 +10,7 @@ namespace Syde\Multisyde\Modules\SiteActivePlugins;
 use Syde\Multisyde\LoadableFeature;
 
 /**
- * Class SiteActivePlugins
+ * Feature Class SiteActivePlugins
  */
 final class Feature implements LoadableFeature {
 
