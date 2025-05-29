@@ -25,7 +25,7 @@ class About implements ShareableInformation {
 	public static function get(): Summary {
 		return new Summary(
 			__( 'Last User Login', 'multisyde' ),
-			__( 'Adds a sortable “Last Login” column to the Network Users screen and tracks when users last logged into the network.', 'multisyde' ),
+			__( 'This module enhances the Network Admin Users screen in WordPress Multisite by adding a “Last Login” column. It automatically records the timestamp each time a user logs in and displays it in a readable, timezone-aware format.', 'multisyde' ),
 			array()
 		);
 	}
