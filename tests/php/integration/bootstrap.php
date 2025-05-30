@@ -18,7 +18,7 @@ require_once $_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'setup_theme',
 	function () {
-		require_once TESTS_PLUGIN_DIR . '/index.php';
+		require_once TESTS_PLUGIN_DIR . '/multisyde.php';
 	}
 );
 

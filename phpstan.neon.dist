@@ -2,4 +2,6 @@ parameters:
     level: 8
     paths:
         - src/
-        - index.php
+        - modules/
+        - tests/php/unit/
+        - multisyde.php

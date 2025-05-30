@@ -66,19 +66,18 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function maybe_show_notice(): void {
-		if ( ! is_network_admin() ||
-			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) ) ) {
+		if (
+			! is_network_admin() ||
+			! isset( $_GET['_wpnonce'] ) ||
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
+			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) )
+		) {
 			return;
 		}
 
 		$plugin_file = sanitize_text_field( wp_unslash( $_GET['plugin_file'] ?? '' ) );
 		$site_count  = absint( wp_unslash( $_GET['site_count'] ?? 0 ) );
-		if ( empty( $plugin_file ) || 0 === $site_count ) {
-			return;
-		}
-
-		$_nonce = sanitize_key( wp_unslash( $_GET['_wpnonce'] ?? '' ) );
-		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ) ) {
+		if ( '' === $plugin_file || 0 === $site_count ) {
 			return;
 		}
 
@@ -108,18 +107,21 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function bulk_deactivate(): void {
-		if ( ! current_user_can( 'manage_network_plugins' ) ||
-			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ?? '' ) ) ) {
+		if (
+			! current_user_can( 'manage_network_plugins' ) ||
+			! isset( $_POST['_wpnonce'] ) ||
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
+			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ?? '' ) )
+		) {
 			return;
 		}
 
 		$plugin_file = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ?? '' ) );
-		$_nonce      = sanitize_key( wp_unslash( $_POST['_wpnonce'] ?? '' ) );
-		if ( empty( $_nonce ) || ! wp_verify_nonce( $_nonce, sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ) ) {
+		$site_ids    = array_map( 'absint', (array) wp_unslash( $_POST['site_ids'] ?? array() ) );
+		if ( '' === $plugin_file || empty( $site_ids ) ) {
 			return;
 		}
 
-		$site_ids = array_map( 'absint', (array) wp_unslash( $_POST['site_ids'] ?? array() ) );
 		foreach ( $site_ids as $site_id ) {
 			switch_to_blog( $site_id );
 			deactivate_plugins( $plugin_file, false, false );
@@ -132,7 +134,7 @@ final class Feature implements LoadableFeature {
 					'notice'      => self::NOTICE_DEACTIVATION,
 					'plugin_file' => rawurlencode( $plugin_file ),
 					'site_count'  => count( $site_ids ),
-					'_wpnonce'    => wp_create_nonce( sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) ),
+					'_wpnonce'    => wp_create_nonce( self::ACTION_DEACTIVATION ),
 				),
 				network_admin_url( 'plugins.php' )
 			)
@@ -165,43 +167,6 @@ final class Feature implements LoadableFeature {
 				$this->active_plugins[ $plugin ][] = $site_id;
 			}
 		}
-	}
-
-	/**
-	 * Adds action links for site active plugins to the network admin plugin page.
-	 *
-	 * @param array<string, string> $links The action links.
-	 * @param string                $plugin_file The plugin file path.
-	 *
-	 * @return array<string, string> The modified action links.
-	 */
-	public function add_action_link( array $links, string $plugin_file ): array {
-		if ( ! isset( $this->active_plugins[ $plugin_file ] ) ) {
-			return $links;
-		}
-
-		$count = count( $this->active_plugins[ $plugin_file ] );
-		/* translators: 1: Plugin Name, 2: Number of sites. */
-		$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisyde' );
-		$title       = sprintf(
-			$translation,
-			get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
-			$count
-		);
-
-		$sites_deactivate_link = array(
-			'site_deactivate' => sprintf(
-				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
-				esc_attr( $title ),
-				esc_attr( md5( $plugin_file ) ),
-				esc_html__( 'Sites deactivate', 'multisyde' )
-			),
-		);
-
-		$before = array_slice( $links, 0, 1 );
-		$after  = array_slice( $links, 1 );
-
-		return array_merge( $before, $sites_deactivate_link, $after );
 	}
 
 	/**
@@ -249,7 +214,7 @@ final class Feature implements LoadableFeature {
 			) . '</p>';
 
 			echo '<form method="post" action="' . esc_url( add_query_arg( array() ) ) . '">';
-			wp_nonce_field( sprintf( '%s_%s', self::ACTION_DEACTIVATION, $plugin_file ) );
+			wp_nonce_field( self::ACTION_DEACTIVATION );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_DEACTIVATION ) . '" />';
 			echo '<input type="hidden" name="plugin_file" value="' . esc_attr( $plugin_file ) . '" />';
 
@@ -272,5 +237,42 @@ final class Feature implements LoadableFeature {
 			echo '</form>';
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * Adds action links for site active plugins to the network admin plugin page.
+	 *
+	 * @param array<string, string> $links The action links.
+	 * @param string                $plugin_file The plugin file path.
+	 *
+	 * @return array<string, string> The modified action links.
+	 */
+	public function add_action_link( array $links, string $plugin_file ): array {
+		if ( ! isset( $this->active_plugins[ $plugin_file ] ) ) {
+			return $links;
+		}
+
+		$count = count( $this->active_plugins[ $plugin_file ] );
+		/* translators: 1: Plugin Name, 2: Number of sites. */
+		$translation = _n( '"%1$s" is active in %2$d site', '"%1$s" is active in %2$d sites', $count, 'multisyde' );
+		$title       = sprintf(
+			$translation,
+			get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file )['Name'],
+			$count
+		);
+
+		$sites_deactivate_link = array(
+			'site_deactivate' => sprintf(
+				'<a class="thickbox" title="%1$s" style="display: inline-block" href="#TB_inline?width=600&height=550&inlineId=%2$s">%3$s</a>',
+				esc_attr( $title ),
+				esc_attr( md5( $plugin_file ) ),
+				esc_html__( 'Sites deactivate', 'multisyde' )
+			),
+		);
+
+		$before = array_slice( $links, 0, 1 );
+		$after  = array_slice( $links, 1 );
+
+		return array_merge( $before, $sites_deactivate_link, $after );
 	}
 }

@@ -12,7 +12,6 @@ namespace Syde\Multisyde\Modules\SiteActivePlugins\tests\unit;
 use Brain\Monkey\Functions;
 use Syde\Multisyde\Modules\SiteActivePlugins\Feature;
 use Syde\MultisydeUnitTests\UnitTestCase;
-use function Brain\Monkey\Functions;
 
 /**
  * Test the SiteActivePlugins class.
@@ -75,10 +74,8 @@ final class TestFeature extends UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_maybe_show_notice_network(): void {
+	public function test_maybe_show_notice_network_no_globals(): void {
 		Functions\expect( 'is_network_admin' )->once()->andReturn( true );
-		Functions\expect( 'sanitize_key' )->once()->andReturnFirstArg();
-		Functions\expect( 'wp_unslash' )->once()->andReturnFirstArg();
 
 		Feature::maybe_show_notice();
 
@@ -92,6 +89,17 @@ final class TestFeature extends UnitTestCase {
 	 */
 	public function test_bulk_deactivate_no_network_admin(): void {
 		Functions\expect( 'current_user_can' )->once()->with( 'manage_network_plugins' )->andReturn( false );
+
+		Feature::bulk_deactivate();
+	}
+
+	/**
+	 * Test the bulk_deactivate method with a user that is a network admin but there are no POST vars set.
+	 *
+	 * @return void
+	 */
+	public function test_bulk_deactivate_network_admin_no_globals(): void {
+		Functions\expect( 'current_user_can' )->once()->with( 'manage_network_plugins' )->andReturn( true );
 
 		Feature::bulk_deactivate();
 	}
