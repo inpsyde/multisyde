@@ -81,11 +81,7 @@ final class Feature implements LoadableFeature {
 		);
 
 		if ( ! $last_login ) {
-			return sprintf(
-				'<em title="%1$s">%2$s</em>',
-				esc_attr__( 'Never', 'multisyde' ),
-				esc_html__( 'Never', 'multisyde' )
-			);
+			return sprintf( '<span>%s</span>', esc_html__( '-', 'multisyde' ) );
 		}
 
 		$last_login->setTimezone( wp_timezone() );

@@ -78,7 +78,7 @@ final class Presenter {
 
 		$features_abouts = $this->modules->get_presentable_features();
 		if ( ! empty( $features_abouts ) ) {
-			echo '<table class="widefat fixed striped">';
+			echo '<table class="wp-list-table widefat striped">';
 			echo '<thead>';
 			echo '<tr>';
 			echo '<th scope="col" id="title" class="manage-column column-title" abbr="Title">' . esc_html__( 'Title', 'multisyde' ) . '</th>';

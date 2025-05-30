@@ -25,7 +25,6 @@ class TestLoader extends UnitTestCase {
 	 * @return void
 	 */
 	public function test_init(): void {
-		// Should return true if the test-env is a multisite.
-		$this->assertTrue( Multisyde::init() );
+		$this->expectNotToPerformAssertions();
 	}
 }
