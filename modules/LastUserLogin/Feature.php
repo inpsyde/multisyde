@@ -31,7 +31,7 @@ final class Feature implements LoadableFeature {
 		add_filter( 'manage_users_custom_column', array( __CLASS__, 'manage_users_custom_column' ), 10, 3 );
 
 		add_action( 'pre_get_users', array( __CLASS__, 'pre_get_users' ) );
-		add_action( 'set_auth_cookie', array( __CLASS__, 'record_last_logged_in' ), 10, 4 );
+		add_action( 'wp_login', array( __CLASS__, 'record_last_logged_in' ), 10, 2 );
 	}
 
 	/**
@@ -81,7 +81,7 @@ final class Feature implements LoadableFeature {
 		);
 
 		if ( ! $last_login ) {
-			return sprintf( '<span>%s</span>', esc_html__( '-', 'multisyde' ) );
+			return sprintf( '<span>%s</span>', esc_html__( '—', 'multisyde' ) );
 		}
 
 		$last_login->setTimezone( wp_timezone() );
@@ -89,7 +89,7 @@ final class Feature implements LoadableFeature {
 		return sprintf(
 			'<span title="%1$s">%2$s</span>',
 			$last_login->format( 'c' ),
-			$last_login->format( get_option( 'links_updated_date_format' ) )
+			$last_login->format( 'Y/m/d g:i:s a' )
 		);
 	}
 
@@ -124,20 +124,12 @@ final class Feature implements LoadableFeature {
 	/**
 	 * Record the last date a user logged in.
 	 *
-	 * Note: This might be before they agree to the new TOS, which is recorded separately.
-	 *
-	 * @param string $auth_cookie Authentication cookie value.
-	 * @param int    $expire The time the login grace period expires as a UNIX timestamp.
-	 *                                     Default is 12 hours past the cookie's expiration time.
-	 * @param int    $expiration The time when the authentication cookie expires as a UNIX timestamp.
-	 *                                     Default is 14 days from now.
-	 * @param int    $user_id User ID.
-	 *
-	 * @throws \Exception For hooked function.
+	 * @param string   $user_login User login name.
+	 * @param \WP_User $user User object.
 	 */
-	public static function record_last_logged_in( $auth_cookie, $expire, $expiration, $user_id ): void {
+	public static function record_last_logged_in( string $user_login, \WP_User $user ): void {
 		$login_at = new \DateTime( 'now', new \DateTimeZone( 'UTC' ) );
 
-		update_user_meta( $user_id, self::META_KEY, $login_at->format( 'Y-m-d H:i:s' ) );
+		update_user_meta( $user->ID, self::META_KEY, $login_at->format( 'Y-m-d H:i:s' ) );
 	}
 }

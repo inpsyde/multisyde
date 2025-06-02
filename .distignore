@@ -5,6 +5,7 @@
 .phpcs.xml.dist
 .phpunit.result.cache
 .wp-env.json
+.DS_Store
 /.git
 /.github
 /.idea
