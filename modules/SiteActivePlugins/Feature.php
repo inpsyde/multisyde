@@ -151,15 +151,11 @@ final class Feature implements LoadableFeature {
 		$this->active_plugins = array();
 
 		foreach ( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) {
-			$active_plugins = array_filter(
-				(array) get_blog_option( $site_id, 'active_plugins', array() ),
-				function ( $key ) {
-					return ! is_plugin_active_for_network( $key );
-				},
-				ARRAY_FILTER_USE_KEY
-			);
+			foreach ( (array) get_blog_option( $site_id, 'active_plugins', array() ) as $plugin ) {
+				if ( is_plugin_active_for_network( $plugin ) ) {
+					continue;
+				}
 
-			foreach ( $active_plugins as $plugin ) {
 				if ( ! isset( $this->active_plugins[ $plugin ] ) ) {
 					$this->active_plugins[ $plugin ] = array();
 				}
