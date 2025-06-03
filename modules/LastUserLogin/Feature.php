@@ -74,23 +74,13 @@ final class Feature implements LoadableFeature {
 			return $value;
 		}
 
-		$last_login = \DateTime::createFromFormat(
-			'Y-m-d H:i:s',
-			get_user_meta( $user_id, self::META_KEY, true ),
-			new \DateTimeZone( 'UTC' )
-		);
+		$last_login = get_user_meta( $user_id, self::META_KEY, true );
 
 		if ( ! $last_login ) {
 			return sprintf( '<span>%s</span>', esc_html__( '—', 'multisyde' ) );
 		}
 
-		$last_login->setTimezone( wp_timezone() );
-
-		return sprintf(
-			'<span title="%1$s">%2$s</span>',
-			$last_login->format( 'c' ),
-			$last_login->format( 'Y/m/d g:i:s a' )
-		);
+		return wp_date( __( 'Y/m/d g:i:s a' ), $last_login );
 	}
 
 	/**
@@ -128,8 +118,6 @@ final class Feature implements LoadableFeature {
 	 * @param \WP_User $user User object.
 	 */
 	public static function record_last_logged_in( string $user_login, \WP_User $user ): void {
-		$login_at = new \DateTime( 'now', new \DateTimeZone( 'UTC' ) );
-
-		update_user_meta( $user->ID, self::META_KEY, $login_at->format( 'Y-m-d H:i:s' ) );
+		update_user_meta( $user->ID, self::META_KEY, time() );
 	}
 }
