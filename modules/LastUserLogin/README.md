@@ -2,8 +2,6 @@
 
 This module adds a **"Last Login"** column to the **Network Admin > Users** screen in WordPress Multisite. It records and displays the last time each user logged into the network, helping administrators better understand user activity.
 
-![Screenshot](../../.wordpress.org/screenshot-4.png?raw=true "Admin Users Last Login Column")
-
 ## Features
 
 - Adds a **"Last Login"** column to the Network Users list.
