@@ -25,12 +25,12 @@ Each [feature](./modules/README.md) is self-contained and documented in its resp
 ## How to start
 
 The easiest way to start is to use the [WordPress Environment](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) package.
-```
-$ git clone git@github.com:inpsyde/multisyde.git
-$ cd multisyde
-$ composer install
-$ npm -g i @wordpress/env
-$ wp-env start
+```bash
+git clone git@github.com:inpsyde/multisyde.git
+cd multisyde
+composer install
+npm -g i @wordpress/env
+wp-env start
 ```
 
 The local environment will be available at http://localhost:8888 (Username: _admin_, Password: _password_).
