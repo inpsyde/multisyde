@@ -112,6 +112,7 @@ Additional files may be included:
 - `About.php`: Provides metadata for the presenter or integration with feature discovery.
 - `CHANGELOG.md`: Documents changes specific to the feature across versions.
 
+
 ## Reporting Issues
 
 If you run into bugs or want to suggest an improvement:
