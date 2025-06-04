@@ -63,7 +63,7 @@ final class Feature implements LoadableFeature {
 	/**
 	 * Display colum content
 	 *
-	 * @param string $value Value form before.
+	 * @param string $value Value from before.
 	 * @param string $column current column name.
 	 * @param int    $user_id user ID to display information for.
 	 *
@@ -76,11 +76,11 @@ final class Feature implements LoadableFeature {
 
 		$last_login = get_user_meta( $user_id, self::META_KEY, true );
 
-		if ( ! $last_login ) {
-			return sprintf( '<span>%s</span>', esc_html__( '—', 'multisyde' ) );
+		if ( $last_login ) {
+			$value = wp_date( __( 'Y/m/d g:i:s a' ), $last_login );
 		}
 
-		return wp_date( __( 'Y/m/d g:i:s a' ), $last_login );
+		return $value ?: esc_html__( '—', 'multisyde' );
 	}
 
 	/**
