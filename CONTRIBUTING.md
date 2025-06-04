@@ -34,7 +34,7 @@ We recommend using the [WordPress Environment](https://developer.wordpress.org/b
 ### Quick Start
 
 ```bash
-git clone git@github.com:syde-xyz/multisyde.git
+git clone git@github.com:inpsyde/multisyde.git
 cd multisyde
 composer install
 npm install -g @wordpress/env
@@ -85,12 +85,33 @@ Please include in your PR:
 
 ## Feature Structure
 
-Each feature is self-contained under the modules/ directory and typically includes:
-- A Feature class implementing LoadableFeature and optionally PresentableFeature
-- Hooks for the Network Admin interface, if applicable
-- A dedicated README.md with feature description and related Trac links
+### Example - `LastUserLogin`
 
-You can use GetSiteBy and SiteActivePlugins as reference implementations.
+Each feature is placed in its own directory under `modules/` and follows a clear, modular structure to ensure ease of development, maintenance, and testing. Using `LastUserLogin` as an example:
+
+#### 1. Feature Class (`Feature.php`)
+The `Feature` class:
+- Implements the `LoadableFeature` interface.
+- Hooks into WordPress' Network Admin screens (`manage_users-network_columns`, `wp_login`, etc.).
+- Defines constants (`COLUMN_KEY`, `META_KEY`) that uniquely identify the feature's logic and storage.
+- Handles:
+   - Display of the custom column.
+   - Recording login time via `wp_login` action.
+   - Sortability by login date in the user table.
+   - Conditional rendering based on user permissions.
+
+#### 2. Module README (`README.md`)
+The module includes a dedicated `README.md` file that:
+- Describes the purpose and functionality of the feature.
+- Outlines how it works and key implementation details.
+- Includes screenshots and practical use cases.
+- Credits the original developer, if applicable.
+
+#### 3. Optional Metadata Files
+Additional files may be included:
+- `About.php`: Provides metadata for the presenter or integration with feature discovery.
+- `CHANGELOG.md`: Documents changes specific to the feature across versions.
+
 
 ## Reporting Issues
 
