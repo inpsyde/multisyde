@@ -32,6 +32,10 @@ This module adds a **"Last Login"** column to the **Network Admin > Users** scre
 - Improve network management by sorting users by activity.
 - Audit logins for security or engagement tracking.
 
+## Screenshots
+
+![Last User Login](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-4.png?raw=true)
+
 ## Author
 
 Originally developed by [Daniel Huesken](https://profiles.wordpress.org/danielhuesken/)

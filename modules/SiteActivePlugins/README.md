@@ -26,3 +26,8 @@ It adds a new **"Sites deactivate"** link next to plugins that are active on ind
 ## Related WordPress Core Ticket
 
 This feature is inspired by [Trac ticket #53255](https://core.trac.wordpress.org/ticket/53255).
+
+## Screenshots
+
+![Site Active Plugins 1](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-2.png?raw=true)
+![Site Active Plugins 2](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-3.png?raw=true)
