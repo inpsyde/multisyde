@@ -80,7 +80,7 @@ final class Feature implements LoadableFeature {
 			$value = wp_date( __( 'Y/m/d g:i:s a' ), $last_login );
 		}
 
-		return $value ?: esc_html__( '—', 'multisyde' );
+		return false !== $value ? $value : esc_html__( '—', 'multisyde' );
 	}
 
 	/**
