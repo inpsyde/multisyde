@@ -2,7 +2,6 @@
 
 This module adds a **"Last Login"** column to the **Network Admin > Users** screen in WordPress Multisite. It records and displays the last time each user logged into the network, helping administrators better understand user activity.
 
-![Last User Login](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-4.png?raw=true)
 ## Features
 
 - Adds a **"Last Login"** column to the Network Users list.
@@ -32,6 +31,10 @@ This module adds a **"Last Login"** column to the **Network Admin > Users** scre
 - Identify inactive users across the network.
 - Improve network management by sorting users by activity.
 - Audit logins for security or engagement tracking.
+
+## Screenshots
+
+![Last User Login](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-4.png?raw=true)
 
 ## Author
 

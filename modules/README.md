@@ -2,6 +2,10 @@
 
 This plugin provides various improvements for WordPress multisite installations.
 
+## Screenhots
+
+![Multisyde](https://github.com/inpsyde/multisyde/blob/main/.wordpress-org/screenshot-1.png?raw=true)
+
 ## Available Features
 
 | Title                                                                     | Description                                                                                                                                              | Trac Tickets / GitHub Issues                           |
