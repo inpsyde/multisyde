@@ -39,7 +39,7 @@ The database credentials are: user _root_, password _password_.
 
 ## Contributing
 
-If you want to contribute to the plugin, please fork the repository on GitHub and submit a pull request with your changes. We welcome contributions from the community to improve the plugin and its features.
+If you want to [contribute to the plugin](./CONTRIBUTING.md), please fork the repository on GitHub and submit a pull request with your changes. We welcome contributions from the community to improve the plugin and its features.
 
 ## License
 
