@@ -34,4 +34,4 @@ This module adds a **"Last Login"** column to the **Network Admin > Users** scre
 
 ## Author
 
-Developed by [Daniel Huesken](https://profiles.wordpress.org/danielhuesken/)  
+Originally developed by [Daniel Huesken](https://profiles.wordpress.org/danielhuesken/)
