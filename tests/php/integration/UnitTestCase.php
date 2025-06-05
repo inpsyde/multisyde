@@ -7,11 +7,11 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisydeIntegrationTests;
+namespace Syde\MultiSydeIntegrationTests;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * Generic unit test case for Multisyde.
+ * Generic unit test case for MultiSyde.
  */
 class UnitTestCase extends TestCase {}

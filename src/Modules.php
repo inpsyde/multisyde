@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Syde\Multisyde;
+namespace Syde\MultiSyde;
 
 /**
  * Class Modules

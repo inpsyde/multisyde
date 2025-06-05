@@ -7,11 +7,11 @@
 
 declare( strict_types=1 );
 
-namespace Syde\Multisyde\Modules\SiteActivePlugins\tests\unit;
+namespace Syde\MultiSyde\Modules\SiteActivePlugins\tests\unit;
 
 use Brain\Monkey\Functions;
-use Syde\Multisyde\Modules\SiteActivePlugins\Feature;
-use Syde\MultisydeUnitTests\UnitTestCase;
+use Syde\MultiSyde\Modules\SiteActivePlugins\Feature;
+use Syde\MultiSydeUnitTests\UnitTestCase;
 
 /**
  * Test the SiteActivePlugins class.

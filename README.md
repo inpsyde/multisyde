@@ -1,4 +1,4 @@
-# Multisyde
+# MultiSyde
 
 A WordPress plugin that explores potential improvements for WordPress Multisite.
 

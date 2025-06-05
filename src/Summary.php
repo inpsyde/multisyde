@@ -5,7 +5,7 @@
  * @package multisyde
  */
 
-namespace Syde\Multisyde;
+namespace Syde\MultiSyde;
 
 /**
  * This class is used to store information about a feature.

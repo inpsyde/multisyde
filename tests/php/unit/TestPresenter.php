@@ -7,13 +7,13 @@
 
 declare(strict_types = 1);
 
-namespace Syde\MultisydeUnitTests;
+namespace Syde\MultiSydeUnitTests;
 
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
-use Syde\Multisyde\Modules;
-use Syde\Multisyde\Presenter;
+use Syde\MultiSyde\Modules;
+use Syde\MultiSyde\Presenter;
 
 /**
  * Test the Presenter class.
@@ -44,8 +44,8 @@ class TestPresenter extends UnitTestCase {
 		$test    = new Presenter( $modules );
 
 		Functions\expect( 'add_menu_page' )->once()->with(
-			'Multisyde',
-			'Multisyde',
+			'MultiSyde',
+			'MultiSyde',
 			'manage_network',
 			'multisyde',
 			array( $test, 'render_overview_page' ),
@@ -71,7 +71,7 @@ class TestPresenter extends UnitTestCase {
 
 		( new Presenter( $modules ) )->render_overview_page();
 
-		$this->expectOutputRegex( '/.*Multisyde.*This plugin provides various improvements for WordPress multisite installations.*/' );
+		$this->expectOutputRegex( '/.*MultiSyde.*This plugin provides various improvements for WordPress multisite installations.*/' );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class TestPresenter extends UnitTestCase {
 	}
 
 	/**
-	 * Test the get_admin_footer_text method when not on the Multisyde network admin page.
+	 * Test the get_admin_footer_text method when not on the MultiSyde network admin page.
 	 *
 	 * @return void
 	 */

@@ -5,7 +5,7 @@
  * @package multisyde
  */
 
-namespace Syde\Multisyde;
+namespace Syde\MultiSyde;
 
 /**
  * This class is responsible for presenting the features of the plugin in the network admin menu.
@@ -55,8 +55,8 @@ final class Presenter {
 	 */
 	public function add_network_admin_menu(): void {
 		add_menu_page(
-			__( 'Multisyde', 'multisyde' ),
-			__( 'Multisyde', 'multisyde' ),
+			__( 'MultiSyde', 'multisyde' ),
+			__( 'MultiSyde', 'multisyde' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
 			array( $this, 'render_overview_page' ),
@@ -71,7 +71,7 @@ final class Presenter {
 	 */
 	public function render_overview_page(): void {
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Multisyde', 'multisyde' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'MultiSyde', 'multisyde' ) . '</h1>';
 		echo '<p>' . esc_html__( 'This plugin provides various improvements for WordPress multisite installations.', 'multisyde' ) . '</p>';
 
 		echo '<h2>' . esc_html__( 'Available Features', 'multisyde' ) . '</h2>';

@@ -8,9 +8,9 @@
 
 declare(strict_types=1);
 
-namespace Syde\Multisyde\Modules\LastUserLogin;
+namespace Syde\MultiSyde\Modules\LastUserLogin;
 
-use Syde\Multisyde\LoadableFeature;
+use Syde\MultiSyde\LoadableFeature;
 
 /**
  * Feature Class LastUserLogin

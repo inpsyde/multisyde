@@ -1,6 +1,6 @@
-﻿=== Multisyde ===
+﻿=== MultiSyde ===
 
-Contributors: realloc
+Contributors: syde, realloc
 Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 6.8

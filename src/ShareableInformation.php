@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Syde\Multisyde;
+namespace Syde\MultiSyde;
 
 /**
  * This interface is used to define a contract for classes that provide feature information.

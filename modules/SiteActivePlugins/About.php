@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Syde\Multisyde\Modules\SiteActivePlugins;
+namespace Syde\MultiSyde\Modules\SiteActivePlugins;
 
-use Syde\Multisyde\Summary;
-use Syde\Multisyde\ShareableInformation;
+use Syde\MultiSyde\Summary;
+use Syde\MultiSyde\ShareableInformation;
 
 /**
  * Provides information about the SiteActivePlugins feature.

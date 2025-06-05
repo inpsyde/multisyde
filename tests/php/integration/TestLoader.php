@@ -7,9 +7,9 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisydeIntegrationTests;
+namespace Syde\MultiSydeIntegrationTests;
 
-use Syde\Multisyde\Multisyde;
+use Syde\MultiSyde\MultiSyde;
 
 /**
  * Test the Loader class.
