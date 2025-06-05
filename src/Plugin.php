@@ -12,7 +12,7 @@ namespace Syde\MultiSyde;
 /**
  * Class Loader
  */
-class MultiSyde {
+class Plugin {
 
 	/**
 	 * Hook into WordPress.

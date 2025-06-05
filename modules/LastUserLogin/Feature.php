@@ -77,7 +77,7 @@ final class Feature implements LoadableFeature {
 		$last_login = get_user_meta( $user_id, self::META_KEY, true );
 
 		if ( $last_login ) {
-			$value = wp_date( __( 'Y/m/d g:i:s a' ), $last_login );
+			$value = wp_date( __( 'Y/m/d g:i:s a', 'multisyde' ), $last_login );
 		}
 
 		return false !== $value ? $value : esc_html__( '—', 'multisyde' );
