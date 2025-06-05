@@ -7,15 +7,14 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisydeIntegrationTests;
+namespace Syde\MultiSydeIntegrationTests;
 
-use Syde\Multisyde\Multisyde;
+use Syde\MultiSyde\Plugin;
 
 /**
  * Test the Loader class.
  *
  * @internal
- * @coversDefaultClass \Syde\MultisiteImprovements\ImprovementsLoader
  */
 class TestLoader extends UnitTestCase {
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Multisyde
+ * Plugin Name:       MultiSyde
  * Plugin URI:        https://github.com/inpsyde/multisyde
  * Description:       A WordPress plugin that explores potential improvements for WordPress Multisite.
  * Version:           1.0.0
@@ -26,4 +26,4 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-Syde\Multisyde\Multisyde::init();
+Syde\MultiSyde\Plugin::init();

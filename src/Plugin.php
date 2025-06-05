@@ -7,12 +7,12 @@
 
 declare( strict_types=1 );
 
-namespace Syde\Multisyde;
+namespace Syde\MultiSyde;
 
 /**
  * Class Loader
  */
-class Multisyde {
+class Plugin {
 
 	/**
 	 * Hook into WordPress.

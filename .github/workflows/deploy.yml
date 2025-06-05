@@ -1,0 +1,34 @@
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+    - "*"
+jobs:
+  tag:
+    name: New tag
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    timeout-minutes: 70
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Composer dependencies
+        run: composer install --no-dev --no-interaction --optimize-autoloader
+      - name: Composer build
+        run: composer run-script build
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        id: deploy
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: multisyde
+        with:
+          generate-zip: true
+      - name: Attest build provenance
+        uses: johnbillion/action-wordpress-plugin-attestation@0.7.1
+        with:
+          zip-path: ${{ steps.deploy.outputs.zip-path }}

@@ -7,9 +7,9 @@
 
 declare( strict_types=1 );
 
-namespace Syde\MultisydeUnitTests;
+namespace Syde\MultiSydeUnitTests;
 
-use Syde\Multisyde\Modules;
+use Syde\MultiSyde\Modules;
 
 /**
  * Test the Modules class.

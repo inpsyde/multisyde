@@ -18,14 +18,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Syde\\Multisyde\\": "src/",
-            "Syde\\Multisyde\\Modules\\": "modules/"
+            "Syde\\MultiSyde\\": "src/",
+            "Syde\\MultiSyde\\Modules\\": "modules/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Syde\\MultisydeUnitTests\\": "tests/php/unit/",
-            "Syde\\MultisydeIntegrationTests\\": "tests/php/integration/"
+            "Syde\\MultiSydeUnitTests\\": "tests/php/unit/",
+            "Syde\\MultiSydeIntegrationTests\\": "tests/php/integration/"
         }
     },
     "minimum-stability": "stable",

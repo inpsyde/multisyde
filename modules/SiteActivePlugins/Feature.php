@@ -5,9 +5,9 @@
  * @package multisyde
  */
 
-namespace Syde\Multisyde\Modules\SiteActivePlugins;
+namespace Syde\MultiSyde\Modules\SiteActivePlugins;
 
-use Syde\Multisyde\LoadableFeature;
+use Syde\MultiSyde\LoadableFeature;
 
 /**
  * Feature Class SiteActivePlugins

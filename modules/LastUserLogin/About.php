@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Syde\Multisyde\Modules\LastUserLogin;
+namespace Syde\MultiSyde\Modules\LastUserLogin;
 
-use Syde\Multisyde\Summary;
-use Syde\Multisyde\ShareableInformation;
+use Syde\MultiSyde\Summary;
+use Syde\MultiSyde\ShareableInformation;
 
 /**
  * Provides information about the LastUserLogin feature.

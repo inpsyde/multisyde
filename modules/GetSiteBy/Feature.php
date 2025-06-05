@@ -7,9 +7,9 @@
 
 declare( strict_types=1 );
 
-namespace Syde\Multisyde\Modules\GetSiteBy;
+namespace Syde\MultiSyde\Modules\GetSiteBy;
 
-use Syde\Multisyde\LoadableFeature;
+use Syde\MultiSyde\LoadableFeature;
 
 /**
  * Feature Class GetSiteBy
