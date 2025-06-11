@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="CS">
+    <description>PHPCS example</description>
+    <config name="testVersion" value="7.4-"/>
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <arg value="ps"/>
+    <arg name="colors"/>
+    <arg name="parallel" value="100"/>
+    <arg name="extensions" value="php"/>
+    <arg name="cache" value=".phpcs.cache"/>
+
+    <rule ref="WordPress">
+        <!-- PSR4 -->
+        <exclude name="WordPress.Files.FileName" />
+    </rule>
+    <rule ref="WordPress-Extra"/>
+    <rule ref="WordPress-Docs"/>
+</ruleset>

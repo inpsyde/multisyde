@@ -1,0 +1,11 @@
+.idea/
+.phpcs.cache
+.phpunit.result.cache
+.phpunit.cache
+.DS_Store
+composer.lock
+multisyde.zip
+multisyde/
+node_modules/
+tests/coverage/
+vendor/

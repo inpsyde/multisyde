@@ -1,0 +1,8 @@
+{
+    "core": "../wordpress-develop/src",
+    "multisite": true,
+    "plugins": [
+        ".",
+        "https://downloads.wordpress.org/plugin/query-monitor.zip"
+    ]
+}

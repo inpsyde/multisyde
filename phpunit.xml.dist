@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         backupGlobals="true"
+         colors="true"
+         bootstrap="tests/php/unit/bootstrap.php"
+>
+  <php>
+    <const name="WP_PLUGIN_DIR" value="/var/www/html/wp-content/plugins"/>
+  </php>
+
+  <testsuites>
+    <testsuite name="Unit tests">
+      <directory prefix="Test" suffix=".php">tests/php/unit</directory>
+      <directory prefix="Test" suffix=".php">modules/*/tests/unit</directory>
+    </testsuite>
+  </testsuites>
+
+  <coverage>
+    <include>
+      <directory suffix=".php">src</directory>
+      <directory suffix=".php">modules</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">modules/*/tests</directory>
+    </exclude>
+  </coverage>
+</phpunit>

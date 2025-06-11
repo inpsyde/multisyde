@@ -1,0 +1,12 @@
+name: Code Style
+on: [push]
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Composer dependencies
+        run: composer install
+      - name: Run Testsuite
+        run: composer run-script lint
