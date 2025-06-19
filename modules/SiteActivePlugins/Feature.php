@@ -150,6 +150,8 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public function populate_active_plugins(): void {
+		$this->active_plugins = array();
+
 		/**
 		 * Filter to set the maximum number of sites to show for each plugin.
 		 *
@@ -158,15 +160,17 @@ final class Feature implements LoadableFeature {
 		 * @param int $max_sites The maximum number of sites to show for each plugin.
 		 */
 		$max_sites = apply_filters( 'site_active_plugins_max_sites', self::DEFAULT_MAX_SITES );
-
-		$this->active_plugins = array();
-		foreach ( get_sites(
+		$site_ids  = get_sites(
 			array(
 				'fields' => 'ids',
 				'number' => $max_sites,
 			)
-		) as $site_id ) {
-			foreach ( (array) get_blog_option( $site_id, 'active_plugins', array() ) as $plugin ) {
+		);
+
+		foreach ( $site_ids as $site_id ) {
+			$active_plugins = get_blog_option( $site_id, 'active_plugins', array() );
+
+			foreach ( $active_plugins as $plugin ) {
 				if ( is_plugin_active_for_network( $plugin ) ) {
 					continue;
 				}
