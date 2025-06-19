@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Syde\MultiSyde\Modules\SiteActivePlugins\tests\unit;
 
 use Brain\Monkey\Functions;
+use Brain\Monkey\Filters;
 use Syde\MultiSyde\Modules\SiteActivePlugins\Feature;
 use Syde\MultiSydeUnitTests\UnitTestCase;
 
@@ -178,6 +179,41 @@ final class TestFeature extends UnitTestCase {
 		$obj->populate_active_plugins();
 
 		$this->assertSame( $expected_links, $obj->add_action_link( $given_links, $active_plugins[0] ) );
+	}
+
+	/**
+	 * Test the populate_active_plugins method with an network-wide active plugin.
+	 *
+	 * @return void
+	 */
+	public function test_populate_active_plugins_network_active(): void {
+		Functions\expect( 'get_sites' )->once()->andReturn( array( 1 ) );
+		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins', array() )->andReturn( array( 'plugin/plugin.php' ) );
+		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( true );
+
+		( new Feature() )->populate_active_plugins();
+	}
+
+	/**
+	 * Test the populate_active_plugins method with a maximum number of sites.
+	 *
+	 * @return void
+	 */
+	public function test_populate_active_plugins_max_sites(): void {
+		$max_sites = 5;
+
+		Filters\expectApplied( 'site_active_plugins_max_sites' )->once()->with( 100 )->andReturn( $max_sites );
+
+		$args = array(
+			'fields' => 'ids',
+			'number' => $max_sites,
+		);
+
+		Functions\expect( 'get_sites' )->once()->with( $args )->andReturn( range( 1, $max_sites ) );
+		Functions\expect( 'get_blog_option' )->times( $max_sites )->andReturn( array( 'plugin/plugin.php' ) );
+		Functions\expect( 'is_plugin_active_for_network' )->times( $max_sites )->andReturn( false );
+
+		( new Feature() )->populate_active_plugins();
 	}
 
 	/**

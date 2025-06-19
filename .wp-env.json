@@ -1,5 +1,5 @@
 {
-    "core": "../wordpress-develop/src",
+    "phpVersion": "8.1",
     "multisite": true,
     "plugins": [
         ".",
