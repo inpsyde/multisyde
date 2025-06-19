@@ -2,127 +2,153 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Multisyde 1.0.0\n"
+"Project-Id-Version: MultiSyde 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/multisyde\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-29T09:12:08+00:00\n"
+"POT-Creation-Date: 2025-06-19T09:42:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: multisyde\n"
 
 #. Plugin Name of the plugin
-#: index.php
+#: multisyde.php
+#: multisyde/src/Presenter.php:58
+#: multisyde/src/Presenter.php:59
+#: multisyde/src/Presenter.php:74
 #: src/Presenter.php:58
 #: src/Presenter.php:59
 #: src/Presenter.php:74
-msgid "Multisyde"
+msgid "MultiSyde"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: index.php
+#: multisyde.php
 msgid "https://github.com/inpsyde/multisyde"
 msgstr ""
 
 #. Description of the plugin
-#: index.php
+#: multisyde.php
 msgid "A WordPress plugin that explores potential improvements for WordPress Multisite."
 msgstr ""
 
 #. Author of the plugin
-#: index.php
+#: multisyde.php
 msgid "Syde"
 msgstr ""
 
 #. Author URI of the plugin
-#: index.php
+#: multisyde.php
 msgid "https://syde.com"
 msgstr ""
 
 #: modules/GetSiteBy/About.php:27
+#: multisyde/modules/GetSiteBy/About.php:27
 msgid "Introduce `get_site_by()` function for multisite"
 msgstr ""
 
 #: modules/GetSiteBy/About.php:28
+#: multisyde/modules/GetSiteBy/About.php:28
 msgid "Provides a utility function to retrieve a site object from the multisite network using a specific field such as ID, slug, domain, path, or full URL. This makes it easier to locate subsites without relying on raw SQL or manual loops."
 msgstr ""
 
 #: modules/LastUserLogin/About.php:27
+#: multisyde/modules/LastUserLogin/About.php:27
 msgid "Last User Login"
 msgstr ""
 
 #: modules/LastUserLogin/About.php:28
-msgid "Adds a sortable “Last Login” column to the Network Users screen and tracks when users last logged into the network."
+#: multisyde/modules/LastUserLogin/About.php:28
+msgid "This module enhances the Network Admin Users screen in WordPress Multisite by adding a “Last Login” column. It automatically records the timestamp each time a user logs in and displays it in a readable, timezone-aware format."
 msgstr ""
 
 #: modules/LastUserLogin/Feature.php:45
 #: modules/LastUserLogin/Feature.php:58
+#: multisyde/modules/LastUserLogin/Feature.php:45
+#: multisyde/modules/LastUserLogin/Feature.php:58
 msgid "Last Login"
 msgstr ""
 
-#: modules/LastUserLogin/Feature.php:86
-#: modules/LastUserLogin/Feature.php:87
-msgid "Never"
+#: modules/LastUserLogin/Feature.php:80
+msgid "Y/m/d g:i:s a"
+msgstr ""
+
+#: modules/LastUserLogin/Feature.php:83
+#: multisyde/modules/LastUserLogin/Feature.php:83
+msgid "—"
 msgstr ""
 
 #: modules/SiteActivePlugins/About.php:27
+#: multisyde/modules/SiteActivePlugins/About.php:27
 msgid "Site Active Plugins"
 msgstr ""
 
 #: modules/SiteActivePlugins/About.php:28
+#: multisyde/modules/SiteActivePlugins/About.php:28
 msgid "Displays which plugins are active on each site in the network. Adds a “Sites deactivate” link to the Network Admin Plugins page with a modal that lists subsites using the plugin. Supports selective bulk deactivation across subsites."
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Number of sites.
-#: modules/SiteActivePlugins/Feature.php:86
+#: modules/SiteActivePlugins/Feature.php:87
+#: multisyde/modules/SiteActivePlugins/Feature.php:85
 msgid "The plugin \"%1$s\" has been deactivated on %2$d site."
 msgid_plural "The plugin \"%1$s\" has been deactivated on %2$d sites."
 msgstr[0] ""
 msgstr[1] ""
 
+#: modules/SiteActivePlugins/Feature.php:222
+#: multisyde/modules/SiteActivePlugins/Feature.php:207
+msgid "Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site."
+msgstr ""
+
+#: modules/SiteActivePlugins/Feature.php:247
+#: multisyde/modules/SiteActivePlugins/Feature.php:232
+msgid "Deactivate on selected sites"
+msgstr ""
+
 #. translators: 1: Plugin Name, 2: Number of sites.
-#: modules/SiteActivePlugins/Feature.php:185
+#: modules/SiteActivePlugins/Feature.php:268
+#: multisyde/modules/SiteActivePlugins/Feature.php:253
 msgid "\"%1$s\" is active in %2$d site"
 msgid_plural "\"%1$s\" is active in %2$d sites"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/SiteActivePlugins/Feature.php:197
+#: modules/SiteActivePlugins/Feature.php:280
+#: multisyde/modules/SiteActivePlugins/Feature.php:265
 msgid "Sites deactivate"
 msgstr ""
 
-#: modules/SiteActivePlugins/Feature.php:246
-msgid "Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site."
-msgstr ""
-
-#: modules/SiteActivePlugins/Feature.php:271
-msgid "Deactivate on selected sites"
-msgstr ""
-
+#: multisyde/src/Presenter.php:75
 #: src/Presenter.php:75
 msgid "This plugin provides various improvements for WordPress multisite installations."
 msgstr ""
 
+#: multisyde/src/Presenter.php:77
 #: src/Presenter.php:77
 msgid "Available Features"
 msgstr ""
 
+#: multisyde/src/Presenter.php:84
 #: src/Presenter.php:84
 msgid "Title"
 msgstr ""
 
+#: multisyde/src/Presenter.php:85
 #: src/Presenter.php:85
 msgid "Description"
 msgstr ""
 
+#: multisyde/src/Presenter.php:86
 #: src/Presenter.php:86
 msgid "Tickets"
 msgstr ""
 
 #. translators: 1: dashicon, 2: opening HTML tag for a link, 3: closing HTML tags for a link.
+#: multisyde/src/Presenter.php:128
 #: src/Presenter.php:128
 msgid "Made with %1$s by %2$sSyde%3$s."
 msgstr ""
