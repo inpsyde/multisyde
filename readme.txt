@@ -5,7 +5,7 @@ Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ Option 1: Install via Network Admin
 Option 2: Manual Installation
 * Download or clone the plugin into your /wp-content/plugins/ directory: /wp-content/plugins/multisyde
 * Go to Network Admin → Plugins (/wp-admin/network/plugins.php).
-* Locate Multisyde in the list and click "Network Activate".
+* Locate MultiSyde in the list and click "Network Activate".
 
 This plugin is intended for WordPress Multisites and must be activated network-wide.
 

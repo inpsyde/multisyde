@@ -1,6 +1,6 @@
-# Contributing to Multisyde
+# Contributing to MultiSyde
 
-Thanks for your interest in contributing to Multisyde!
+Thanks for your interest in contributing to MultiSyde!
 
 This plugin explores improvements for the WordPress Multisite experience, especially around usability, visibility, and admin workflows. Whether you're here to fix a bug, suggest an enhancement, or build something new — you're welcome!
 
@@ -127,5 +127,5 @@ Be respectful and inclusive in all your interactions.
 
 ---
 
-Thanks for helping improve Multisyde! ❤️
+Thanks for helping improve MultiSyde! ❤️
 — The Syde Team
