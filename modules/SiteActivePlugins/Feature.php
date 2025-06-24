@@ -17,6 +17,8 @@ final class Feature implements LoadableFeature {
 	const ACTION_DEACTIVATION = 'bulk_deactivate';
 	const NOTICE_DEACTIVATION = 'bulk_deactivated';
 
+	const DEFAULT_MAX_SITES = 100;
+
 	/**
 	 * The active plugins in the sites in the network.
 	 *
@@ -150,8 +152,25 @@ final class Feature implements LoadableFeature {
 	public function populate_active_plugins(): void {
 		$this->active_plugins = array();
 
-		foreach ( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) {
-			foreach ( (array) get_blog_option( $site_id, 'active_plugins', array() ) as $plugin ) {
+		/**
+		 * Filter to set the maximum number of sites to show for each plugin.
+		 *
+		 * @since 1.0.1
+		 *
+		 * @param int $max_sites The maximum number of sites to show for each plugin.
+		 */
+		$max_sites = apply_filters( 'site_active_plugins_max_sites', self::DEFAULT_MAX_SITES );
+		$site_ids  = get_sites(
+			array(
+				'fields' => 'ids',
+				'number' => $max_sites,
+			)
+		);
+
+		foreach ( $site_ids as $site_id ) {
+			$active_plugins = get_blog_option( $site_id, 'active_plugins', array() );
+
+			foreach ( $active_plugins as $plugin ) {
 				if ( is_plugin_active_for_network( $plugin ) ) {
 					continue;
 				}
