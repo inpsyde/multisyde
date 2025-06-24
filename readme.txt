@@ -35,4 +35,9 @@ This plugin is intended for WordPress Multisites and must be activated network-w
 
 == Contributing ==
 
-If you want to contribute to the plugin, please fork the repository on GitHub and submit a pull request with your changes. We welcome contributions from the community to improve the plugin and its features.
+If you want to contribute to the plugin, please fork the [repository on GitHub](https://github.com/inpsyde/multisyde/ "MultiSyde Repository") and submit a pull request with your changes. We welcome contributions from the community to improve the plugin and its features.
+
+== Changelog ==
+
+= 1.0.1 =
+* [Site Active Plugins](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActivePlugins/README.md): Added a filter to allow other plugins to modify the list of active plugins on a site.
