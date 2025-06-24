@@ -29,7 +29,7 @@ Option 1: Install via Network Admin
 Option 2: Manual Installation
 * Download or clone the plugin into your /wp-content/plugins/ directory: /wp-content/plugins/multisyde
 * Go to Network Admin → Plugins (/wp-admin/network/plugins.php).
-* Locate Multisyde in the list and click "Network Activate".
+* Locate MultiSyde in the list and click "Network Activate".
 
 This plugin is intended for WordPress Multisites and must be activated network-wide.
 
