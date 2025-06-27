@@ -128,6 +128,10 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 3. Site Active Plugins management with bulk deactivation modal
 4. Advanced site retrieval using get_site_by() function
 
+== Upgrade Notice ==
+
+Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
+
 == Changelog ==
 
 = 1.0.1 =
