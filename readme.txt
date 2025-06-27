@@ -75,7 +75,6 @@ Each feature is designed to solve specific challenges that Multisite administrat
 
 MultiSyde is functional but also serves as a proof-of-concept and exploration tool. It's designed to demonstrate potential improvements and gather community feedback. Use in production environments should be carefully evaluated based on your specific needs and risk tolerance.
 
-
 = How can I contribute to the project? =
 
 We welcome contributions! You can:
