@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-19T09:42:16+00:00\n"
+"POT-Creation-Date: 2025-06-24T08:38:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: multisyde\n"
@@ -73,6 +73,7 @@ msgid "Last Login"
 msgstr ""
 
 #: modules/LastUserLogin/Feature.php:80
+#: multisyde/modules/LastUserLogin/Feature.php:80
 msgid "Y/m/d g:i:s a"
 msgstr ""
 
@@ -93,32 +94,32 @@ msgstr ""
 
 #. translators: 1: Plugin Name, 2: Number of sites.
 #: modules/SiteActivePlugins/Feature.php:87
-#: multisyde/modules/SiteActivePlugins/Feature.php:85
+#: multisyde/modules/SiteActivePlugins/Feature.php:87
 msgid "The plugin \"%1$s\" has been deactivated on %2$d site."
 msgid_plural "The plugin \"%1$s\" has been deactivated on %2$d sites."
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/SiteActivePlugins/Feature.php:222
-#: multisyde/modules/SiteActivePlugins/Feature.php:207
+#: modules/SiteActivePlugins/Feature.php:226
+#: multisyde/modules/SiteActivePlugins/Feature.php:226
 msgid "Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site."
 msgstr ""
 
-#: modules/SiteActivePlugins/Feature.php:247
-#: multisyde/modules/SiteActivePlugins/Feature.php:232
+#: modules/SiteActivePlugins/Feature.php:251
+#: multisyde/modules/SiteActivePlugins/Feature.php:251
 msgid "Deactivate on selected sites"
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Number of sites.
-#: modules/SiteActivePlugins/Feature.php:268
-#: multisyde/modules/SiteActivePlugins/Feature.php:253
+#: modules/SiteActivePlugins/Feature.php:272
+#: multisyde/modules/SiteActivePlugins/Feature.php:272
 msgid "\"%1$s\" is active in %2$d site"
 msgid_plural "\"%1$s\" is active in %2$d sites"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/SiteActivePlugins/Feature.php:280
-#: multisyde/modules/SiteActivePlugins/Feature.php:265
+#: modules/SiteActivePlugins/Feature.php:284
+#: multisyde/modules/SiteActivePlugins/Feature.php:284
 msgid "Sites deactivate"
 msgstr ""
 

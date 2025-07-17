@@ -23,6 +23,22 @@ It adds a new **"Sites deactivate"** link next to plugins that are active on ind
 4. Select sites from the modal and submit
 5. Receive a confirmation notice in the dashboard
 
+## 🔌 Customization
+
+### Filter: `site_active_plugins_max_sites`
+
+You can customize the maximum number of sites to scan for site-level plugin usage using the `site_active_plugins_max_sites` filter. The default value is 100. If the number of sites in the network exceeds this limit, the feature will skip data collection to avoid performance issues.
+
+#### Example:
+
+```php
+add_filter( 'site_active_plugins_max_sites', function ( int $max ): int {
+    return 200; // Allow scanning up to 200 sites
+} );
+```
+
+This filter is useful if your network is midsize and you still want to benefit from the feature, or if you want to lower the limit for performance reasons.
+
 ## Related WordPress Core Ticket
 
 This feature is inspired by [Trac ticket #53255](https://core.trac.wordpress.org/ticket/53255).

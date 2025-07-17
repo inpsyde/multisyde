@@ -45,7 +45,8 @@
         "yoast/phpunit-polyfills": "^3.1",
         "phpunit/phpunit": "^9.6",
         "brain/monkey": "^2.0@dev",
-        "phpstan/phpstan-mockery": "^2.0"},
+        "phpstan/phpstan-mockery": "^2.0"
+    },
     "scripts": {
         "tests:unit": "vendor/bin/phpunit -c phpunit.xml.dist",
         "tests:integration": "vendor/bin/phpunit -c integration.xml.dist",

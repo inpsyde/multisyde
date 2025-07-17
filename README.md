@@ -6,7 +6,7 @@ Developed as part of Syde’s initiative to improve the Multisite experience by 
 
 ## Vision and Purpose
 
-Multisyde is a proof-of-concept plugin created by Syde to explore and demonstrate improvements to the WordPress Multisite experience.
+MultiSyde is a proof-of-concept plugin created by Syde to explore and demonstrate improvements to the WordPress Multisite experience.
 
 Multisite is a powerful but often overlooked feature of WordPress. Our goal is to bring more visibility, usability, and flexibility to network administrators and developers working with Multisite networks - through small, focused improvements that solve real-world pain points.
 
