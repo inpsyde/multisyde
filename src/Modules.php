@@ -19,15 +19,38 @@ class Modules {
 	 *
 	 * @var array<class-string<LoadableFeature>, class-string<ShareableInformation>> $config
 	 */
-	private array $config = array();
+	private array $config;
+
+	/**
+	 * Initializes the Modules class with the configuration from the modules config file.
+	 *
+	 * @return self
+	 */
+	public static function init(): self {
+		$config = apply_filters( 'syde_multisyde_modules_init', require __DIR__ . '/../modules/config.php' );
+
+		return new self( $config );
+	}
 
 	/**
 	 * Constructor for the Modules class.
 	 *
-	 * This constructor loads the configuration from the specified path.
+	 * @param array<class-string<LoadableFeature>, class-string<ShareableInformation>> $config
 	 */
-	public function __construct() {
-		$this->config = require __DIR__ . '/../modules/config.php';
+	public function __construct( array $config ) {
+		$this->config = array_filter( $config, array( __CLASS__, 'filter' ),ARRAY_FILTER_USE_BOTH );
+	}
+
+	/**
+	 * Filters the configuration to ensure that only valid loadable features and shareable information classes are included.
+	 *
+	 * @param mixed $info
+	 * @param mixed $module
+	 *
+	 * @return bool
+	 */
+	public static function filter( $info, $module ): bool {
+		return is_subclass_of( $module, LoadableFeature::class ) && is_subclass_of( $info, ShareableInformation::class );
 	}
 
 	/**
@@ -46,7 +69,7 @@ class Modules {
 	 *
 	 * @return array<class-string<LoadableFeature>, class-string<ShareableInformation>>
 	 */
-	public function get_presentable_features(): array {
+	public function features(): array {
 		return $this->config;
 	}
 }

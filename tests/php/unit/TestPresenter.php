@@ -62,7 +62,7 @@ class TestPresenter extends UnitTestCase {
 	 */
 	public function test_render_overview_page(): void {
 		$modules = \Mockery::mock( Modules::class );
-		$modules->shouldReceive( 'get_presentable_features' )->andReturn(
+		$modules->shouldReceive( 'features' )->andReturn(
 			array(
 				Modules\SiteActivePlugins\Feature::class => Modules\SiteActivePlugins\About::class,
 				Modules\GetSiteBy\Feature::class         => Modules\GetSiteBy\About::class,

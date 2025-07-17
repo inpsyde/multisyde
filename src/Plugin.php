@@ -33,6 +33,6 @@ class Plugin {
 			return;
 		}
 
-		Presenter::init( ( new Modules() )->load() );
+		Presenter::init( Modules::init()->load() );
 	}
 }

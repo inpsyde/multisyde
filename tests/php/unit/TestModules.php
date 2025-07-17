@@ -21,7 +21,7 @@ final class TestModules extends UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_get_presentables() {
-		$this->assertTrue( count( ( new Modules() )->get_presentable_features() ) > 0 );
+	public function test_features() {
+		$this->assertTrue( count( Modules::init()->features() ) > 0 );
 	}
 }
