@@ -38,7 +38,7 @@ class Modules {
 	 * @param array<class-string<LoadableFeature>, class-string<ShareableInformation>> $config
 	 */
 	public function __construct( array $config ) {
-		$this->config = array_filter( $config, array( __CLASS__, 'filter' ),ARRAY_FILTER_USE_BOTH );
+		$this->config = array_filter( $config, array( __CLASS__, 'filter' ), ARRAY_FILTER_USE_BOTH );
 	}
 
 	/**
