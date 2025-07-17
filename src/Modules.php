@@ -35,7 +35,7 @@ class Modules {
 	/**
 	 * Constructor for the Modules class.
 	 *
-	 * @param array<class-string<LoadableFeature>, class-string<ShareableInformation>> $config
+	 * @param array<class-string<LoadableFeature>, class-string<ShareableInformation>> $config Configuration array that maps loadable features to their shareable information classes.
 	 */
 	public function __construct( array $config ) {
 		$this->config = array_filter( $config, array( __CLASS__, 'filter' ), ARRAY_FILTER_USE_BOTH );
@@ -44,8 +44,8 @@ class Modules {
 	/**
 	 * Filters the configuration to ensure that only valid loadable features and shareable information classes are included.
 	 *
-	 * @param mixed $info
-	 * @param mixed $module
+	 * @param mixed $info Shareable information class.
+	 * @param mixed $module Loadable feature class.
 	 *
 	 * @return bool
 	 */
