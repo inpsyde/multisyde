@@ -65,6 +65,7 @@ class TestPresenter extends UnitTestCase {
 		$modules->shouldReceive( 'get_presentable_features' )->andReturn(
 			array(
 				Modules\SiteActivePlugins\Feature::class => Modules\SiteActivePlugins\About::class,
+				Modules\LastUserLogin\Feature::class     => Modules\LastUserLogin\About::class,
 				Modules\GetSiteBy\Feature::class         => Modules\GetSiteBy\About::class,
 			)
 		);
