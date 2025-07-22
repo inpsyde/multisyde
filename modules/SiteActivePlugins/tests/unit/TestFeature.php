@@ -171,7 +171,7 @@ final class TestFeature extends UnitTestCase {
 	 */
 	public function test_add_action_link_with_active_plugins( array $sites, array $active_plugins, array $plugin_data, array $given_links, array $expected_links ): void {
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
-		Functions\expect( 'get_blog_option' )->once()->with( $sites[0], 'active_plugins', array() )->andReturn( $active_plugins );
+		Functions\expect( 'get_blog_option' )->once()->with( $sites[0], 'active_plugins' )->andReturn( $active_plugins );
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( false );
 		Functions\expect( 'get_plugin_data' )->once()->andReturn( $plugin_data );
 
@@ -188,7 +188,7 @@ final class TestFeature extends UnitTestCase {
 	 */
 	public function test_populate_active_plugins_network_active(): void {
 		Functions\expect( 'get_sites' )->once()->andReturn( array( 1 ) );
-		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins', array() )->andReturn( array( 'plugin/plugin.php' ) );
+		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins' )->andReturn( array( 'plugin/plugin.php' ) );
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( true );
 
 		( new Feature() )->populate_active_plugins();
@@ -234,7 +234,7 @@ final class TestFeature extends UnitTestCase {
 	 */
 	public function test_print_row_styles(): void {
 		Functions\expect( 'get_sites' )->once()->andReturn( array( 1 ) );
-		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins', array() )->andReturn( array( 'plugin/plugin.php' ) );
+		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins' )->andReturn( array( 'plugin/plugin.php' ) );
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( false );
 
 		$obj = new Feature();
@@ -276,7 +276,7 @@ final class TestFeature extends UnitTestCase {
 	public function test_print_thickbox_content(): void {
 		Functions\expect( 'get_current_screen' )->once()->andReturn( (object) array( 'id' => 'plugins-network' ) );
 		Functions\expect( 'get_sites' )->once()->andReturn( array( 1 ) );
-		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins', array() )->andReturn( array( 'plugin/plugin.php' ) );
+		Functions\expect( 'get_blog_option' )->once()->with( 1, 'active_plugins' )->andReturn( array( 'plugin/plugin.php' ) );
 		Functions\expect( 'is_plugin_active_for_network' )->once()->andReturn( false );
 		Functions\expect( 'add_query_arg' )->once()->andReturn( '#some-abitrary-url' );
 		Functions\expect( 'wp_nonce_field' )->once();
