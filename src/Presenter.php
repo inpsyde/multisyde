@@ -76,7 +76,7 @@ final class Presenter {
 
 		echo '<h2>' . esc_html__( 'Available Features', 'multisyde' ) . '</h2>';
 
-		$features_abouts = $this->modules->get_presentable_features();
+		$features_abouts = $this->modules->features();
 		if ( ! empty( $features_abouts ) ) {
 			echo '<table class="wp-list-table widefat striped">';
 			echo '<thead>';
