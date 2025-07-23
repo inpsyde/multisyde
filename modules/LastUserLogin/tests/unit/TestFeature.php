@@ -101,19 +101,42 @@ final class TestFeature extends UnitTestCase {
 		Functions\expect( 'current_user_can' )
 			->once()
 			->with( 'list_users' )
-			->andReturnTrue();
+			->andReturn( true );
 		Functions\expect( 'get_user_meta' )
 			->once()
 			->with( $user_id, Feature::META_KEY, true )
-			->andReturn( '2025-07-10 12:00:00' );
+			->andReturn( '1753258400' );
 		Functions\expect( 'wp_date' )
 			->once()
-			->with( 'Y/m/d g:i:s a', '2025-07-10 12:00:00' )
-			->andReturn( '2025/07/10 12:00:00 pm' );
+			->with( 'Y/m/d g:i:s a', 1753258400 )
+			->andReturn( '2025/07/23 10:16:00 pm' );
 
 		$result = Feature::manage_users_custom_column( $value, $column, $user_id );
-		$this->assertSame( '2025/07/10 12:00:00 pm', $result );
+		$this->assertSame( '2025/07/23 10:16:00 pm', $result );
 	}
+
+	/**
+	 * Test the manage_users_custom_column when get_user_meta returns an empty string
+	 */
+	public function test_manage_users_custom_column_no_login_recorded(): void {
+		$value   = 'Previous Value';
+		$column  = Feature::COLUMN_KEY;
+		$user_id = 1;
+
+		Functions\expect( 'current_user_can' )
+			->once()
+			->with( 'list_users' )
+			->andReturn( true );
+		Functions\expect( 'get_user_meta' )
+			->once()
+			->with( $user_id, Feature::META_KEY, true )
+			->andReturn( '' );
+		Functions\expect( 'wp_date' )->never();
+
+		$result = Feature::manage_users_custom_column( $value, $column, $user_id );
+		$this->assertSame( '—', $result );
+	}
+
 
 	/**
 	 * Test the manage_users_custom_column method passing any other column name.
@@ -140,7 +163,7 @@ final class TestFeature extends UnitTestCase {
 		Functions\expect( 'current_user_can' )
 			->once()
 			->with( 'list_users' )
-			->andReturnFalse();
+			->andReturn( false );
 
 		$result = Feature::manage_users_custom_column( $value, $column, $user_id );
 		$this->assertSame( $value, $result );
@@ -154,11 +177,11 @@ final class TestFeature extends UnitTestCase {
 	public function test_pre_get_users(): void {
 		Functions\expect( 'is_network_admin' )
 			->once()
-			->andReturnTrue();
+			->andReturn( true );
 		Functions\expect( 'current_user_can' )
 			->once()
 			->with( 'list_users' )
-			->andReturnTrue();
+			->andReturn( true );
 
 		$query = \Mockery::mock( \WP_User_Query::class );
 		$query->shouldReceive( 'get' )
@@ -180,7 +203,7 @@ final class TestFeature extends UnitTestCase {
 	public function test_pre_get_users_not_network_admin(): void {
 		Functions\expect( 'is_network_admin' )
 			->once()
-			->andReturnFalse();
+			->andReturn( false );
 
 		$query = \Mockery::mock( \WP_User_Query::class );
 		$query->shouldNotReceive( 'get' );
@@ -195,7 +218,7 @@ final class TestFeature extends UnitTestCase {
 	public function test_pre_get_users_not_orderby_column_key(): void {
 		Functions\expect( 'is_network_admin' )
 			->once()
-			->andReturnTrue();
+			->andReturn( true );
 
 		$query = \Mockery::mock( \WP_User_Query::class );
 		$query->shouldReceive( 'get' )
@@ -215,11 +238,11 @@ final class TestFeature extends UnitTestCase {
 	public function test_pre_get_users_no_permission(): void {
 		Functions\expect( 'is_network_admin' )
 			->once()
-			->andReturnTrue();
+			->andReturn( true );
 		Functions\expect( 'current_user_can' )
 			->once()
 			->with( 'list_users' )
-			->andReturnFalse();
+			->andReturn( false );
 
 		$query = \Mockery::mock( \WP_User_Query::class );
 		$query->shouldReceive( 'get' )

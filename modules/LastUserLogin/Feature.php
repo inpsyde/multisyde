@@ -67,7 +67,7 @@ final class Feature implements LoadableFeature {
 	 * @param string $column current column name.
 	 * @param int    $user_id user ID to display information for.
 	 *
-	 * @return string
+	 * @return string|false
 	 */
 	public static function manage_users_custom_column( $value, $column, $user_id ) {
 		if ( self::COLUMN_KEY !== $column || ! current_user_can( 'list_users' ) ) {
@@ -77,10 +77,10 @@ final class Feature implements LoadableFeature {
 		$last_login = get_user_meta( $user_id, self::META_KEY, true );
 
 		if ( is_string( $last_login ) && '' !== $last_login ) {
-			$value = wp_date( __( 'Y/m/d g:i:s a', 'multisyde' ), (int) $last_login );
+			return wp_date( __( 'Y/m/d g:i:s a', 'multisyde' ), (int) $last_login );
 		}
 
-		return false !== $value ? $value : esc_html__( '—', 'multisyde' );
+		return esc_html__( '—', 'multisyde' );
 	}
 
 	/**
