@@ -4,29 +4,15 @@
          backupGlobals="true"
          colors="true"
          testdox="false"
-         bootstrap="tests/php/integration/bootstrap.php"
-         displayDetailsOnIncompleteTests="true"
-         displayDetailsOnSkippedTests="true"
-         displayDetailsOnTestsThatTriggerDeprecations="true"
-         displayDetailsOnTestsThatTriggerErrors="true"
-         displayDetailsOnTestsThatTriggerNotices="true"
-         displayDetailsOnTestsThatTriggerWarnings="true"
-         displayDetailsOnPhpunitDeprecations="true"
-         cacheDirectory=".phpunit.cache"
->
-	<php>
+         bootstrap="tests/php/integration/bootstrap.php">
+
+    <php>
         <const name="WP_TESTS_MULTISITE" value="1" />
-   	</php>
+    </php>
 
-	<testsuites>
-		<testsuite name="Integration tests">
-			<directory prefix="Test" suffix=".php">tests/php/integration</directory>
-		</testsuite>
-	</testsuites>
-
-	<source>
-		<include>
-			  <directory suffix=".php">src/</directory>
-		</include>
-	</source>
+    <testsuites>
+        <testsuite name="Integration tests">
+            <directory prefix="Test" suffix=".php">tests/php/integration</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

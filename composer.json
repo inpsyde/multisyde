@@ -48,16 +48,16 @@
         "phpstan/phpstan-mockery": "^2.0"
     },
     "scripts": {
-        "tests:unit": "vendor/bin/phpunit -c phpunit.xml.dist",
-        "tests:integration": "vendor/bin/phpunit -c integration.xml.dist",
+        "tests:unit": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
+        "tests:integration": "./vendor/bin/phpunit -c ./integration.xml.dist",
         "tests": [
             "@tests:unit",
             "@tests:integration"
         ],
-        "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit -c phpunit.xml.dist --coverage-html tests/coverage",
-        "lint": "vendor/bin/phpcs .",
-        "fix": "vendor/bin/phpcbf .",
-        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "coverage": "@php XDEBUG_MODE=coverage vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
+        "lint": "./vendor/bin/phpcs .",
+        "fix": "./vendor/bin/phpcbf .",
+        "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
             "@lint",
             "@phpstan"
