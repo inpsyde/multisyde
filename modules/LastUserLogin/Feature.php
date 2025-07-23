@@ -67,7 +67,7 @@ final class Feature implements LoadableFeature {
 	 * @param string $column current column name.
 	 * @param int    $user_id user ID to display information for.
 	 *
-	 * @return string|false
+	 * @return string
 	 */
 	public static function manage_users_custom_column( $value, $column, $user_id ) {
 		if ( self::COLUMN_KEY !== $column || ! current_user_can( 'list_users' ) ) {
