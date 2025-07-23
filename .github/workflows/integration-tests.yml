@@ -23,4 +23,4 @@ jobs:
         run: npm run wp-env start
 
       - name: Run Testsuite
-        run: composer run-script tests:integration
+        run: npm run test-php-integration

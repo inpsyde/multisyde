@@ -17,7 +17,7 @@
         "preinstall": "npx check-node-version --package",
         "prewp-env": "npx check-node-version --package",
         "wp-env": "wp-env",
-        "test-php-unit": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde/ composer test:unit",
-        "test-php-integration": "npx wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde/ composer test:integration"
+        "test-php-unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde vendor/bin/phpunit -c phpunit.xml.dist",
+        "test-php-integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde ./vendor/bin/phpunit -c ./integration.xml.dist"
     }
 }
