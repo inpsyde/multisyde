@@ -50,7 +50,7 @@ class Modules {
 	 * @return bool
 	 */
 	public static function filter( $info, $module ): bool {
-		return is_subclass_of( $module, LoadableFeature::class ) && is_subclass_of( $info, ShareableInformation::class );
+		return is_string( $module ) && is_subclass_of( $module, LoadableFeature::class ) && is_string( $info ) && is_subclass_of( $info, ShareableInformation::class );
 	}
 
 	/**

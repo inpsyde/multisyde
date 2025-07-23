@@ -71,6 +71,7 @@ final class Feature implements LoadableFeature {
 		if (
 			! is_network_admin() ||
 			! isset( $_GET['_wpnonce'] ) ||
+			! is_string( $_GET['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
 			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) )
 		) {
@@ -112,6 +113,7 @@ final class Feature implements LoadableFeature {
 		if (
 			! current_user_can( 'manage_network_plugins' ) ||
 			! isset( $_POST['_wpnonce'] ) ||
+			! is_string( $_POST['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
 			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ?? '' ) )
 		) {
@@ -168,7 +170,10 @@ final class Feature implements LoadableFeature {
 		);
 
 		foreach ( $site_ids as $site_id ) {
-			$active_plugins = get_blog_option( $site_id, 'active_plugins', array() );
+			$active_plugins = get_blog_option( $site_id, 'active_plugins' );
+			if ( ! is_iterable( $active_plugins ) ) {
+				continue;
+			}
 
 			foreach ( $active_plugins as $plugin ) {
 				if ( is_plugin_active_for_network( $plugin ) ) {
