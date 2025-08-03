@@ -9,4 +9,4 @@ jobs:
       - name: Composer dependencies
         run: composer install
       - name: Run Testsuite
-        run: composer run-script lint
+        run: composer run-script cs
