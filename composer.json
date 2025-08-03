@@ -54,7 +54,7 @@
             "@tests:unit",
             "@tests:integration"
         ],
-        "coverage": "@php XDEBUG_MODE=coverage vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
+        "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
         "cs": "./vendor/bin/phpcs .",
         "cs:fix": "./vendor/bin/phpcbf .",
         "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",

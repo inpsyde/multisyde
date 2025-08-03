@@ -37,7 +37,7 @@ final class TestMultiSyde extends UnitTestCase {
 	 */
 	public function test_load_multisite(): void {
 		Functions\expect( 'function_exists' )->once()->with( 'is_multisite' )->andReturn( true );
-		Functions\expect( 'is_network_admin' )->once()->andReturn( false );
+		Functions\expect( 'is_network_admin' )->times( 2 )->andReturn( false );
 
 		Plugin::load();
 	}
