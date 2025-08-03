@@ -55,11 +55,11 @@
             "@tests:integration"
         ],
         "coverage": "@php XDEBUG_MODE=coverage vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
-        "lint": "./vendor/bin/phpcs .",
-        "fix": "./vendor/bin/phpcbf .",
+        "cs": "./vendor/bin/phpcs .",
+        "cs:fix": "./vendor/bin/phpcbf .",
         "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
-            "@lint",
+            "@cs",
             "@phpstan"
         ],
         "i18n:pot": "wp i18n make-pot . languages/multisyde.pot",
