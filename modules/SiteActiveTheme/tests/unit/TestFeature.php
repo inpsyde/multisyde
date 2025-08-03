@@ -61,20 +61,20 @@ final class TestFeature extends UnitTestCase {
 		Feature::manage_custom_column( Feature::COLUMN_NAME, 1 );
 	}
 
-    public function test_manage_custom_column_theme_with_parent_theme(): void {
-        $parent = \Mockery::mock( WP_Theme::class );
-        $parent->shouldReceive( 'get' )->once()->andReturn( 'Parent Theme' );
+	public function test_manage_custom_column_theme_with_parent_theme(): void {
+		$parent = \Mockery::mock( WP_Theme::class );
+		$parent->shouldReceive( 'get' )->once()->andReturn( 'Parent Theme' );
 
-        $theme = \Mockery::mock( WP_Theme::class );
-        $theme->shouldReceive( 'get' )->twice()->andReturnArg( 0 );
-        $theme->shouldReceive( 'parent' )->once()->andReturn( $parent );
+		$theme = \Mockery::mock( WP_Theme::class );
+		$theme->shouldReceive( 'get' )->twice()->andReturnArg( 0 );
+		$theme->shouldReceive( 'parent' )->once()->andReturn( $parent );
 
-        Functions\expect( 'switch_to_blog' )->once();
-        Functions\expect( 'wp_get_theme' )->once()->andReturn( $theme );
-        Functions\expect( 'restore_current_blog' )->once();
+		Functions\expect( 'switch_to_blog' )->once();
+		Functions\expect( 'wp_get_theme' )->once()->andReturn( $theme );
+		Functions\expect( 'restore_current_blog' )->once();
 
-        $this->expectOutputString( 'Name Version (Parent Theme)' );
+		$this->expectOutputString( 'Name Version (Parent Theme)' );
 
-        Feature::manage_custom_column( Feature::COLUMN_NAME, 1 );
-    }
+		Feature::manage_custom_column( Feature::COLUMN_NAME, 1 );
+	}
 }
