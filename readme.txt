@@ -135,7 +135,7 @@ Update for the latest enhancements and improvements. MultiSyde evolves continuou
 == Changelog ==
 
 = 1.1.0 =
-* Enhancement: Added [Site Active Plugins](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveThemes/README.md) in site management dashboard.
+* Enhancement: Added [Site Active Theme](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveTheme/README.md) in site management dashboard.
 
 = 1.0.1 =
 * Enhancement: [Site Active Plugins](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActivePlugins/README.md) - Added a filter to allow other plugins to modify the list of active plugins on a site.

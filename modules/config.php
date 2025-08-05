@@ -20,7 +20,7 @@ use Syde\MultiSyde\Modules\SiteActiveTheme\About as SiteActiveThemeInformation;
 
 return array(
 	GetSiteBy::class         => GetSiteByInformation::class,
-	SiteActivePlugins::class => SiteActivePluginsInformation::class,
 	LastUserLogin::class     => LastUserLoginInformation::class,
+    SiteActivePlugins::class => SiteActivePluginsInformation::class,
 	SiteActiveTheme::class   => SiteActiveThemeInformation::class,
 );
