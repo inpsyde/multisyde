@@ -126,7 +126,7 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 2. Enhanced user management interface with Last Login column
 3. Site Active Plugins management with bulk deactivation modal
 4. Advanced site retrieval using get_site_by() function
-5. Site Active Themes feature in site management dashboard
+5. Site Active Theme feature in site management dashboard
 
 == Upgrade Notice ==
 
