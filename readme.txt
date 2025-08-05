@@ -5,7 +5,7 @@ Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,12 +126,16 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 2. Enhanced user management interface with Last Login column
 3. Site Active Plugins management with bulk deactivation modal
 4. Advanced site retrieval using get_site_by() function
+5. Site Active Themes feature in site management dashboard
 
 == Upgrade Notice ==
 
 Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
 
 == Changelog ==
+
+= 1.1.0 =
+* Enhancement: Added [Site Active Plugins](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveThemes/README.md) in site management dashboard.
 
 = 1.0.1 =
 * Enhancement: [Site Active Plugins](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActivePlugins/README.md) - Added a filter to allow other plugins to modify the list of active plugins on a site.
