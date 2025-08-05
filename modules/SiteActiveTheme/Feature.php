@@ -73,7 +73,7 @@ final class Feature implements LoadableFeature {
 		}
 
 		/* translators: 1: Parent Theme Name */
-		$format = __( 'Parent Theme: %1$s', 'multisyde' );
+		$format = __( 'Child theme of %1$s', 'multisyde' );
 		echo '<p class="description">', esc_html( sprintf( $format, $parent->get( 'Name' ) ) ), '</p>';
 	}
 }
