@@ -67,6 +67,7 @@ class TestPresenter extends UnitTestCase {
 				Modules\SiteActivePlugins\Feature::class => Modules\SiteActivePlugins\About::class,
 				Modules\LastUserLogin\Feature::class     => Modules\LastUserLogin\About::class,
 				Modules\GetSiteBy\Feature::class         => Modules\GetSiteBy\About::class,
+				Modules\SiteActiveTheme\Feature::class   => Modules\SiteActiveTheme\About::class,
 			)
 		);
 
