@@ -61,13 +61,19 @@ final class Feature implements LoadableFeature {
 		$theme = wp_get_theme();
 		restore_current_blog();
 
-		$column = sprintf( '%1$s %2$s', $theme->get( 'Name' ), $theme->get( 'Version' ) );
+		echo '<strong>', esc_html( $theme->get( 'Name' ) ), '</strong>&nbsp;';
+
+		/* translators: 1: Theme Version */
+		$format = __( 'Version %1$s', 'multisyde' );
+		echo '<span>', esc_html( sprintf( $format, $theme->get( 'Version' ) ) ), '</span>';
 
 		$parent = $theme->parent();
-		if ( false !== $parent ) {
-			$column .= sprintf( ' (%1$s)', $parent->get( 'Name' ) );
+		if ( false === $parent ) {
+			return;
 		}
 
-		echo esc_html( $column );
+		/* translators: 1: Parent Theme Name */
+		$format = __( 'Parent Theme: %1$s', 'multisyde' );
+		echo '<p class="description">', esc_html( sprintf( $format, $parent->get( 'Name' ) ) ), '</p>';
 	}
 }
