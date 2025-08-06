@@ -72,8 +72,7 @@ composer run phpstan
 3. Make your changes and commit them with meaningful messages.
 4. Run code quality tools before submitting:
     ```bash
-    composer run lint
-    composer run phpstan
+    composer run qa
    ```
 5. Push your branch and open a pull request against the main branch.
 
