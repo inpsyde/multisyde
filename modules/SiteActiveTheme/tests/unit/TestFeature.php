@@ -71,7 +71,7 @@ final class TestFeature extends UnitTestCase {
 		Functions\expect( 'wp_get_theme' )->once()->andReturn( $theme );
 		Functions\expect( 'restore_current_blog' )->once();
 
-		$this->expectOutputString( 'Name Version' );
+		$this->expectOutputString( '<strong>Name</strong>&nbsp;<span>Version Version</span>' );
 
 		Feature::manage_custom_column( Feature::COLUMN_NAME, 1 );
 	}
@@ -93,7 +93,7 @@ final class TestFeature extends UnitTestCase {
 		Functions\expect( 'wp_get_theme' )->once()->andReturn( $theme );
 		Functions\expect( 'restore_current_blog' )->once();
 
-		$this->expectOutputString( 'Name Version (Parent Theme)' );
+		$this->expectOutputString( '<strong>Name</strong>&nbsp;<span>Version Version</span><p class="description">Child theme of Parent Theme</p>' );
 
 		Feature::manage_custom_column( Feature::COLUMN_NAME, 1 );
 	}

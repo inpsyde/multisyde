@@ -124,7 +124,7 @@ final class Presenter {
 			return $text;
 		}
 
-		/* translators: 1: dashicon, 2: opening HTML tag for a link, 3: closing HTML tags for a link. */
+		/* translators: 1: Dashicon, 2: Opening HTML tag for a link, 3: Closing HTML tags for a link. */
 		$translation = __( 'Made with %1$s by %2$sSyde%3$s.', 'multisyde' );
 
 		return sprintf( $translation, '<span class="dashicons dashicons-heart"></span>', '<a href="https://syde.com" target="_blank" rel="noopener noreferrer">', '</a>' );
