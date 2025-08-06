@@ -5,7 +5,7 @@ Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,9 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
 
 == Changelog ==
+
+= 1.1.1 =
+* MultiSyde is now network-wide activatable now.
 
 = 1.1.0 =
 * Enhancement: Added [Site Active Theme](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveTheme/README.md) in site management dashboard.
