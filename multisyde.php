@@ -12,6 +12,7 @@
  * License URI:       /LICENSE
  * Text Domain:       multisyde
  * Domain Path:       /languages/
+ * Network:           true
  *
  * @package multisyde
  */
