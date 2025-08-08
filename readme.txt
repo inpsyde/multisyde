@@ -137,7 +137,7 @@ Update for the latest enhancements and improvements. MultiSyde evolves continuou
 == Changelog ==
 
 = 1.1.1 =
-* MultiSyde is now network-wide activatable now.
+* MultiSyde is now network-wide activatable only.
 
 = 1.1.0 =
 * Enhancement: Added [Site Active Theme](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveTheme/README.md) in site management dashboard.
