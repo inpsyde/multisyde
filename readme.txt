@@ -5,7 +5,7 @@ Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,11 +21,13 @@ MultiSyde follows a modular architecture where each feature addresses specific p
 
 == Features ==
 
-**Site Active Plugins** - See which plugins are active on each site, with bulk deactivation across subsites (addresses Trac [#53255](https://core.trac.wordpress.org/ticket/53255/ "WordPress Trac Ticket #53255"))
-
 **Enhanced Site Retrieval** - New `get_site_by()` utility function for easier site lookups by ID, slug, domain, path, or URL (addresses Trac [#40180](https://core.trac.wordpress.org/ticket/40180/ "WordPress Trac Ticket #40180"))
 
 **Last User Login Tracking** - Adds "Last Login" column to Network Admin Users screen with automatic timestamp recording (addresses MultiSyde GitHub issue [#11](https://github.com/inpsyde/multisyde/issues/11/ "MultiSyde GitHub Issue #11"))
+
+**Site Active Plugins** - See which plugins are active on each site, with bulk deactivation across subsites (addresses Trac [#53255](https://core.trac.wordpress.org/ticket/53255/ "WordPress Trac Ticket #53255"))
+
+**Site Active Theme** - Displays the active theme for each site in the Network Admin dashboard, making it easier to manage themes across the network (addresses Trac [#56458](https://core.trac.wordpress.org/ticket/56458/ "WordPress Trac Ticket #56458"))
 
 The feature set continues to expand based on community contributions and real-world needs.
 
@@ -133,6 +135,9 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
 
 == Changelog ==
+
+= 1.1.1 =
+* MultiSyde is now network-wide activatable only.
 
 = 1.1.0 =
 * Enhancement: Added [Site Active Theme](https://github.com/inpsyde/multisyde/blob/main/modules/SiteActiveTheme/README.md) in site management dashboard.

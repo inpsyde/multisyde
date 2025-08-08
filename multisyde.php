@@ -3,7 +3,7 @@
  * Plugin Name:       MultiSyde
  * Plugin URI:        https://github.com/inpsyde/multisyde
  * Description:       A WordPress plugin that explores potential improvements for WordPress Multisite.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Syde
@@ -12,6 +12,7 @@
  * License URI:       /LICENSE
  * Text Domain:       multisyde
  * Domain Path:       /languages/
+ * Network:           true
  *
  * @package multisyde
  */
