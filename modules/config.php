@@ -17,10 +17,13 @@ use Syde\MultiSyde\Modules\LastUserLogin\Feature as LastUserLogin;
 use Syde\MultiSyde\Modules\LastUserLogin\About as LastUserLoginInformation;
 use Syde\MultiSyde\Modules\SiteActiveTheme\Feature as SiteActiveTheme;
 use Syde\MultiSyde\Modules\SiteActiveTheme\About as SiteActiveThemeInformation;
+use Syde\MultiSyde\Modules\RetiredSiteStatus\Feature as RetiredSiteStatus;
+use Syde\MultiSyde\Modules\RetiredSiteStatus\About as RetiredSiteStatusInformation;
 
 return array(
 	GetSiteBy::class         => GetSiteByInformation::class,
 	LastUserLogin::class     => LastUserLoginInformation::class,
 	SiteActivePlugins::class => SiteActivePluginsInformation::class,
 	SiteActiveTheme::class   => SiteActiveThemeInformation::class,
+	RetiredSiteStatus::class => RetiredSiteStatusInformation::class,
 );
