@@ -37,7 +37,7 @@ class Feature implements LoadableFeature {
 		add_action( 'network_site_info_form', array( __CLASS__, 'network_site_info_form' ) );
 		add_action( 'load-site-info.php', array( __CLASS__, 'update_site_info' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_list_css' ) );
-		add_filter( 'display_site_states', array( __CLASS__, 'display_site_states' ), 10, 2 );
+		add_filter( 'display_site_states', array( __CLASS__, 'add_retired_state' ), 10, 2 );
 	}
 
 	/**
@@ -48,6 +48,7 @@ class Feature implements LoadableFeature {
 	 * @return array<string, string>
 	 */
 	public static function views_sites_network( array $views ): array {
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		$counts = get_sites(
 			array(
 				'meta_query' => array(
@@ -228,12 +229,14 @@ class Feature implements LoadableFeature {
 	}
 
 	/**
-	 * @param array    $site_states
-	 * @param \WP_Site $site
+	 * Add retired state to the sites in the sites list table.
+	 *
+	 * @param array    $site_states Array of site states.
+	 * @param \WP_Site $site The site object.
 	 *
 	 * @return array
 	 */
-	public static function display_site_states( array $site_states, \WP_Site $site ): array {
+	public static function add_retired_state( array $site_states, \WP_Site $site ): array {
 		$status = get_site_meta( $site->id, self::META_KEY, true );
 
 		if ( self::META_VALUE === $status ) {

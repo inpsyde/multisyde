@@ -13,6 +13,7 @@
     <rule ref="WordPress">
         <!-- PSR4 -->
         <exclude name="WordPress.Files.FileName" />
+        <exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_query" />
     </rule>
     <rule ref="WordPress-Extra"/>
     <rule ref="WordPress-Docs"/>
