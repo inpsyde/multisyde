@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { Badge } from '@wordpress/components';
 
 export const fields = [
 	{ id: 'blog_id', label: __( 'ID', 'multisyde' ), enableSorting: true },

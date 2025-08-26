@@ -1,4 +1,3 @@
-// modules/SitesDataViews/assets/admin/sites-data-views/App.js
 import { Fragment } from '@wordpress/element';
 import { DataViews } from '@wordpress/dataviews/wp';
 
