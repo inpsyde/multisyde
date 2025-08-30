@@ -66,7 +66,7 @@ class Feature implements LoadableFeature {
 			// Translators: %s is the number of retired websites.
 			$format = __( 'Retired <span class="count">(%s)</span>', 'multisyde' );
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$status = sanitize_text_field( wp_unslash( $_GET['status'] ?? '' ) );
+			$status = sanitize_text_field( wp_unslash( is_string( $_GET['status'] ) ? $_GET['status'] : '' ) );
 			$attr   = self::META_VALUE === $status ? ' class="current" aria-current="page"' : '';
 			$label  = sprintf( $format, number_format_i18n( $counts ) );
 
@@ -90,7 +90,7 @@ class Feature implements LoadableFeature {
 	 */
 	public static function ms_sites_list_table_query_args( $args ) {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$status = sanitize_text_field( wp_unslash( $_GET['status'] ?? '' ) );
+		$status = sanitize_text_field( wp_unslash( is_string( $_GET['status'] ) ? $_GET['status'] : '' ) );
 		if ( self::META_VALUE !== $status ) {
 			return $args;
 		}
@@ -167,7 +167,7 @@ class Feature implements LoadableFeature {
 
 		check_admin_referer( 'edit-site' );
 
-		$site_id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+		$site_id = isset( $_POST['id'] ) && is_scalar( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 		if ( $site_id <= 0 ) {
 			return;
 		}
@@ -231,10 +231,10 @@ class Feature implements LoadableFeature {
 	/**
 	 * Add retired state to the sites in the sites list table.
 	 *
-	 * @param array    $site_states Array of site states.
+	 * @param array<string, string> $site_states Array of site states.
 	 * @param \WP_Site $site The site object.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public static function add_retired_state( array $site_states, \WP_Site $site ): array {
 		$status = get_site_meta( $site->id, self::META_KEY, true );
