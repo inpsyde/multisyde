@@ -65,9 +65,7 @@ class Feature implements LoadableFeature {
 		if ( $counts > 0 ) {
 			// Translators: %s is the number of retired websites.
 			$format = __( 'Retired <span class="count">(%s)</span>', 'multisyde' );
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$status = sanitize_text_field( wp_unslash( is_string( $_GET['status'] ) ? $_GET['status'] : '' ) );
-			$attr   = self::META_VALUE === $status ? ' class="current" aria-current="page"' : '';
+			$attr   = self::is_retired_status() ? ' class="current" aria-current="page"' : '';
 			$label  = sprintf( $format, number_format_i18n( $counts ) );
 
 			$views[ self::META_VALUE ] = sprintf(
@@ -89,9 +87,7 @@ class Feature implements LoadableFeature {
 	 * @return array<string, mixed>
 	 */
 	public static function ms_sites_list_table_query_args( $args ) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$status = sanitize_text_field( wp_unslash( is_string( $_GET['status'] ) ? $_GET['status'] : '' ) );
-		if ( self::META_VALUE !== $status ) {
+		if ( ! self::is_retired_status() ) {
 			return $args;
 		}
 
@@ -232,7 +228,7 @@ class Feature implements LoadableFeature {
 	 * Add retired state to the sites in the sites list table.
 	 *
 	 * @param array<string, string> $site_states Array of site states.
-	 * @param \WP_Site $site The site object.
+	 * @param \WP_Site              $site The site object.
 	 *
 	 * @return array<string, string>
 	 */
@@ -244,5 +240,21 @@ class Feature implements LoadableFeature {
 		}
 
 		return $site_states;
+	}
+
+	/**
+	 * Whether the feature represents a retired status.
+	 *
+	 * @return bool
+	 */
+	public static function is_retired_status(): bool {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$status = sanitize_text_field(
+			wp_unslash(
+				isset( $_GET['status'] ) && is_string( $_GET['status'] ) ? $_GET['status'] : ''
+			)
+		);
+
+		return self::META_VALUE === $status;
 	}
 }
