@@ -248,9 +248,9 @@ class Feature implements LoadableFeature {
 	 * @return bool
 	 */
 	public static function is_retired_status(): bool {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$status = sanitize_text_field(
 			wp_unslash(
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				isset( $_GET['status'] ) && is_string( $_GET['status'] ) ? $_GET['status'] : ''
 			)
 		);
