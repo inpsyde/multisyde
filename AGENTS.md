@@ -71,10 +71,13 @@ type: wordpress-plugin
 layout:
   src: bootstrap and entry files
   modules/<FeatureName>/:
-    - Feature.php: feature entry class
     - assets/: feature JS, TS, CSS
     - build/: compiled artifacts
     - tests/: feature tests
+    - About.php: feature metadata
+    - CHANGELOG.md: feature changelog
+    - Feature.php: feature entry class
+    - README.md: feature description
   tests/: plugin bootstrap and shared tests
 files:
   - README.md
@@ -90,4 +93,20 @@ rules:
   - no edits in modules/<FeatureName>/build/
   - changelog only via release workflow
   - do not change plugin header in multisyde.php
+architecture:
+  bootstrap: src/Plugin.php
+  feature_loader: src/Modules.php
+  feature_config: modules/config.php
+  presenter: src/Presenter.php
+interfaces:
+  - LoadableFeature: required for all features
+  - ShareableInformation: optional for feature metadata
+data_structures:
+  - Summary: feature metadata container
+i18n:
+  text_domain: multisyde
+  template: languages/multisyde.pot
+admin:
+  menu_slug: multisyde
+  capability: manage_network
 ```
