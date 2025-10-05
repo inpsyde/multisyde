@@ -1,18 +1,18 @@
 import { __ } from '@wordpress/i18n';
 
 export const fields = [
-	{ id: 'blog_id', label: __( 'ID', 'multisyde' ), enableSorting: true },
+	{ id: 'id', label: __( 'ID', 'multisyde' ), enableSorting: true },
 	{ id: 'domain', label: __( 'Domain', 'multisyde' ), enableGlobalSearch: true, enableSorting: true },
 	{ id: 'path',    label: __( 'Path', 'multisyde' ), enableGlobalSearch: true, enableSorting: true },
 	{
 		id: 'url',
 		label: __( 'URL', 'multisyde' ),
-		enableSorting: true,
+		enableSorting: false,
 		render: ( { item } ) => {
+			const url = item.domain + item.path;
 			return (
-				<a href={ item.home_url } target="_blank" rel="noreferrer" className="ms-sites-url">
-					{ item.domain }
-					{ item.path }
+				<a href={ url } target="_blank" rel="noreferrer" className="ms-sites-url">
+					{ url }
 				</a>
 			);
 		},

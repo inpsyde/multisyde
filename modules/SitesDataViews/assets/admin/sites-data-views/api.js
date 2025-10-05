@@ -6,7 +6,7 @@ export function setupApiFetch(nonce) {
 	}
 }
 
-export function fetchSites({ view, restNs = 'multisyde/v1' }) {
+export function fetchSites({ view, restNs = 'wp/v2' }) {
 	const params = new URLSearchParams();
 
 	if (view?.page) params.set('page', String(view.page));

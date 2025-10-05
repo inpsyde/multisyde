@@ -29,7 +29,7 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function init(): void {
-		add_action( 'rest_api_init', array( __CLASS__, 'register_rest' ) );
+		add_action( 'rest_api_init', array( __CLASS__, 'sites_rest_api_init' ) );
 
 		if ( is_network_admin() ) {
 			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ) );
@@ -91,7 +91,7 @@ final class Feature implements LoadableFeature {
 		);
 
 		$config = array(
-			'restNs' => 'multisyde/v1',
+			'restNs' => 'wp/v2',
 			'nonce'  => wp_create_nonce( 'wp_rest' ),
 		);
 
@@ -114,7 +114,13 @@ final class Feature implements LoadableFeature {
 	 *
 	 * @return void
 	 */
-	public static function register_rest(): void {
-		( new SitesController() )->register_routes();
+	public static function sites_rest_api_init(): void {
+        if ( class_exists( 'WP_REST_Controller' ) && ! class_exists( 'WP_REST_Sites_Controller' ) ) {
+            require_once __DIR__ . '/lib/class-wp-rest-site-meta-fields.php';
+            require_once __DIR__ . '/lib/class-wp-rest-sites-controller.php';
+        }
+
+        $plugins_controller = new \WP_REST_Sites_Controller();
+        $plugins_controller->register_routes();
 	}
 }
