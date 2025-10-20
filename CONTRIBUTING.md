@@ -58,7 +58,7 @@ Your environment will be available at [http://localhost:8888](http://localhost:8
 - Use `phpcs` and `PHPStan` (level 8) to validate your code.
 
 ```bash
-composer run lint
+composer run cs
 composer run phpstan
 ```
 
