@@ -43,7 +43,7 @@ final class Feature implements LoadableFeature {
 			return $value;
 		}
 
-		if ( strpos( $value, '/blog/' ) === 0 ) {
+		if ( str_starts_with( $value, '/blog/' ) ) {
 			return substr( $value, 5 );
 		}
 
