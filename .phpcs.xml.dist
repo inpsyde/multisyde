@@ -2,6 +2,7 @@
 <ruleset name="CS">
     <description>PHPCS example</description>
     <config name="testVersion" value="7.4-"/>
+    <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
 
     <arg value="ps"/>
