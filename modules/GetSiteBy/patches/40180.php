@@ -53,7 +53,7 @@ function get_site_by( $field, $value, $network_id = null ) {
 				}
 				break;
 			case 'url':
-				if ( 0 !== strpos( $value, 'http://' ) && 0 !== strpos( $value, 'https://' ) ) {
+				if ( ! str_starts_with( $value, 'http://' ) && ! str_starts_with( $value, 'https://' ) ) {
 					$value = 'http://' . $value;
 				}
 
@@ -90,7 +90,7 @@ function get_site_by( $field, $value, $network_id = null ) {
 
 	$args['number'] = 1;
 
-	if ( isset( $args['domain'] ) && substr( $args['domain'], 0, 4 ) === 'www.' ) {
+	if ( isset( $args['domain'] ) && str_starts_with( $args['domain'], 'www.' ) ) {
 		$bare = substr( $args['domain'], 4 );
 
 		$args['domain__in'] = array( $bare, $args['domain'] );
