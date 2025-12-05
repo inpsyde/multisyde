@@ -35,7 +35,8 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "lloc/composer-i18n-scripts": true
         }
     },
     "require-dev": {
@@ -45,7 +46,8 @@
         "yoast/phpunit-polyfills": "^3.1",
         "phpunit/phpunit": "^9.6",
         "brain/monkey": "^2.0@dev",
-        "phpstan/phpstan-mockery": "^2.0"
+        "phpstan/phpstan-mockery": "^2.0",
+        "lloc/composer-i18n-scripts": "^1.0"
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
@@ -57,7 +59,6 @@
             "@cs",
             "@phpstan"
         ],
-        "i18n:pot": "wp i18n make-pot . languages/multisyde.pot",
         "git-release": "bin/git-release.sh",
         "build": [
             "@composer install --no-dev",
