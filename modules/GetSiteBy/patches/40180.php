@@ -16,7 +16,7 @@
  * @param int|null   $network_id Optional. ID of the network. Default is the current network.
  * @return WP_Site|null The site object or null if not found.
  */
-function multisyde_get_site_by( $field, $value, $network_id = null ) {
+function get_site_by( $field, $value, $network_id = null ) {
 	$args = array();
 
 	if ( 'id' === $field ) {
@@ -115,23 +115,4 @@ function multisyde_get_site_by( $field, $value, $network_id = null ) {
 	}
 
 	return array_shift( $sites );
-}
-
-if ( ! function_exists( 'get_site_by' ) ) {
-	/**
-	 * Wrapper for WordPress core compatibility.
-	 *
-	 * @since 4.9.0
-	 *
-	 * @param string     $field      Name of a field to query against. Accepts 'id', 'slug', 'url',
-	 *                               'domain' (if a subdomain-install) or 'path' (if a subdirectory-install).
-	 * @param string|int $value      The search value for $field.
-	 * @param int|null   $network_id Optional. ID of the network. Default is the current network.
-	 * @return WP_Site|null The site object or null if not found.
-	 *
-	 * @phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-	 */
-	function get_site_by( $field, $value, $network_id = null ) {
-		return multisyde_get_site_by( $field, $value, $network_id );
-	}
 }
