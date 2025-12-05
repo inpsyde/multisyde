@@ -47,13 +47,14 @@
         "phpunit/phpunit": "^9.6",
         "brain/monkey": "^2.0@dev",
         "phpstan/phpstan-mockery": "^2.0",
-        "lloc/composer-i18n-scripts": "^1.0"
+        "lloc/composer-i18n-scripts": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
         "tests:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
-        "cs": "./vendor/bin/phpcs .",
-        "cs:fix": "./vendor/bin/phpcbf .",
+        "phpcs": "vendor/bin/phpcs .",
+        "phpcbf": "./vendor/bin/phpcbf .",
         "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
             "@cs",

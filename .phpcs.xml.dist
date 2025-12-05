@@ -10,10 +10,15 @@
     <arg name="extensions" value="php"/>
     <arg name="cache" value=".phpcs.cache"/>
 
+	<rule ref="PHPCompatibilityWP" />
+
     <rule ref="WordPress">
         <!-- PSR4 -->
         <exclude name="WordPress.Files.FileName" />
     </rule>
     <rule ref="WordPress-Extra"/>
     <rule ref="WordPress-Docs"/>
+
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
 </ruleset>
