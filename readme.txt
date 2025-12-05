@@ -3,7 +3,7 @@
 Contributors: syde, realloc
 Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 1.1.1
 License: GPLv2 or later
