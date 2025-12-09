@@ -18,6 +18,7 @@ final class Feature implements LoadableFeature {
 	const NOTICE_DEACTIVATION = 'bulk_deactivated';
 
 	const DEFAULT_MAX_SITES = 100;
+	const FILTER_MAX_SITES  = 'multisyde_site_active_plugins_max_sites';
 
 	/**
 	 * The active plugins in the sites in the network.
@@ -161,7 +162,7 @@ final class Feature implements LoadableFeature {
 		 *
 		 * @param int $max_sites The maximum number of sites to show for each plugin.
 		 */
-		$max_sites = apply_filters( 'site_active_plugins_max_sites', self::DEFAULT_MAX_SITES );
+		$max_sites = apply_filters( self::FILTER_MAX_SITES, self::DEFAULT_MAX_SITES );
 		$site_ids  = get_sites(
 			array(
 				'fields' => 'ids',

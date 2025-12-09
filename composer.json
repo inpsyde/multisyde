@@ -35,29 +35,30 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "lloc/composer-i18n-scripts": true
         }
     },
     "require-dev": {
         "wp-coding-standards/wpcs": "^3.0",
         "szepeviktor/phpstan-wordpress": "^2.0",
         "phpstan/extension-installer": "^1.4",
-        "yoast/phpunit-polyfills": "^3.1",
         "phpunit/phpunit": "^9.6",
         "brain/monkey": "^2.0@dev",
-        "phpstan/phpstan-mockery": "^2.0"
+        "phpstan/phpstan-mockery": "^2.0",
+        "lloc/composer-i18n-scripts": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
         "tests:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
-        "cs": "./vendor/bin/phpcs .",
-        "cs:fix": "./vendor/bin/phpcbf .",
+        "phpcs": "vendor/bin/phpcs .",
+        "phpcbf": "./vendor/bin/phpcbf .",
         "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
             "@cs",
             "@phpstan"
         ],
-        "i18n:pot": "wp i18n make-pot . languages/multisyde.pot",
         "git-release": "bin/git-release.sh",
         "build": [
             "@composer install --no-dev",
