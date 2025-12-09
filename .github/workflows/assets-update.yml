@@ -5,7 +5,7 @@ permissions:
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   trunk:
     name: Push to trunk
