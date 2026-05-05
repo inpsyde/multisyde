@@ -32,26 +32,49 @@ final class Feature implements LoadableFeature {
 		add_action( 'rest_api_init', array( __CLASS__, 'sites_rest_api_init' ) );
 
 		if ( is_network_admin() ) {
-			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ) );
+			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ), 999 );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+			add_action( 'load-sites.php', array( __CLASS__, 'redirect_legacy_sites_page' ) );
 		}
 	}
 
 	/**
-	 * Register the submenu page under "Sites" in the network admin.
+	 * Register the submenu page under "Sites" in the network admin and remove
+	 * the default "All Sites" entry so this POC takes its place.
 	 *
 	 * @return void
 	 */
 	public static function register_submenu(): void {
 		add_submenu_page(
 			'sites.php',
-			__( 'Sites (Data Views)', 'multisyde' ),
-			__( 'Sites (Data Views)', 'multisyde' ),
+			__( 'All Sites', 'multisyde' ),
+			__( 'All Sites', 'multisyde' ),
 			'manage_network',
 			self::SLUG,
 			array( __CLASS__, 'render_page' ),
-			30
+			0
 		);
+
+		remove_submenu_page( 'sites.php', 'sites.php' );
+	}
+
+	/**
+	 * Redirect any direct hit on the legacy sites.php (no submenu page param)
+	 * to our DataViews replacement.
+	 *
+	 * @return void
+	 */
+	public static function redirect_legacy_sites_page(): void {
+		if ( isset( $_GET['page'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_network' ) ) {
+			return;
+		}
+
+		wp_safe_redirect( network_admin_url( 'sites.php?page=' . self::SLUG ) );
+		exit;
 	}
 
 	/**
@@ -60,7 +83,7 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function render_page(): void {
-		echo '<div class="wrap"><h1>' . esc_html__( 'Sites (Data Views)', 'multisyde' ) . '</h1><div id="ms-dataviews-root"></div></div>';
+		echo '<div class="wrap"><h1>' . esc_html__( 'Sites', 'multisyde' ) . '</h1><div id="ms-sites-dataviews-root"></div></div>';
 	}
 
 	/**

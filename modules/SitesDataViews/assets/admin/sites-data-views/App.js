@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { DataViews } from '@wordpress/dataviews/wp';
 
 import { fields } from './fields';
@@ -14,7 +13,7 @@ const App = () => {
 	const actions = buildActions();
 
 	return (
-		<Fragment>
+		<div className="ms-sites-dataviews">
 			<DataViews
 				data={ rows }
 				fields={ fields }
@@ -26,7 +25,7 @@ const App = () => {
 				getItemId={ (item) => String( item.id ) }
 				paginationInfo={ paginationInfo }
 			/>
-		</Fragment>
+		</div>
 	);
 };
 
