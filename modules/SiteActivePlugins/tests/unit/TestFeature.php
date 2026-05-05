@@ -202,7 +202,7 @@ final class TestFeature extends UnitTestCase {
 	public function test_populate_active_plugins_max_sites(): void {
 		$max_sites = 5;
 
-		Filters\expectApplied( 'site_active_plugins_max_sites' )->once()->with( 100 )->andReturn( $max_sites );
+		Filters\expectApplied( Feature::FILTER_MAX_SITES )->once()->with( 100 )->andReturn( $max_sites );
 
 		$args = array(
 			'fields' => 'ids',
