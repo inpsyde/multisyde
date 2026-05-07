@@ -124,7 +124,7 @@ final class Feature implements LoadableFeature {
 			return;
 		}
 
-		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/sites-data-views.asset.php' );
+		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/sites-dataviews.asset.php' );
 		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
@@ -133,7 +133,7 @@ final class Feature implements LoadableFeature {
 
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-data-views.js' ),
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews.js' ),
 			$asset['dependencies'],
 			$asset['version'],
 			true
