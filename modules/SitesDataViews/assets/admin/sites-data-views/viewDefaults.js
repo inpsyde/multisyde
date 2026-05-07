@@ -7,5 +7,5 @@ export const initialView = {
 	page: 1,
 	search: '',
 	sort: { field: 'id', direction: 'asc' },
-	fields: [ 'url', 'status', 'last_updated', 'registered' ],
+	fields: [ 'url', 'last_updated', 'registered' ],
 };

@@ -1,15 +1,25 @@
 import { __ } from '@wordpress/i18n';
+import { dateI18n, getSettings } from '@wordpress/date';
+import { siteInfoUrl } from './urls';
+
+const formatSiteDate = ( value ) => {
+	if ( ! value || value === '0000-00-00 00:00:00' ) {
+		return '';
+	}
+	const { formats } = getSettings();
+	return dateI18n( `${ formats.date } ${ formats.time }`, value );
+};
 
 export const fields = [
 	{ id: 'id', label: __( 'ID', 'multisyde' ), enableSorting: true },
 	{ id: 'domain', label: __( 'Domain', 'multisyde' ), enableGlobalSearch: true, enableSorting: true },
-	{ id: 'path',    label: __( 'Path', 'multisyde' ), enableGlobalSearch: true, enableSorting: true },
+	{ id: 'path', label: __( 'Path', 'multisyde' ), enableGlobalSearch: true, enableSorting: true },
 	{
 		id: 'url',
 		label: __( 'URL', 'multisyde' ),
 		enableSorting: false,
 		render: ( { item } ) => (
-			<a href={ item.home_url } target="_blank" rel="noreferrer" className="ms-sites-url">
+			<a href={ siteInfoUrl( item ) } className="ms-sites-url">
 				{ item.domain + item.path }
 			</a>
 		),
@@ -18,56 +28,45 @@ export const fields = [
 		id: 'status',
 		label: __( 'Status', 'multisyde' ),
 		enableSorting: false,
-		render: ( { item } ) => (
-			<div className="ms-sites-chips">
-				{ Number(item.public) !== 1 && <span className="ms-chip">{ __( 'Private', 'multisyde' ) }</span> }
-				{ Number(item.archived) === 1 && <span className="ms-chip ms-chip--warn">{ __( 'Archived', 'multisyde' ) }</span> }
-				{ Number(item.spam) === 1 && <span className="ms-chip ms-chip--danger">{ __( 'Spam', 'multisyde' ) }</span> }
-				{ Number(item.deleted) === 1 && <span className="ms-chip ms-chip--danger">{ __( 'Deleted', 'multisyde' ) }</span> }
-				{ Number(item.mature) === 1 && <span className="ms-chip ms-chip--warn">{ __( 'Mature', 'multisyde' ) }</span> }
-			</div>
-		)
+		elements: [
+			{ value: 'public', label: __( 'Public', 'multisyde' ) },
+			{ value: 'private', label: __( 'Private', 'multisyde' ) },
+			{ value: 'archived', label: __( 'Archived', 'multisyde' ) },
+			{ value: 'spam', label: __( 'Spam', 'multisyde' ) },
+			{ value: 'deleted', label: __( 'Deleted', 'multisyde' ) },
+			{ value: 'mature', label: __( 'Mature', 'multisyde' ) },
+		],
+		filterBy: { operators: [ 'is' ] },
+		render: ( { item } ) => {
+			const labels = [];
+			if ( Number( item.public ) !== 1 ) {
+				labels.push( __( 'Private', 'multisyde' ) );
+			}
+			if ( Number( item.archived ) === 1 ) {
+				labels.push( __( 'Archived', 'multisyde' ) );
+			}
+			if ( Number( item.spam ) === 1 ) {
+				labels.push( __( 'Spam', 'multisyde' ) );
+			}
+			if ( Number( item.deleted ) === 1 ) {
+				labels.push( __( 'Deleted', 'multisyde' ) );
+			}
+			if ( Number( item.mature ) === 1 ) {
+				labels.push( __( 'Mature', 'multisyde' ) );
+			}
+			return labels.join( ', ' );
+		},
 	},
 	{
-		id: 'public',
-		label: __( 'Public', 'multisyde' ),
-		type: 'boolean',
-		enableSorting: false,
-		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
-		filterBy: { operators: [ 'isAny' ] },
+		id: 'last_updated',
+		label: __( 'Last Updated', 'multisyde' ),
+		enableSorting: true,
+		render: ( { item } ) => formatSiteDate( item.last_updated ),
 	},
 	{
-		id: 'mature',
-		label: __( 'Mature', 'multisyde' ),
-		type: 'boolean',
-		enableSorting: false,
-		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
-		filterBy: { operators: [ 'isAny' ] },
+		id: 'registered',
+		label: __( 'Registered', 'multisyde' ),
+		enableSorting: true,
+		render: ( { item } ) => formatSiteDate( item.registered ),
 	},
-	{
-		id: 'archived',
-		label: __( 'Archived', 'multisyde' ),
-		type: 'boolean',
-		enableSorting: false,
-		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
-		filterBy: { operators: [ 'isAny' ] },
-	},
-	{
-		id: 'spam',
-		label: __( 'Spam', 'multisyde' ),
-		type: 'boolean',
-		enableSorting: false,
-		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
-		filterBy: { operators: [ 'isAny' ] },
-	},
-	{
-		id: 'deleted',
-		label: __( 'Deleted', 'multisyde' ),
-		type: 'boolean',
-		enableSorting: false,
-		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
-		filterBy: { operators: [ 'isAny' ] },
-	},
-	{ id: 'last_updated', label: __( 'Last Updated', 'multisyde' ), type: 'datetime', enableSorting: true },
-	{ id: 'registered',   label: __( 'Registered', 'multisyde' ), type: 'datetime', enableSorting: true },
 ];

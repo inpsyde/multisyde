@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import { DataViews } from '@wordpress/dataviews/wp';
 
 import { fields } from './fields';
@@ -14,6 +15,7 @@ const App = () => {
 
 	return (
 		<div className="ms-sites-dataviews">
+			<h1 className="wp-heading-inline">{ __( 'Sites', 'multisyde' ) }</h1>
 			<DataViews
 				data={ rows }
 				fields={ fields }

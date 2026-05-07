@@ -14,15 +14,12 @@ export default function useSites(initialView) {
 		let alive = true;
 		setIsLoading(true);
 		fetchSites(params)
-			.then((data) => {
+			.then(({ items, total, totalPages }) => {
 				if (!alive) return;
-				const items = Array.isArray(data) ? data : (data.items || []);
-				const total = Array.isArray(data) ? items.length : (data.total || items.length);
 				setRows(items);
-				const perPage = view.perPage || 20;
 				setPaginationInfo({
 					totalItems: total,
-					totalPages: Math.max(1, Math.ceil(total / perPage)),
+					totalPages: Math.max(1, totalPages),
 				});
 			})
 			.catch(() => {
@@ -35,7 +32,7 @@ export default function useSites(initialView) {
 				setIsLoading(false);
 			});
 		return () => { alive = false; };
-	}, [view.page, view.perPage, view.search, view.sort]);
+	}, [view.page, view.perPage, view.search, view.sort, JSON.stringify(view.filters)]);
 
 	return { rows, setRows, view, setView, isLoading, paginationInfo };
 }

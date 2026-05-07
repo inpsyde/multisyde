@@ -5,23 +5,21 @@
 	flex-direction: column;
 	min-height: calc(100vh - 160px);
 	margin-top: 16px;
-	background: #fff;
-	border: 1px solid #dcdcde;
+	background: var(--wp-components-color-accent-inverted, white);
+	border: #ccc;
+	color: #2f2f2f;
 	border-radius: 4px;
 	overflow: hidden;
+
+	> h1 {
+		padding: 16px 48px 0;
+
+		@media (max-width: 960px) {
+			padding: 12px 24px 0;
+		}
+	}
 }
 
 .ms-sites-url {
 	white-space: nowrap;
 }
-.ms-chip {
-	display: inline-block;
-	padding: 0 6px;
-	border-radius: 10px;
-	font-size: 11px;
-	line-height: 20px;
-	background: var(--wp-admin-theme-color, #2271b1);
-	color: #fff;
-}
-.ms-chip--warn   { background: #996800; }
-.ms-chip--danger { background: #b32d2e; }

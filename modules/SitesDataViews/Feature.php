@@ -30,12 +30,38 @@ final class Feature implements LoadableFeature {
 	 */
 	public static function init(): void {
 		add_action( 'rest_api_init', array( __CLASS__, 'sites_rest_api_init' ) );
+		add_filter( 'rest_site_collection_params', array( __CLASS__, 'register_status_collection_params' ) );
 
 		if ( is_network_admin() ) {
 			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ), 999 );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
 			add_action( 'load-sites.php', array( __CLASS__, 'redirect_legacy_sites_page' ) );
 		}
+	}
+
+	/**
+	 * Register the boolean site-status flags (public/archived/mature/spam/deleted)
+	 * as collection params so the REST controller actually forwards them to
+	 * WP_Site_Query — without this they are silently dropped.
+	 *
+	 * @param array $query_params Existing collection params.
+	 *
+	 * @return array
+	 */
+	public static function register_status_collection_params( array $query_params ): array {
+		foreach ( array( 'public', 'archived', 'mature', 'spam', 'deleted' ) as $flag ) {
+			$query_params[ $flag ] = array(
+				'description' => sprintf(
+					/* translators: %s: site flag name. */
+					__( 'Limit result set to sites whose %s flag matches the value (0 or 1).', 'multisyde' ),
+					$flag
+				),
+				'type'        => 'integer',
+				'enum'        => array( 0, 1 ),
+			);
+		}
+
+		return $query_params;
 	}
 
 	/**
@@ -83,7 +109,7 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function render_page(): void {
-		echo '<div class="wrap"><h1>' . esc_html__( 'Sites', 'multisyde' ) . '</h1><div id="ms-sites-dataviews-root"></div></div>';
+		echo '<div class="wrap"><div id="ms-sites-dataviews-root"></div></div>';
 	}
 
 	/**
@@ -114,8 +140,9 @@ final class Feature implements LoadableFeature {
 		);
 
 		$config = array(
-			'restNs' => 'wp/v2',
-			'nonce'  => wp_create_nonce( 'wp_rest' ),
+			'restNs'          => 'wp/v2',
+			'nonce'           => wp_create_nonce( 'wp_rest' ),
+			'networkAdminUrl' => network_admin_url(),
 		);
 
 		wp_add_inline_script(

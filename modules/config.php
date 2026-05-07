@@ -19,6 +19,8 @@ use Syde\MultiSyde\Modules\PermalinkCleanup\Feature as PermalinkCleanup;
 use Syde\MultiSyde\Modules\PermalinkCleanup\About as PermalinkCleanupInformation;
 use Syde\MultiSyde\Modules\SiteActiveTheme\Feature as SiteActiveTheme;
 use Syde\MultiSyde\Modules\SiteActiveTheme\About as SiteActiveThemeInformation;
+use Syde\MultiSyde\Modules\SiteNewDataForm\Feature as SiteNewDataForm;
+use Syde\MultiSyde\Modules\SiteNewDataForm\About as SiteNewDataFormInformation;
 use Syde\MultiSyde\Modules\SitesDataViews\Feature as SitesDataViews;
 use Syde\MultiSyde\Modules\SitesDataViews\About as SitesDataViewsInformation;
 
