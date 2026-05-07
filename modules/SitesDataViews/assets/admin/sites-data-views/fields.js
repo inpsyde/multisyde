@@ -8,14 +8,11 @@ export const fields = [
 		id: 'url',
 		label: __( 'URL', 'multisyde' ),
 		enableSorting: false,
-		render: ( { item } ) => {
-			const url = item.domain + item.path;
-			return (
-				<a href={ url } target="_blank" rel="noreferrer" className="ms-sites-url">
-					{ url }
-				</a>
-			);
-		},
+		render: ( { item } ) => (
+			<a href={ item.home_url } target="_blank" rel="noreferrer" className="ms-sites-url">
+				{ item.domain + item.path }
+			</a>
+		),
 	},
 	{
 		id: 'status',
@@ -71,6 +68,6 @@ export const fields = [
 		elements: [ { value: 1, label: __( 'Yes', 'multisyde' ) }, { value: 0, label: __( 'No', 'multisyde' ) } ],
 		filterBy: { operators: [ 'isAny' ] },
 	},
-	{ id: 'last_updated', label: __( 'Last Updated', 'multisyde' ), enableSorting: true },
-	{ id: 'registered',   label: __( 'Registered', 'multisyde' ), enableSorting: true },
+	{ id: 'last_updated', label: __( 'Last Updated', 'multisyde' ), type: 'datetime', enableSorting: true },
+	{ id: 'registered',   label: __( 'Registered', 'multisyde' ), type: 'datetime', enableSorting: true },
 ];
