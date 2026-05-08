@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { dateI18n, getSettings } from '@wordpress/date';
-import { siteInfoUrl } from './urls';
+import { siteEditUrl } from '../utils/siteUrl';
 
 const formatSiteDate = ( value ) => {
 	if ( ! value || value === '0000-00-00 00:00:00' ) {
@@ -19,7 +19,7 @@ export const fields = [
 		label: __( 'URL', 'multisyde' ),
 		enableSorting: false,
 		render: ( { item } ) => (
-			<a href={ siteInfoUrl( item ) } className="ms-sites-url">
+			<a href={ siteEditUrl( item ) } className="ms-sites-url">
 				{ item.domain + item.path }
 			</a>
 		),

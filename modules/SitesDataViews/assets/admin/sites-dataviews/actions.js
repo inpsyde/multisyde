@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { siteHomeUrl, siteAdminUrl } from './urls';
+import { siteHomeUrl, siteAdminUrl } from '../utils/siteUrl';
 
 export function buildActions({ openEditor } = {}) {
 	return [

@@ -20,6 +20,12 @@ const blogNamePlaceholder = config.isSubdomain
 
 export const fields = [
 	{
+		id: 'title',
+		label: __( 'Site Title', 'multisyde' ),
+		type: 'text',
+		isValid: { required: true },
+	},
+	{
 		id: 'blogname',
 		label: config.isSubdomain
 			? __( 'Site Address (subdomain)', 'multisyde' )
@@ -27,12 +33,6 @@ export const fields = [
 		type: 'text',
 		placeholder: blogNamePlaceholder,
 		description: blogNameHelp,
-		isValid: { required: true },
-	},
-	{
-		id: 'title',
-		label: __( 'Site Title', 'multisyde' ),
-		type: 'text',
 		isValid: { required: true },
 	},
 	{

@@ -34,7 +34,7 @@ const App = () => {
 			} );
 
 			const editUrl = result?.id
-				? `${ config.networkAdminUrl || '' }site-info.php?id=${ result.id }`
+				? `${ config.networkAdminUrl || '' }sites.php?page=ms-edit-site&id=${ result.id }`
 				: undefined;
 
 			setNotice( {

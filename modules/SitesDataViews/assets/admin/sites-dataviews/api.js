@@ -1,5 +1,7 @@
 import apiFetch from '@wordpress/api-fetch';
 
+export { setupApiFetch } from '../utils/apiFetch';
+
 const STATUS_FILTER_MAP = {
 	public: { public: 1 },
 	private: { public: 0 },
@@ -8,12 +10,6 @@ const STATUS_FILTER_MAP = {
 	deleted: { deleted: 1 },
 	mature: { mature: 1 },
 };
-
-export function setupApiFetch(nonce) {
-	if (nonce) {
-		apiFetch.use(apiFetch.createNonceMiddleware(nonce));
-	}
-}
 
 export function fetchSites({ view, restNs = 'wp/v2' }) {
 	const params = new URLSearchParams();

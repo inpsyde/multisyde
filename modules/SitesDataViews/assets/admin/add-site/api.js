@@ -1,10 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 
-export function setupApiFetch( nonce ) {
-	if ( nonce ) {
-		apiFetch.use( apiFetch.createNonceMiddleware( nonce ) );
-	}
-}
+export { setupApiFetch } from '../utils/apiFetch';
 
 export function createSite( { restNs = 'wp/v2', data } ) {
 	return apiFetch( {

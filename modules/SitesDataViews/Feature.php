@@ -26,6 +26,10 @@ final class Feature implements LoadableFeature {
 	private const ADD_SITE_SCRIPT_HANDLE = 'multisyde-add-site';
 	private const ADD_SITE_STYLE_HANDLE  = 'multisyde-add-site-styles';
 
+	private const EDIT_SITE_SLUG          = 'ms-edit-site';
+	private const EDIT_SITE_SCRIPT_HANDLE = 'multisyde-edit-site';
+	private const EDIT_SITE_STYLE_HANDLE  = 'multisyde-edit-site-styles';
+
 	/**
 	 * Adds functionality to their respective hooks.
 	 *
@@ -34,13 +38,17 @@ final class Feature implements LoadableFeature {
 	public static function init(): void {
 		add_action( 'rest_api_init', array( __CLASS__, 'sites_rest_api_init' ) );
 		add_filter( 'rest_site_collection_params', array( __CLASS__, 'register_status_collection_params' ) );
+		add_action( 'rest_insert_site', array( __CLASS__, 'sync_site_title_option' ), 10, 3 );
 
 		if ( is_network_admin() ) {
 			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ), 999 );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_add_site_assets' ) );
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_edit_site_assets' ) );
+			add_action( 'admin_head', array( __CLASS__, 'hide_edit_site_menu_link' ) );
 			add_action( 'load-sites.php', array( __CLASS__, 'redirect_legacy_sites_page' ) );
 			add_action( 'load-site-new.php', array( __CLASS__, 'redirect_legacy_site_new_page' ) );
+			add_action( 'load-site-info.php', array( __CLASS__, 'redirect_legacy_site_info_page' ) );
 		}
 	}
 
@@ -96,8 +104,33 @@ final class Feature implements LoadableFeature {
 			1
 		);
 
+		// Edit Site: registered as a real submenu so WP can resolve its
+		// capability when accessing it via `?page=ms-edit-site`. The menu
+		// link itself is hidden through `admin_head` CSS below — we don't
+		// call `remove_submenu_page()` here because that would empty the
+		// $submenu entry that WP's `get_plugin_page_capability()` scans,
+		// causing access to wp_die with "Sorry, you are not allowed".
+		add_submenu_page(
+			'sites.php',
+			__( 'Edit Site', 'multisyde' ),
+			__( 'Edit Site', 'multisyde' ),
+			'manage_sites',
+			self::EDIT_SITE_SLUG,
+			array( __CLASS__, 'render_edit_site_page' )
+		);
+
 		remove_submenu_page( 'sites.php', 'sites.php' );
 		remove_submenu_page( 'sites.php', 'site-new.php' );
+	}
+
+	/**
+	 * Hide the Edit Site submenu link from the network admin sidebar without
+	 * unregistering it (see register_submenu() for the rationale).
+	 *
+	 * @return void
+	 */
+	public static function hide_edit_site_menu_link(): void {
+		echo '<style>#adminmenu a.wp-submenu-edit-site,#adminmenu li.wp-submenu-edit-site,#adminmenu .wp-submenu a[href$="page=' . esc_attr( self::EDIT_SITE_SLUG ) . '"]{display:none !important;}</style>';
 	}
 
 	/**
@@ -135,6 +168,30 @@ final class Feature implements LoadableFeature {
 	}
 
 	/**
+	 * Redirect any direct hit on the legacy network/site-info.php to our
+	 * DataForm replacement, preserving the site `id` query arg.
+	 *
+	 * @return void
+	 */
+	public static function redirect_legacy_site_info_page(): void {
+		if ( ! current_user_can( 'manage_sites' ) ) {
+			return;
+		}
+
+		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		if ( $id <= 0 ) {
+			return;
+		}
+
+		wp_safe_redirect(
+			network_admin_url(
+				'sites.php?page=' . self::EDIT_SITE_SLUG . '&id=' . $id
+			)
+		);
+		exit;
+	}
+
+	/**
 	 * Render the content of the submenu page.
 	 *
 	 * @return void
@@ -150,6 +207,27 @@ final class Feature implements LoadableFeature {
 	 */
 	public static function render_add_site_page(): void {
 		echo '<div class="wrap"><div id="ms-add-site-root"></div></div>';
+	}
+
+	/**
+	 * Render the content of the Edit Site submenu page (hidden submenu).
+	 *
+	 * @return void
+	 */
+	public static function render_edit_site_page(): void {
+		$site_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		if ( $site_id <= 0 ) {
+			printf(
+				'<div class="wrap"><h1>%s</h1><p>%s <a href="%s">%s</a></p></div>',
+				esc_html__( 'Edit Site', 'multisyde' ),
+				esc_html__( 'No site selected.', 'multisyde' ),
+				esc_url( network_admin_url( 'sites.php?page=' . self::SLUG ) ),
+				esc_html__( 'Back to all sites', 'multisyde' )
+			);
+			return;
+		}
+
+		echo '<div class="wrap"><div id="ms-edit-site-root"></div></div>';
 	}
 
 	/**
@@ -255,6 +333,64 @@ final class Feature implements LoadableFeature {
 	}
 
 	/**
+	 * Enqueue scripts and styles for the Edit Site page.
+	 *
+	 * @param string $hook The current admin page hook.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_edit_site_assets( string $hook ): void {
+		if ( 'sites_page_' . self::EDIT_SITE_SLUG !== $hook ) {
+			return;
+		}
+
+		$site_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		if ( $site_id <= 0 ) {
+			return;
+		}
+
+		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/edit-site/edit-site.asset.php' );
+		if ( ! file_exists( $asset_file ) ) {
+			return;
+		}
+
+		$asset = include $asset_file;
+
+		wp_enqueue_script(
+			self::EDIT_SITE_SCRIPT_HANDLE,
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/edit-site.js' ),
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
+		$config = array(
+			'restNs'          => 'wp/v2',
+			'nonce'           => wp_create_nonce( 'wp_rest' ),
+			'networkAdminUrl' => network_admin_url(),
+			'sitesListUrl'    => network_admin_url( 'sites.php?page=' . self::SLUG ),
+			'siteId'          => $site_id,
+			'isMainSite'      => is_main_site( $site_id ),
+			'homeUrl'         => get_home_url( $site_id, '/' ),
+			'adminUrl'        => get_admin_url( $site_id ),
+			'defaultScheme'   => is_ssl() ? 'https' : 'http',
+		);
+
+		wp_add_inline_script(
+			self::EDIT_SITE_SCRIPT_HANDLE,
+			'window.MS_EDIT_SITE_DATA = ' . wp_json_encode( $config ) . ';',
+			'before'
+		);
+
+		wp_enqueue_style(
+			self::EDIT_SITE_STYLE_HANDLE,
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/style-index.css' ),
+			array( 'wp-components' ),
+			$asset['version'],
+		);
+	}
+
+	/**
 	 * Build the list of language choices for the Add Site DataForm field.
 	 *
 	 * Mirrors `wp_dropdown_languages()` on the legacy `network/site-new.php`
@@ -322,6 +458,37 @@ final class Feature implements LoadableFeature {
 			$installed_translations,
 			$available_translations
 		);
+	}
+
+	/**
+	 * Sync the per-site `blogname` option when a `title` is supplied via
+	 * the sites REST endpoint. The REST controller already accepts `title`
+	 * for site creation but its `update_item()` does not propagate it on
+	 * subsequent edits — this listener fills that gap.
+	 *
+	 * @param \WP_Site         $site     The site that was inserted/updated.
+	 * @param \WP_REST_Request $request  The REST request.
+	 * @param bool             $creating Whether this fired during creation.
+	 *
+	 * @return void
+	 */
+	public static function sync_site_title_option( $site, $request, $creating ): void {
+		if ( $creating ) {
+			return;
+		}
+
+		if ( ! $request->has_param( 'title' ) ) {
+			return;
+		}
+
+		$title = trim( (string) $request->get_param( 'title' ) );
+		if ( '' === $title ) {
+			return;
+		}
+
+		switch_to_blog( (int) $site->blog_id );
+		update_option( 'blogname', sanitize_text_field( $title ) );
+		restore_current_blog();
 	}
 
 	/**

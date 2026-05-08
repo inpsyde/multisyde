@@ -1,0 +1,49 @@
+@import "@wordpress/dataviews/build-style/style.css";
+
+.ms-edit-site {
+	display: flex;
+	flex-direction: column;
+	max-width: 720px;
+	margin-top: 16px;
+	background: var(--wp-components-color-accent-inverted, white);
+	border-radius: 4px;
+	color: #2f2f2f;
+	overflow: hidden;
+
+	> h1 {
+		padding: 16px 24px 0;
+	}
+
+	&__top-actions {
+		padding: 0 24px;
+		margin: 8px 0 0;
+		font-size: 13px;
+		color: #50575e;
+
+		a + a {
+			margin-left: 8px;
+		}
+	}
+
+	&__tabs {
+		margin: 16px 24px 0;
+	}
+
+	&__form {
+		padding: 16px 24px 24px;
+	}
+
+	&__main-url {
+		margin: 0 0 16px;
+
+		.description {
+			color: #50575e;
+			font-style: normal;
+		}
+	}
+
+	&__actions {
+		margin-top: 24px;
+		gap: 8px;
+	}
+}
