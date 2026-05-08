@@ -434,10 +434,26 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			return $prepared_site;
 		}
 
-		$site_id = wp_insert_site( $prepared_site );
+		$title = isset( $request['title'] ) ? trim( (string) $request['title'] ) : '';
+		$email = isset( $request['email'] ) ? trim( (string) $request['email'] ) : '';
+
+		// When title and email are provided, run the full installation flow
+		// (create/lookup admin user, default content, welcome email) — equivalent
+		// to wp-admin/network/site-new.php. Otherwise fall back to the low-level
+		// wp_insert_site() path that only writes to wp_blogs.
+		if ( '' !== $title && '' !== $email ) {
+			$site_id = $this->create_site_with_admin( $prepared_site, $request );
+		} else {
+			$site_id = wp_insert_site( $prepared_site );
+		}
 
 		if ( is_wp_error( $site_id ) ) {
-			$site_id->add_data( array( 'status' => 500 ) );
+			// Preserve any HTTP status the helper already set (e.g. 400/409); only
+			// default to 500 when no status was attached.
+			$existing = $site_id->get_error_data( $site_id->get_error_code() );
+			if ( ! is_array( $existing ) || empty( $existing['status'] ) ) {
+				$site_id->add_data( array( 'status' => 500 ) );
+			}
 
 			return $site_id;
 		}
@@ -488,6 +504,91 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $site_id ) ) );
 
 		return $response;
+	}
+
+	/**
+	 * Create a fully-installed site with an admin user, mirroring the legacy
+	 * `wp-admin/network/site-new.php` flow.
+	 *
+	 * Looks up or creates the admin user, calls `wpmu_create_blog()` (which runs
+	 * default content installation), assigns `primary_blog` for non-super-admins,
+	 * and sends the welcome notification.
+	 *
+	 * @param array           $prepared_site Prepared site data containing at least `domain` and `path`.
+	 * @param WP_REST_Request $request       Original request.
+	 *
+	 * @return int|WP_Error New site ID on success, WP_Error otherwise.
+	 */
+	protected function create_site_with_admin( array $prepared_site, $request ) {
+		$email = trim( (string) $request['email'] );
+		$title = trim( (string) $request['title'] );
+
+		if ( '' === $email || ! is_email( $email ) ) {
+			return new WP_Error( 'rest_invalid_email', __( 'A valid admin email is required.' ), array( 'status' => 400 ) );
+		}
+
+		$domain     = isset( $prepared_site['domain'] ) ? (string) $prepared_site['domain'] : '';
+		$path       = isset( $prepared_site['path'] ) ? (string) $prepared_site['path'] : '/';
+		$network_id = isset( $prepared_site['network_id'] ) ? (int) $prepared_site['network_id'] : (int) $prepared_site['network'];
+
+		if ( '' === $domain ) {
+			return new WP_Error( 'rest_missing_domain', __( 'A site domain is required (provide either `domain` or `slug`).' ), array( 'status' => 400 ) );
+		}
+
+		if ( domain_exists( $domain, $path, $network_id ) ) {
+			return new WP_Error( 'rest_site_exists', __( 'Sorry, that site already exists!' ), array( 'status' => 409 ) );
+		}
+
+		$password = 'N/A';
+		$user_id  = email_exists( $email );
+		if ( ! $user_id ) {
+			$password = wp_generate_password( 12, false );
+			$user_id  = wpmu_create_user( sanitize_user( $email, true ), $password, $email );
+			if ( ! $user_id ) {
+				return new WP_Error( 'rest_create_user_failed', __( 'There was an error creating the user.' ), array( 'status' => 500 ) );
+			}
+
+			wp_new_user_notification( $user_id, null, 'both' );
+		}
+
+		$meta = array( 'public' => 1 );
+		if ( isset( $prepared_site['fields']['public'] ) && null !== $prepared_site['fields']['public'] ) {
+			$meta['public'] = (int) $prepared_site['fields']['public'];
+		}
+
+		$locale = isset( $request['locale'] ) ? (string) $request['locale'] : '';
+		if ( '' !== $locale ) {
+			$available_languages   = get_available_languages();
+			$available_languages[] = 'en_US';
+
+			if ( in_array( $locale, $available_languages, true ) ) {
+				$meta['WPLANG'] = $locale;
+			} elseif ( current_user_can( 'install_languages' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+
+				if ( wp_can_install_language_pack() ) {
+					$downloaded = wp_download_language_pack( $locale );
+					if ( $downloaded ) {
+						$meta['WPLANG'] = $downloaded;
+					}
+				}
+			}
+		}
+
+		$blog_id = wpmu_create_blog( $domain, $path, $title, $user_id, $meta, $network_id );
+
+		if ( is_wp_error( $blog_id ) ) {
+			return $blog_id;
+		}
+
+		if ( ! is_super_admin( $user_id ) && ! get_user_option( 'primary_blog', $user_id ) ) {
+			update_user_option( $user_id, 'primary_blog', $blog_id, true );
+		}
+
+		wpmu_welcome_notification( $blog_id, $user_id, $password, $title, array( 'public' => $meta['public'] ) );
+
+		return (int) $blog_id;
 	}
 
 	/**
@@ -779,13 +880,38 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			$prepared_site['network_id'] = (int) $request['network'];
 		}
 
-		if ( empty( $request['path'] ) ) {
-			$prepared_site['path'] = '/';
-		} else {
-			$prepared_site['path'] = $request['path'];
-		}
+		// Derive domain/path from `slug` if domain is not provided explicitly.
+		// Mirrors the legacy `wp-admin/network/site-new.php` slug handling.
+		if ( empty( $request['domain'] ) && ! empty( $request['slug'] ) ) {
+			$network_id      = isset( $prepared_site['network_id'] ) ? (int) $prepared_site['network_id'] : (int) $prepared_site['network'];
+			$current_network = get_network( $network_id );
+			if ( ! $current_network ) {
+				return new WP_Error( 'rest_no_network', __( 'Could not load network for slug-based site creation.' ), array( 'status' => 500 ) );
+			}
 
-		$prepared_site['domain'] = $request['domain'];
+			$slug = trim( (string) $request['slug'] );
+			if ( is_subdomain_install() ) {
+				$slug                    = preg_replace( '/^-+|-+$/', '', strtolower( preg_replace( '/[^a-zA-Z0-9-]+/', '', $slug ) ) );
+				$prepared_site['domain'] = $slug . '.' . preg_replace( '|^www\.|', '', $current_network->domain );
+				$prepared_site['path']   = $current_network->path;
+			} else {
+				$slug                    = strtolower( preg_replace( '/[^a-zA-Z0-9_-]+/', '', $slug ) );
+				$prepared_site['domain'] = $current_network->domain;
+				$prepared_site['path']   = $current_network->path . $slug . '/';
+			}
+
+			if ( '' === $slug ) {
+				return new WP_Error( 'rest_invalid_slug', __( 'Please enter a valid site address.' ), array( 'status' => 400 ) );
+			}
+		} else {
+			if ( empty( $request['path'] ) ) {
+				$prepared_site['path'] = '/';
+			} else {
+				$prepared_site['path'] = $request['path'];
+			}
+
+			$prepared_site['domain'] = isset( $request['domain'] ) ? $request['domain'] : '';
+		}
 
 		/**
 		 * Filters a site after it is prepared for the database.
@@ -889,22 +1015,48 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 					'description' => __( 'Site\'s name, stored in blogname option' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
 				),
 				'siteurl'      => array(
 					'description' => __( 'Site\'s site url, stored in site_url option' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
 				),
 				'home'         => array(
 					'description' => __( 'Site\'s home url, stored in home option' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
 				),
 				'post_count'   => array(
 					'description' => __( 'Number of posts on this site' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'default'     => 0,
+					'readonly'    => true,
+				),
+				'slug'         => array(
+					'description' => __( 'Site address slug. Subdomain on subdomain installs, path component on subdirectory installs. Used at creation time only; ignored if `domain` is provided explicitly.' ),
+					'type'        => 'string',
+					'context'     => array( 'edit' ),
+				),
+				'title'        => array(
+					'description' => __( 'Site title. Used at creation time; sets the new site\'s `blogname` option and triggers full site installation (default content, admin user assignment, welcome email).' ),
+					'type'        => 'string',
+					'context'     => array( 'edit' ),
+				),
+				'email'        => array(
+					'description' => __( 'Admin email for the new site. If no user with this email exists, a new user is created and notified.' ),
+					'type'        => 'string',
+					'format'      => 'email',
+					'context'     => array( 'edit' ),
+				),
+				'locale'       => array(
+					'description' => __( 'Site language locale code (e.g. de_DE). Stored as the WPLANG option on the new site. Defaults to the network default.' ),
+					'type'        => 'string',
+					'context'     => array( 'edit' ),
+					'default'     => '',
 				),
 			),
 		);

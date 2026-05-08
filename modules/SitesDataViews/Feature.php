@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Syde\MultiSyde\Modules\SitesDataViews;
 
 use Syde\MultiSyde\LoadableFeature;
-use Syde\MultiSyde\Modules\SitesDataViews\Rest\SitesController;
 use Syde\MultiSyde\Plugin;
 
 /**
@@ -22,6 +21,10 @@ final class Feature implements LoadableFeature {
 	private const SCRIPT_HANDLE = 'multisyde-sites-data-views';
 
 	private const STYLE_HANDLE = 'multisyde-sites-data-views-styles';
+
+	private const ADD_SITE_SLUG          = 'ms-add-site';
+	private const ADD_SITE_SCRIPT_HANDLE = 'multisyde-add-site';
+	private const ADD_SITE_STYLE_HANDLE  = 'multisyde-add-site-styles';
 
 	/**
 	 * Adds functionality to their respective hooks.
@@ -35,7 +38,9 @@ final class Feature implements LoadableFeature {
 		if ( is_network_admin() ) {
 			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ), 999 );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_add_site_assets' ) );
 			add_action( 'load-sites.php', array( __CLASS__, 'redirect_legacy_sites_page' ) );
+			add_action( 'load-site-new.php', array( __CLASS__, 'redirect_legacy_site_new_page' ) );
 		}
 	}
 
@@ -81,7 +86,18 @@ final class Feature implements LoadableFeature {
 			0
 		);
 
+		add_submenu_page(
+			'sites.php',
+			__( 'Add New Site', 'multisyde' ),
+			__( 'Add New Site', 'multisyde' ),
+			'manage_network',
+			self::ADD_SITE_SLUG,
+			array( __CLASS__, 'render_add_site_page' ),
+			1
+		);
+
 		remove_submenu_page( 'sites.php', 'sites.php' );
+		remove_submenu_page( 'sites.php', 'site-new.php' );
 	}
 
 	/**
@@ -104,12 +120,36 @@ final class Feature implements LoadableFeature {
 	}
 
 	/**
+	 * Redirect any direct hit on the legacy site-new.php to our DataForm
+	 * replacement.
+	 *
+	 * @return void
+	 */
+	public static function redirect_legacy_site_new_page(): void {
+		if ( ! current_user_can( 'manage_network' ) ) {
+			return;
+		}
+
+		wp_safe_redirect( network_admin_url( 'sites.php?page=' . self::ADD_SITE_SLUG ) );
+		exit;
+	}
+
+	/**
 	 * Render the content of the submenu page.
 	 *
 	 * @return void
 	 */
 	public static function render_page(): void {
 		echo '<div class="wrap"><div id="ms-sites-dataviews-root"></div></div>';
+	}
+
+	/**
+	 * Render the content of the Add New Site submenu page.
+	 *
+	 * @return void
+	 */
+	public static function render_add_site_page(): void {
+		echo '<div class="wrap"><div id="ms-add-site-root"></div></div>';
 	}
 
 	/**
@@ -124,7 +164,7 @@ final class Feature implements LoadableFeature {
 			return;
 		}
 
-		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/sites-dataviews.asset.php' );
+		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/sites-dataviews/sites-dataviews.asset.php' );
 		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
@@ -133,7 +173,7 @@ final class Feature implements LoadableFeature {
 
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews.js' ),
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews/sites-dataviews.js' ),
 			$asset['dependencies'],
 			$asset['version'],
 			true
@@ -153,9 +193,134 @@ final class Feature implements LoadableFeature {
 
 		wp_enqueue_style(
 			self::STYLE_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/style-index.css' ),
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews/style-index.css' ),
 			array( 'wp-components' ),
 			$asset['version'],
+		);
+	}
+
+	/**
+	 * Enqueue scripts and styles for the Add New Site page.
+	 *
+	 * @param string $hook The current admin page hook.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_add_site_assets( string $hook ): void {
+		if ( 'sites_page_' . self::ADD_SITE_SLUG !== $hook ) {
+			return;
+		}
+
+		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/add-site/add-site.asset.php' );
+		if ( ! file_exists( $asset_file ) ) {
+			return;
+		}
+
+		$asset = include $asset_file;
+
+		wp_enqueue_script(
+			self::ADD_SITE_SCRIPT_HANDLE,
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/add-site.js' ),
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
+		$current_network = get_network();
+		$config          = array(
+			'restNs'           => 'wp/v2',
+			'nonce'            => wp_create_nonce( 'wp_rest' ),
+			'networkAdminUrl'  => network_admin_url(),
+			'sitesListUrl'     => network_admin_url( 'sites.php?page=' . self::SLUG ),
+			'isSubdomain'      => (bool) is_subdomain_install(),
+			'networkDomain'    => $current_network ? $current_network->domain : '',
+			'networkPath'      => $current_network ? $current_network->path : '/',
+			'siteUrlScheme'    => is_ssl() ? 'https' : 'http',
+			'languages'        => self::get_available_languages_choices(),
+			'defaultLanguage'  => get_network_option( null, 'WPLANG', '' ),
+		);
+
+		wp_add_inline_script(
+			self::ADD_SITE_SCRIPT_HANDLE,
+			'window.MS_ADD_SITE_DATA = ' . wp_json_encode( $config ) . ';',
+			'before'
+		);
+
+		wp_enqueue_style(
+			self::ADD_SITE_STYLE_HANDLE,
+			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/style-index.css' ),
+			array( 'wp-components' ),
+			$asset['version'],
+		);
+	}
+
+	/**
+	 * Build the list of language choices for the Add Site DataForm field.
+	 *
+	 * Mirrors `wp_dropdown_languages()` on the legacy `network/site-new.php`
+	 * screen with `show_available_translations` enabled: lists installed
+	 * languages first, then all uninstalled translations from the API. The
+	 * REST controller downloads the language pack on submit when needed.
+	 *
+	 * @return array
+	 */
+	private static function get_available_languages_choices(): array {
+		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+
+		$installed              = get_available_languages();
+		$translations           = wp_get_available_translations();
+		$can_install            = current_user_can( 'install_languages' ) && wp_can_install_language_pack();
+		$installed_translations = array();
+		$available_translations = array();
+
+		foreach ( $installed as $locale ) {
+			if ( isset( $translations[ $locale ] ) ) {
+				$installed_translations[] = array(
+					'value' => $locale,
+					'label' => $translations[ $locale ]['native_name'],
+				);
+				unset( $translations[ $locale ] );
+				continue;
+			}
+
+			$installed_translations[] = array(
+				'value' => $locale,
+				'label' => $locale,
+			);
+		}
+
+		usort(
+			$installed_translations,
+			static fn ( $a, $b ) => strcoll( $a['label'], $b['label'] )
+		);
+
+		if ( $can_install ) {
+			foreach ( $translations as $locale => $translation ) {
+				$available_translations[] = array(
+					'value' => $locale,
+					'label' => $translation['native_name'],
+				);
+			}
+
+			usort(
+				$available_translations,
+				static fn ( $a, $b ) => strcoll( $a['label'], $b['label'] )
+			);
+		}
+
+		return array_merge(
+			array(
+				array(
+					'value' => '',
+					'label' => __( 'Site Default', 'multisyde' ),
+				),
+				array(
+					'value' => 'en_US',
+					'label' => 'English (United States)',
+				),
+			),
+			$installed_translations,
+			$available_translations
 		);
 	}
 
@@ -165,12 +330,12 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function sites_rest_api_init(): void {
-        if ( class_exists( 'WP_REST_Controller' ) && ! class_exists( 'WP_REST_Sites_Controller' ) ) {
-            require_once __DIR__ . '/lib/class-wp-rest-site-meta-fields.php';
-            require_once __DIR__ . '/lib/class-wp-rest-sites-controller.php';
-        }
+		if ( class_exists( 'WP_REST_Controller' ) && ! class_exists( 'WP_REST_Sites_Controller' ) ) {
+			require_once __DIR__ . '/lib/class-wp-rest-site-meta-fields.php';
+			require_once __DIR__ . '/lib/class-wp-rest-sites-controller.php';
+		}
 
-        $plugins_controller = new \WP_REST_Sites_Controller();
-        $plugins_controller->register_routes();
+		$sites_controller = new \WP_REST_Sites_Controller();
+		$sites_controller->register_routes();
 	}
 }

@@ -1,0 +1,25 @@
+@import "@wordpress/dataviews/build-style/style.css";
+
+.ms-add-site {
+	display: flex;
+	flex-direction: column;
+	max-width: 720px;
+	margin-top: 16px;
+	background: var(--wp-components-color-accent-inverted, white);
+	border-radius: 4px;
+	color: #2f2f2f;
+	overflow: hidden;
+
+	> h1 {
+		padding: 16px 24px 0;
+	}
+
+	&__form {
+		padding: 16px 24px 24px;
+	}
+
+	&__actions {
+		margin-top: 24px;
+		gap: 8px;
+	}
+}
