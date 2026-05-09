@@ -24,7 +24,7 @@ class About implements ShareableInformation {
 	 */
 	public static function get(): Summary {
 		return new Summary(
-			__( 'Sites — DataViews (prototype)', 'multisyde' ),
+			__( 'Sites - DataViews (prototype)', 'multisyde' ),
 			__( 'Experimental Network Admin screen that renders the Sites list using DataViews and DataForm. Includes global search, sorting, basic filters, and inline editing of selected site flags via REST.', 'multisyde' ),
 			array()
 		);
