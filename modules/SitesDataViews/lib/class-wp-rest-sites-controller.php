@@ -872,6 +872,19 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			$prepared_site['fields'][ $meta_field ] = $request[ $meta_field ];
 		}
 
+		foreach ( array( 'registered', 'last_updated' ) as $datetime_field ) {
+			if ( ! isset( $request[ $datetime_field ] ) ) {
+				continue;
+			}
+			$value = trim( (string) $request[ $datetime_field ] );
+			if ( '' === $value ) {
+				continue;
+			}
+			// Accept both `YYYY-MM-DDTHH:MM:SS` (REST) and `YYYY-MM-DD HH:MM:SS` (SQL).
+			$value = str_replace( 'T', ' ', $value );
+			$prepared_site[ $datetime_field ] = $value;
+		}
+
 		$prepared_site['network'] = get_current_network_id();
 		if ( isset( $request['network'] ) ) {
 			if ( ! get_network( $request['network'] ) ) {
