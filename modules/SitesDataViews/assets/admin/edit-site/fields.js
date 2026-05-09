@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import DateTimeLocalEdit from '../utils/DateTimeLocalEdit';
+import DateTimePopoverEdit from '../utils/DateTimePopoverEdit';
 
 /**
  * Build the DataForm field definitions for the Edit Site page.
@@ -32,13 +32,13 @@ export function buildFields() {
 			id: 'registered',
 			label: __( 'Registered', 'multisyde' ),
 			type: 'datetime',
-			Edit: DateTimeLocalEdit,
+			Edit: DateTimePopoverEdit,
 		},
 		{
 			id: 'last_updated',
 			label: __( 'Last Updated', 'multisyde' ),
 			type: 'datetime',
-			Edit: DateTimeLocalEdit,
+			Edit: DateTimePopoverEdit,
 		},
 		{
 			id: 'public',

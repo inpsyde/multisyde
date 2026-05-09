@@ -26,7 +26,11 @@
 	}
 
 	&__tabs {
-		margin: 16px 24px 0;
+		margin: 16px 0 0;
+
+		.components-tab-panel__tabs {
+			padding: 0 24px;
+		}
 	}
 
 	&__form {

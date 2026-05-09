@@ -5,3 +5,7 @@ parameters:
         - modules/
         - tests/php/unit/
         - multisyde.php
+    excludePaths:
+        analyse:
+            - modules/GetSiteBy/patches/40180.php
+            - modules/SitesDataViews/lib/

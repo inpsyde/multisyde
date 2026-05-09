@@ -57,9 +57,9 @@ final class Feature implements LoadableFeature {
 	 * as collection params so the REST controller actually forwards them to
 	 * WP_Site_Query — without this they are silently dropped.
 	 *
-	 * @param array $query_params Existing collection params.
+	 * @param array<string, mixed> $query_params Existing collection params.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function register_status_collection_params( array $query_params ): array {
 		foreach ( array( 'public', 'archived', 'mature', 'spam', 'deleted' ) as $flag ) {
@@ -178,7 +178,7 @@ final class Feature implements LoadableFeature {
 			return;
 		}
 
-		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$id = isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		if ( $id <= 0 ) {
 			return;
 		}
@@ -215,7 +215,7 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function render_edit_site_page(): void {
-		$site_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$site_id = isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		if ( $site_id <= 0 ) {
 			printf(
 				'<div class="wrap"><h1>%s</h1><p>%s <a href="%s">%s</a></p></div>',
@@ -344,7 +344,7 @@ final class Feature implements LoadableFeature {
 			return;
 		}
 
-		$site_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$site_id = isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		if ( $site_id <= 0 ) {
 			return;
 		}
@@ -398,7 +398,7 @@ final class Feature implements LoadableFeature {
 	 * languages first, then all uninstalled translations from the API. The
 	 * REST controller downloads the language pack on submit when needed.
 	 *
-	 * @return array
+	 * @return array<int, array{value: string, label: string}>
 	 */
 	private static function get_available_languages_choices(): array {
 		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
@@ -432,6 +432,9 @@ final class Feature implements LoadableFeature {
 
 		if ( $can_install ) {
 			foreach ( $translations as $locale => $translation ) {
+				if ( ! is_string( $locale ) ) {
+					continue;
+				}
 				$available_translations[] = array(
 					'value' => $locale,
 					'label' => $translation['native_name'],
@@ -466,13 +469,13 @@ final class Feature implements LoadableFeature {
 	 * for site creation but its `update_item()` does not propagate it on
 	 * subsequent edits — this listener fills that gap.
 	 *
-	 * @param \WP_Site         $site     The site that was inserted/updated.
+	 * @param \WP_Site $site     The site that was inserted/updated.
 	 * @param \WP_REST_Request $request  The REST request.
-	 * @param bool             $creating Whether this fired during creation.
+	 * @param bool $creating Whether this fired during creation.
 	 *
 	 * @return void
 	 */
-	public static function sync_site_title_option( $site, $request, $creating ): void {
+	public static function sync_site_title_option( \WP_Site $site, \WP_REST_Request $request, bool $creating ): void {
 		if ( $creating ) {
 			return;
 		}
@@ -481,7 +484,12 @@ final class Feature implements LoadableFeature {
 			return;
 		}
 
-		$title = trim( (string) $request->get_param( 'title' ) );
+		$title_raw = $request->get_param( 'title' );
+		if ( ! is_scalar( $title_raw ) ) {
+			return;
+		}
+
+		$title = trim( (string) $title_raw );
 		if ( '' === $title ) {
 			return;
 		}

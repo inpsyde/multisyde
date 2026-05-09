@@ -7,6 +7,7 @@ import {
 	Flex,
 	FlexItem,
 	Spinner,
+	TabPanel,
 } from '@wordpress/components';
 
 import { buildFields, buildForm, defaults } from './fields';
@@ -35,8 +36,10 @@ const siteToFormData = ( site, fallbackScheme ) => ( {
 	mature: Boolean( Number( site?.mature ?? 0 ) ),
 } );
 
-const tabLink = ( base, id ) =>
+const tabHref = ( base, id ) =>
 	`${ base }${ base.includes( '?' ) ? '&' : '?' }id=${ id }`;
+
+const INFO_TAB = 'site-info';
 
 const App = () => {
 	const isMainSite = !! config.isMainSite;
@@ -173,120 +176,137 @@ const App = () => {
 				</p>
 			) }
 
-			<nav
-				className="ms-edit-site__tabs nav-tab-wrapper wp-clearfix"
-				aria-label={ __( 'Secondary menu', 'multisyde' ) }
+			<TabPanel
+				className="ms-edit-site__tabs"
+				initialTabName={ INFO_TAB }
+				tabs={ [
+					{
+						name: INFO_TAB,
+						title: __( 'Info', 'multisyde' ),
+					},
+					{
+						name: 'site-users',
+						title: __( 'Users', 'multisyde' ),
+						href: tabHref(
+							`${ config.networkAdminUrl || '' }site-users.php`,
+							siteId
+						),
+					},
+					{
+						name: 'site-themes',
+						title: __( 'Themes', 'multisyde' ),
+						href: tabHref(
+							`${ config.networkAdminUrl || '' }site-themes.php`,
+							siteId
+						),
+					},
+					{
+						name: 'site-settings',
+						title: __( 'Settings', 'multisyde' ),
+						href: tabHref(
+							`${ config.networkAdminUrl || '' }site-settings.php`,
+							siteId
+						),
+					},
+				] }
+				onSelect={ ( name ) => {
+					if ( name === INFO_TAB ) {
+						return;
+					}
+					// Tabs whose target lives on a legacy page navigate
+					// instantly — TabPanel still flips its internal state,
+					// but the page is on its way out so the empty panel
+					// only flashes for a frame.
+					const target = {
+						'site-users': `${ config.networkAdminUrl || '' }site-users.php`,
+						'site-themes': `${ config.networkAdminUrl || '' }site-themes.php`,
+						'site-settings': `${ config.networkAdminUrl || '' }site-settings.php`,
+					}[ name ];
+					if ( target ) {
+						window.location.href = tabHref( target, siteId );
+					}
+				} }
 			>
-				<a
-					href={ `${ config.networkAdminUrl || '' }sites.php?page=ms-edit-site&id=${ siteId }` }
-					id="site-info"
-					className="nav-tab nav-tab-active"
-					aria-current="page"
-				>
-					{ __( 'Info', 'multisyde' ) }
-				</a>
-				<a
-					href={ tabLink(
-						`${ config.networkAdminUrl || '' }site-users.php`,
-						siteId
-					) }
-					id="site-users"
-					className="nav-tab"
-				>
-					{ __( 'Users', 'multisyde' ) }
-				</a>
-				<a
-					href={ tabLink(
-						`${ config.networkAdminUrl || '' }site-themes.php`,
-						siteId
-					) }
-					id="site-themes"
-					className="nav-tab"
-				>
-					{ __( 'Themes', 'multisyde' ) }
-				</a>
-				<a
-					href={ tabLink(
-						`${ config.networkAdminUrl || '' }site-settings.php`,
-						siteId
-					) }
-					id="site-settings"
-					className="nav-tab"
-				>
-					{ __( 'Settings', 'multisyde' ) }
-				</a>
-			</nav>
+				{ ( tab ) => {
+					if ( tab.name !== INFO_TAB ) {
+						return null;
+					}
 
-			{ notice && (
-				<div className="ms-edit-site__form">
-					<Notice
-						status={ notice.status }
-						isDismissible
-						onRemove={ () => setNotice( null ) }
-					>
-						{ notice.message }
-					</Notice>
-				</div>
-			) }
+					return (
+						<div className="ms-edit-site__form">
+							{ notice && (
+								<Notice
+									status={ notice.status }
+									isDismissible
+									onRemove={ () => setNotice( null ) }
+								>
+									{ notice.message }
+								</Notice>
+							) }
 
-			<div className="ms-edit-site__form">
-				{ isLoading ? (
-					<Spinner />
-				) : (
-					<>
-						{ isMainSite && site && (
-							<p className="ms-edit-site__main-url">
-								<strong>
-									{ __(
-										'Site Address (URL):',
-										'multisyde'
+							{ isLoading ? (
+								<Spinner />
+							) : (
+								<>
+									{ isMainSite && site && (
+										<p className="ms-edit-site__main-url">
+											<strong>
+												{ __(
+													'Site Address (URL):',
+													'multisyde'
+												) }
+											</strong>{ ' ' }
+											<span>
+												{ buildDisplayUrl(
+													site,
+													fallbackScheme
+												) }
+											</span>
+											<br />
+											<em className="description">
+												{ __(
+													'The main site\'s address cannot be changed here.',
+													'multisyde'
+												) }
+											</em>
+										</p>
 									) }
-								</strong>{ ' ' }
-								<span>
-									{ buildDisplayUrl( site, fallbackScheme ) }
-								</span>
-								<br />
-								<em className="description">
-									{ __(
-										'The main site\'s address cannot be changed here.',
-										'multisyde'
-									) }
-								</em>
-							</p>
-						) }
-						<DataForm
-							data={ data }
-							fields={ fields }
-							form={ form }
-							onChange={ onChange }
-						/>
-						<Flex
-							justify="flex-start"
-							className="ms-edit-site__actions"
-						>
-							<FlexItem>
-								<Button
-									variant="primary"
-									onClick={ submit }
-									isBusy={ isSaving }
-									disabled={ isSaving }
-								>
-									{ __( 'Save Changes', 'multisyde' ) }
-								</Button>
-							</FlexItem>
-							<FlexItem>
-								<Button
-									variant="tertiary"
-									href={ config.sitesListUrl }
-									disabled={ isSaving }
-								>
-									{ __( 'Cancel', 'multisyde' ) }
-								</Button>
-							</FlexItem>
-						</Flex>
-					</>
-				) }
-			</div>
+									<DataForm
+										data={ data }
+										fields={ fields }
+										form={ form }
+										onChange={ onChange }
+									/>
+									<Flex
+										justify="flex-start"
+										className="ms-edit-site__actions"
+									>
+										<FlexItem>
+											<Button
+												variant="primary"
+												onClick={ submit }
+												isBusy={ isSaving }
+												disabled={ isSaving }
+											>
+												{ __( 'Save Changes', 'multisyde' ) }
+											</Button>
+										</FlexItem>
+										<FlexItem>
+											<Button
+												variant="tertiary"
+												href={ config.sitesListUrl }
+												disabled={ isSaving }
+											>
+												{ __( 'Cancel', 'multisyde' ) }
+											</Button>
+										</FlexItem>
+									</Flex>
+								</>
+							) }
+						</div>
+					);
+				} }
+			</TabPanel>
 		</div>
 	);
 };
