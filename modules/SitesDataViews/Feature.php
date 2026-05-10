@@ -17,10 +17,10 @@ use Syde\MultiSyde\Plugin;
  */
 final class Feature implements LoadableFeature {
 
-	private const SLUG          = 'ms-sites-dataviews';
-	private const SCRIPT_HANDLE = 'multisyde-sites-data-views';
+	private const SLUG          = 'ms-all-sites';
+	private const SCRIPT_HANDLE = 'multisyde-all-sites';
 
-	private const STYLE_HANDLE = 'multisyde-sites-data-views-styles';
+	private const STYLE_HANDLE = 'multisyde-all-sites-styles';
 
 	private const ADD_SITE_SLUG          = 'ms-add-site';
 	private const ADD_SITE_SCRIPT_HANDLE = 'multisyde-add-site';
@@ -42,7 +42,7 @@ final class Feature implements LoadableFeature {
 
 		if ( is_network_admin() ) {
 			add_action( 'network_admin_menu', array( __CLASS__, 'register_submenu' ), 999 );
-			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_all_sites_assets' ) );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_add_site_assets' ) );
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_edit_site_assets' ) );
 			add_action( 'admin_head', array( __CLASS__, 'hide_edit_site_menu_link' ) );
@@ -52,7 +52,22 @@ final class Feature implements LoadableFeature {
 		}
 	}
 
-	/**
+    /**
+     * Register the REST API routes for managing sites data views.
+     *
+     * @return void
+     */
+    public static function sites_rest_api_init(): void {
+        if ( class_exists( 'WP_REST_Controller' ) && ! class_exists( 'WP_REST_Sites_Controller' ) ) {
+            require_once __DIR__ . '/lib/class-wp-rest-site-meta-fields.php';
+            require_once __DIR__ . '/lib/class-wp-rest-sites-controller.php';
+        }
+
+        $sites_controller = new \WP_REST_Sites_Controller();
+        $sites_controller->register_routes();
+    }
+
+    /**
 	 * Register the boolean site-status flags (public/archived/mature/spam/deleted)
 	 * as collection params so the REST controller actually forwards them to
 	 * WP_Site_Query — without this they are silently dropped.
@@ -77,7 +92,43 @@ final class Feature implements LoadableFeature {
 		return $query_params;
 	}
 
-	/**
+    /**
+     * Sync the per-site `blogname` option when a `title` is supplied via
+     * the sites REST endpoint. The REST controller already accepts `title`
+     * for site creation but its `update_item()` does not propagate it on
+     * subsequent edits — this listener fills that gap.
+     *
+     * @param \WP_Site $site     The site that was inserted/updated.
+     * @param \WP_REST_Request $request  The REST request.
+     * @param bool $creating Whether this fired during creation.
+     *
+     * @return void
+     */
+    public static function sync_site_title_option( \WP_Site $site, \WP_REST_Request $request, bool $creating ): void {
+        if ( $creating ) {
+            return;
+        }
+
+        if ( ! $request->has_param( 'title' ) ) {
+            return;
+        }
+
+        $title_raw = $request->get_param( 'title' );
+        if ( ! is_scalar( $title_raw ) ) {
+            return;
+        }
+
+        $title = trim( (string) $title_raw );
+        if ( '' === $title ) {
+            return;
+        }
+
+        switch_to_blog( (int) $site->blog_id );
+        update_option( 'blogname', sanitize_text_field( $title ) );
+        restore_current_blog();
+    }
+
+    /**
 	 * Register the submenu page under "Sites" in the network admin and remove
 	 * the default "All Sites" entry so this POC takes its place.
 	 *
@@ -90,7 +141,7 @@ final class Feature implements LoadableFeature {
 			__( 'All Sites', 'multisyde' ),
 			'manage_network',
 			self::SLUG,
-			array( __CLASS__, 'render_page' ),
+			array( __CLASS__, 'render_all_sites_page'),
 			0
 		);
 
@@ -123,7 +174,167 @@ final class Feature implements LoadableFeature {
 		remove_submenu_page( 'sites.php', 'site-new.php' );
 	}
 
-	/**
+    /**
+     * Enqueue the necessary scripts and styles for the data views page.
+     *
+     * @param string $hook The current admin page hook.
+     *
+     * @return void
+     */
+    public static function enqueue_all_sites_assets( string $hook ): void {
+        if ( 'sites_page_' . self::SLUG !== $hook ) {
+            return;
+        }
+
+        $asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/all-sites/all-sites.asset.php' );
+        if ( ! file_exists( $asset_file ) ) {
+            return;
+        }
+
+        $asset = include $asset_file;
+
+        wp_enqueue_script(
+            self::SCRIPT_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/all-sites/all-sites.js' ),
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+
+        $config = array(
+            'restNs'          => 'wp/v2',
+            'nonce'           => wp_create_nonce( 'wp_rest' ),
+            'networkAdminUrl' => network_admin_url(),
+        );
+
+        wp_add_inline_script(
+            self::SCRIPT_HANDLE,
+            'window.MS_SITES_DATA = ' . wp_json_encode( $config ) . ';',
+            'before'
+        );
+
+        wp_enqueue_style(
+            self::STYLE_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/all-sites/style-index.css' ),
+            array( 'wp-components' ),
+            $asset['version'],
+        );
+    }
+
+    /**
+     * Enqueue scripts and styles for the Add New Site page.
+     *
+     * @param string $hook The current admin page hook.
+     *
+     * @return void
+     */
+    public static function enqueue_add_site_assets( string $hook ): void {
+        if ( 'sites_page_' . self::ADD_SITE_SLUG !== $hook ) {
+            return;
+        }
+
+        $asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/add-site/add-site.asset.php' );
+        if ( ! file_exists( $asset_file ) ) {
+            return;
+        }
+
+        $asset = include $asset_file;
+
+        wp_enqueue_script(
+            self::ADD_SITE_SCRIPT_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/add-site.js' ),
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+
+        $current_network = get_network();
+        $config          = array(
+            'restNs'           => 'wp/v2',
+            'nonce'            => wp_create_nonce( 'wp_rest' ),
+            'networkAdminUrl'  => network_admin_url(),
+            'sitesListUrl'     => network_admin_url( 'sites.php?page=' . self::SLUG ),
+            'isSubdomain'      => (bool) is_subdomain_install(),
+            'networkDomain'    => $current_network ? $current_network->domain : '',
+            'networkPath'      => $current_network ? $current_network->path : '/',
+            'siteUrlScheme'    => is_ssl() ? 'https' : 'http',
+            'languages'        => self::get_available_languages_choices(),
+            'defaultLanguage'  => get_network_option( null, 'WPLANG', '' ),
+        );
+
+        wp_add_inline_script(
+            self::ADD_SITE_SCRIPT_HANDLE,
+            'window.MS_ADD_SITE_DATA = ' . wp_json_encode( $config ) . ';',
+            'before'
+        );
+
+        wp_enqueue_style(
+            self::ADD_SITE_STYLE_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/style-index.css' ),
+            array( 'wp-components' ),
+            $asset['version'],
+        );
+    }
+
+    /**
+     * Enqueue scripts and styles for the Edit Site page.
+     *
+     * @param string $hook The current admin page hook.
+     *
+     * @return void
+     */
+    public static function enqueue_edit_site_assets( string $hook ): void {
+        if ( 'sites_page_' . self::EDIT_SITE_SLUG !== $hook ) {
+            return;
+        }
+
+        $site_id = isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+        if ( $site_id <= 0 ) {
+            return;
+        }
+
+        $asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/edit-site/edit-site.asset.php' );
+        if ( ! file_exists( $asset_file ) ) {
+            return;
+        }
+
+        $asset = include $asset_file;
+
+        wp_enqueue_script(
+            self::EDIT_SITE_SCRIPT_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/edit-site.js' ),
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+
+        $config = array(
+            'restNs'          => 'wp/v2',
+            'nonce'           => wp_create_nonce( 'wp_rest' ),
+            'networkAdminUrl' => network_admin_url(),
+            'sitesListUrl'    => network_admin_url( 'sites.php?page=' . self::SLUG ),
+            'siteId'          => $site_id,
+            'isMainSite'      => is_main_site( $site_id ),
+            'homeUrl'         => get_home_url( $site_id, '/' ),
+            'adminUrl'        => get_admin_url( $site_id ),
+            'defaultScheme'   => is_ssl() ? 'https' : 'http',
+        );
+
+        wp_add_inline_script(
+            self::EDIT_SITE_SCRIPT_HANDLE,
+            'window.MS_EDIT_SITE_DATA = ' . wp_json_encode( $config ) . ';',
+            'before'
+        );
+
+        wp_enqueue_style(
+            self::EDIT_SITE_STYLE_HANDLE,
+            Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/style-index.css' ),
+            array( 'wp-components' ),
+            $asset['version'],
+        );
+    }
+
+    /**
 	 * Hide the Edit Site submenu link from the network admin sidebar without
 	 * unregistering it (see register_submenu() for the rationale).
 	 *
@@ -196,8 +407,8 @@ final class Feature implements LoadableFeature {
 	 *
 	 * @return void
 	 */
-	public static function render_page(): void {
-		echo '<div class="wrap"><div id="ms-sites-dataviews-root"></div></div>';
+	public static function render_all_sites_page(): void {
+		echo '<div class="wrap"><div id="ms-all-sites-root"></div></div>';
 	}
 
 	/**
@@ -228,166 +439,6 @@ final class Feature implements LoadableFeature {
 		}
 
 		echo '<div class="wrap"><div id="ms-edit-site-root"></div></div>';
-	}
-
-	/**
-	 * Enqueue the necessary scripts and styles for the data views page.
-	 *
-	 * @param string $hook The current admin page hook.
-	 *
-	 * @return void
-	 */
-	public static function enqueue_assets( string $hook ): void {
-		if ( 'sites_page_' . self::SLUG !== $hook ) {
-			return;
-		}
-
-		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/sites-dataviews/sites-dataviews.asset.php' );
-		if ( ! file_exists( $asset_file ) ) {
-			return;
-		}
-
-		$asset = include $asset_file;
-
-		wp_enqueue_script(
-			self::SCRIPT_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews/sites-dataviews.js' ),
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-
-		$config = array(
-			'restNs'          => 'wp/v2',
-			'nonce'           => wp_create_nonce( 'wp_rest' ),
-			'networkAdminUrl' => network_admin_url(),
-		);
-
-		wp_add_inline_script(
-			self::SCRIPT_HANDLE,
-			'window.MS_SITES_DATA = ' . wp_json_encode( $config ) . ';',
-			'before'
-		);
-
-		wp_enqueue_style(
-			self::STYLE_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/sites-dataviews/style-index.css' ),
-			array( 'wp-components' ),
-			$asset['version'],
-		);
-	}
-
-	/**
-	 * Enqueue scripts and styles for the Add New Site page.
-	 *
-	 * @param string $hook The current admin page hook.
-	 *
-	 * @return void
-	 */
-	public static function enqueue_add_site_assets( string $hook ): void {
-		if ( 'sites_page_' . self::ADD_SITE_SLUG !== $hook ) {
-			return;
-		}
-
-		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/add-site/add-site.asset.php' );
-		if ( ! file_exists( $asset_file ) ) {
-			return;
-		}
-
-		$asset = include $asset_file;
-
-		wp_enqueue_script(
-			self::ADD_SITE_SCRIPT_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/add-site.js' ),
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-
-		$current_network = get_network();
-		$config          = array(
-			'restNs'           => 'wp/v2',
-			'nonce'            => wp_create_nonce( 'wp_rest' ),
-			'networkAdminUrl'  => network_admin_url(),
-			'sitesListUrl'     => network_admin_url( 'sites.php?page=' . self::SLUG ),
-			'isSubdomain'      => (bool) is_subdomain_install(),
-			'networkDomain'    => $current_network ? $current_network->domain : '',
-			'networkPath'      => $current_network ? $current_network->path : '/',
-			'siteUrlScheme'    => is_ssl() ? 'https' : 'http',
-			'languages'        => self::get_available_languages_choices(),
-			'defaultLanguage'  => get_network_option( null, 'WPLANG', '' ),
-		);
-
-		wp_add_inline_script(
-			self::ADD_SITE_SCRIPT_HANDLE,
-			'window.MS_ADD_SITE_DATA = ' . wp_json_encode( $config ) . ';',
-			'before'
-		);
-
-		wp_enqueue_style(
-			self::ADD_SITE_STYLE_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/add-site/style-index.css' ),
-			array( 'wp-components' ),
-			$asset['version'],
-		);
-	}
-
-	/**
-	 * Enqueue scripts and styles for the Edit Site page.
-	 *
-	 * @param string $hook The current admin page hook.
-	 *
-	 * @return void
-	 */
-	public static function enqueue_edit_site_assets( string $hook ): void {
-		if ( 'sites_page_' . self::EDIT_SITE_SLUG !== $hook ) {
-			return;
-		}
-
-		$site_id = isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ? (int) $_GET['id'] : 0;
-		if ( $site_id <= 0 ) {
-			return;
-		}
-
-		$asset_file = Plugin::plugin_dir_path( 'modules/SitesDataViews/build/edit-site/edit-site.asset.php' );
-		if ( ! file_exists( $asset_file ) ) {
-			return;
-		}
-
-		$asset = include $asset_file;
-
-		wp_enqueue_script(
-			self::EDIT_SITE_SCRIPT_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/edit-site.js' ),
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-
-		$config = array(
-			'restNs'          => 'wp/v2',
-			'nonce'           => wp_create_nonce( 'wp_rest' ),
-			'networkAdminUrl' => network_admin_url(),
-			'sitesListUrl'    => network_admin_url( 'sites.php?page=' . self::SLUG ),
-			'siteId'          => $site_id,
-			'isMainSite'      => is_main_site( $site_id ),
-			'homeUrl'         => get_home_url( $site_id, '/' ),
-			'adminUrl'        => get_admin_url( $site_id ),
-			'defaultScheme'   => is_ssl() ? 'https' : 'http',
-		);
-
-		wp_add_inline_script(
-			self::EDIT_SITE_SCRIPT_HANDLE,
-			'window.MS_EDIT_SITE_DATA = ' . wp_json_encode( $config ) . ';',
-			'before'
-		);
-
-		wp_enqueue_style(
-			self::EDIT_SITE_STYLE_HANDLE,
-			Plugin::plugin_dir_url( 'modules/SitesDataViews/build/edit-site/style-index.css' ),
-			array( 'wp-components' ),
-			$asset['version'],
-		);
 	}
 
 	/**
@@ -461,56 +512,5 @@ final class Feature implements LoadableFeature {
 			$installed_translations,
 			$available_translations
 		);
-	}
-
-	/**
-	 * Sync the per-site `blogname` option when a `title` is supplied via
-	 * the sites REST endpoint. The REST controller already accepts `title`
-	 * for site creation but its `update_item()` does not propagate it on
-	 * subsequent edits — this listener fills that gap.
-	 *
-	 * @param \WP_Site $site     The site that was inserted/updated.
-	 * @param \WP_REST_Request $request  The REST request.
-	 * @param bool $creating Whether this fired during creation.
-	 *
-	 * @return void
-	 */
-	public static function sync_site_title_option( \WP_Site $site, \WP_REST_Request $request, bool $creating ): void {
-		if ( $creating ) {
-			return;
-		}
-
-		if ( ! $request->has_param( 'title' ) ) {
-			return;
-		}
-
-		$title_raw = $request->get_param( 'title' );
-		if ( ! is_scalar( $title_raw ) ) {
-			return;
-		}
-
-		$title = trim( (string) $title_raw );
-		if ( '' === $title ) {
-			return;
-		}
-
-		switch_to_blog( (int) $site->blog_id );
-		update_option( 'blogname', sanitize_text_field( $title ) );
-		restore_current_blog();
-	}
-
-	/**
-	 * Register the REST API routes for managing sites data views.
-	 *
-	 * @return void
-	 */
-	public static function sites_rest_api_init(): void {
-		if ( class_exists( 'WP_REST_Controller' ) && ! class_exists( 'WP_REST_Sites_Controller' ) ) {
-			require_once __DIR__ . '/lib/class-wp-rest-site-meta-fields.php';
-			require_once __DIR__ . '/lib/class-wp-rest-sites-controller.php';
-		}
-
-		$sites_controller = new \WP_REST_Sites_Controller();
-		$sites_controller->register_routes();
 	}
 }

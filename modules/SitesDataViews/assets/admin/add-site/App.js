@@ -14,6 +14,7 @@ const App = () => {
 	const [ data, setData ] = useState( defaults );
 	const [ isSaving, setIsSaving ] = useState( false );
 	const [ notice, setNotice ] = useState( null );
+	const [ formKey, setFormKey ] = useState( 0 );
 
 	const onChange = ( edits ) =>
 		setData( ( current ) => ( { ...current, ...edits } ) );
@@ -43,6 +44,7 @@ const App = () => {
 				editUrl,
 			} );
 			setData( defaults );
+			setFormKey( ( k ) => k + 1 );
 		} catch ( error ) {
 			setNotice( {
 				status: 'error',
@@ -79,6 +81,7 @@ const App = () => {
 
 			<div className="ms-add-site__form">
 				<DataForm
+					key={ formKey }
 					data={ data }
 					fields={ fields }
 					form={ form }

@@ -62,7 +62,7 @@
         "git-release": "bin/git-release.sh",
         "build": [
             "@composer update --no-dev -W --prefer-dist --optimize-autoloader",
-            "npm run build:sites-dataviews",
+            "npm run build:all-sites",
             "npm run build:add-site",
             "npm run build:edit-site",
             "@git-release",

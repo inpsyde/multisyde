@@ -37,7 +37,7 @@
         "wp-env": "wp-env",
         "test-php-unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde vendor/bin/phpunit -c phpunit.xml.dist",
         "test-php-integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde ./vendor/bin/phpunit -c ./integration.xml.dist",
-        "build:sites-dataviews": "wp-scripts build modules/SitesDataViews/assets/admin/sites-dataviews/index.js --output-path=modules/SitesDataViews/build/sites-dataviews --output-filename=sites-dataviews.js",
+        "build:all-sites": "wp-scripts build modules/SitesDataViews/assets/admin/all-sites/index.js --output-path=modules/SitesDataViews/build/all-sites --output-filename=all-sites.js",
         "build:add-site": "wp-scripts build modules/SitesDataViews/assets/admin/add-site/index.js --output-path=modules/SitesDataViews/build/add-site --output-filename=add-site.js",
         "build:edit-site": "wp-scripts build modules/SitesDataViews/assets/admin/edit-site/index.js --output-path=modules/SitesDataViews/build/edit-site --output-filename=edit-site.js"
     }

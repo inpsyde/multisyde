@@ -14,7 +14,7 @@ const App = () => {
 	const actions = buildActions();
 
 	return (
-		<div className="ms-sites-dataviews">
+		<div className="ms-all-sites">
 			<h1 className="wp-heading-inline">{ __( 'Sites', 'multisyde' ) }</h1>
 			<DataViews
 				data={ rows }

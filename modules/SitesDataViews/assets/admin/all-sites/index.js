@@ -5,7 +5,7 @@ import './style.scss';
 
 domReady( () => {
     const root = createRoot(
-        document.getElementById( 'ms-sites-dataviews-root' )
+        document.getElementById( 'ms-all-sites-root' )
     );
     root.render( <App /> );
 } );
