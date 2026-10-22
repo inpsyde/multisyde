@@ -24,3 +24,6 @@ jobs:
 
       - name: Run Testsuite
         run: npm run test-php-integration
+
+      - name: Run tests ported from WordPress core
+        run: npm run test-php-core

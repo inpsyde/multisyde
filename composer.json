@@ -47,7 +47,8 @@
         "brain/monkey": "^2.0@dev",
         "phpstan/phpstan-mockery": "^2.0",
         "lloc/composer-i18n-scripts": "^1.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.1"
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "yoast/phpunit-polyfills": "^4.0"
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",

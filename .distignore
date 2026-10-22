@@ -21,6 +21,7 @@
 CODEOWNERS
 composer.lock
 integration.xml.dist
+core.xml.dist
 multisyde.zip
 package-lock.json
 package.json

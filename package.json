@@ -18,6 +18,7 @@
         "prewp-env": "npx check-node-version --package",
         "wp-env": "wp-env",
         "test-php-unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde vendor/bin/phpunit -c phpunit.xml.dist",
-        "test-php-integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde ./vendor/bin/phpunit -c ./integration.xml.dist"
+        "test-php-integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde ./vendor/bin/phpunit -c ./integration.xml.dist",
+        "test-php-core": "wp-env run tests-cli --env-cwd=wp-content/plugins/multisyde ./vendor/bin/phpunit -c ./core.xml.dist"
     }
 }

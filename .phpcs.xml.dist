@@ -22,4 +22,7 @@
 
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <!-- Verbatim WordPress core code. -->
+    <exclude-pattern>modules/RestSitesEndpoint/patches/*</exclude-pattern>
+    <exclude-pattern>modules/*/tests/core/*</exclude-pattern>
 </ruleset>
