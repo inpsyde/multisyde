@@ -56,7 +56,7 @@
         "phpcbf": "./vendor/bin/phpcbf .",
         "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "qa": [
-            "@cs",
+            "@phpcs",
             "@phpstan"
         ],
         "git-release": "bin/git-release.sh",

@@ -295,4 +295,28 @@ final class TestFeature extends UnitTestCase {
 
 		$this->expectOutputString( '<div id="395f8f9a42dd48eb350e968ed5a81a0a" style="display:none"><p>Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site.</p><form method="post" action="http://#some-abitrary-url"><input type="hidden" name="action" value="bulk_deactivate" /><input type="hidden" name="plugin_file" value="plugin/plugin.php" /><ul><li><label><input type="checkbox" name="site_ids[]" value="1" /> <a href="http:///abc/wp-admin/plugins.php" target="_blank" rel="noopener noreferrer">/abc</a></label></li></ul></form></div>' );
 	}
+
+	/**
+	 * Array-shaped query args don't reach the sanitizers (TypeError under strict types).
+	 *
+	 * @return void
+	 */
+	public function test_maybe_show_notice_array_input(): void {
+		$_GET = array(
+			'_wpnonce'    => 'nonce',
+			'notice'      => Feature::NOTICE_DEACTIVATION,
+			'plugin_file' => array( 'plugin/plugin.php' ),
+			'site_count'  => array( 1 ),
+		);
+
+		Functions\expect( 'is_network_admin' )->once()->andReturn( true );
+		Functions\expect( 'wp_verify_nonce' )->once()->andReturn( 1 );
+		Functions\when( 'wp_unslash' )->returnArg();
+		Functions\when( 'sanitize_key' )->returnArg();
+		Functions\expect( 'get_plugin_data' )->never();
+
+		Feature::maybe_show_notice();
+
+		$this->expectOutputString( '' );
+	}
 }
