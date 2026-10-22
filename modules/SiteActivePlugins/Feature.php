@@ -74,13 +74,15 @@ final class Feature implements LoadableFeature {
 			! isset( $_GET['_wpnonce'] ) ||
 			! is_string( $_GET['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
-			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) )
+			! isset( $_GET['notice'] ) ||
+			! is_string( $_GET['notice'] ) ||
+			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ) )
 		) {
 			return;
 		}
 
-		$plugin_file = sanitize_text_field( wp_unslash( $_GET['plugin_file'] ?? '' ) );
-		$site_count  = absint( wp_unslash( $_GET['site_count'] ?? 0 ) );
+		$plugin_file = isset( $_GET['plugin_file'] ) && is_string( $_GET['plugin_file'] ) ? sanitize_text_field( wp_unslash( $_GET['plugin_file'] ) ) : '';
+		$site_count  = isset( $_GET['site_count'] ) && is_string( $_GET['site_count'] ) ? absint( $_GET['site_count'] ) : 0;
 		if ( '' === $plugin_file || 0 === $site_count ) {
 			return;
 		}
@@ -116,13 +118,15 @@ final class Feature implements LoadableFeature {
 			! isset( $_POST['_wpnonce'] ) ||
 			! is_string( $_POST['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
-			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ?? '' ) )
+			! isset( $_POST['action'] ) ||
+			! is_string( $_POST['action'] ) ||
+			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ) )
 		) {
 			return;
 		}
 
-		$plugin_file = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ?? '' ) );
-		$site_ids    = array_map( 'absint', (array) wp_unslash( $_POST['site_ids'] ?? array() ) );
+		$plugin_file = isset( $_POST['plugin_file'] ) && is_string( $_POST['plugin_file'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) ) : '';
+		$site_ids    = isset( $_POST['site_ids'] ) && is_array( $_POST['site_ids'] ) ? wp_parse_id_list( wp_unslash( $_POST['site_ids'] ) ) : array();
 		if ( '' === $plugin_file || empty( $site_ids ) ) {
 			return;
 		}
