@@ -5,6 +5,10 @@
  * @package multisyde
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Retrieves a site by a given field and value.
  *

@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Syde\MultiSyde\Modules;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Syde\MultiSyde\Modules\GetSiteBy\Feature as GetSiteBy;
 use Syde\MultiSyde\Modules\GetSiteBy\About as GetSiteByInformation;
 use Syde\MultiSyde\Modules\SiteActivePlugins\Feature as SiteActivePlugins;
