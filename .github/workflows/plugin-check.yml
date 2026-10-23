@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
   plugin-check:
     runs-on: ubuntu-latest

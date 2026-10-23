@@ -30,3 +30,4 @@ package.json
 patchwork.json
 phpstan.neon.dist
 phpunit.xml.dist
+/modules/*/tests
