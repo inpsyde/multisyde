@@ -31,6 +31,8 @@ MultiSyde follows a modular architecture where each feature addresses specific p
 
 **Permalink Cleanup** - Automatically removes the `/blog` prefix from the main site's permalink structure in multisite networks for cleaner URLs (addresses GitHub issue [#24](https://github.com/inpsyde/multisyde/issues/24 "MultiSyde GitHub Issue #24"))
 
+**REST API Endpoint for Sites** - Adds the `wp/v2/sites` REST API endpoint to list, create, update and delete sites, including site meta (addresses Trac [#40365](https://core.trac.wordpress.org/ticket/40365/ "WordPress Trac Ticket #40365"))
+
 The feature set continues to expand based on community contributions and real-world needs.
 
 == Installation ==
