@@ -7,6 +7,10 @@
  * @package multisyde-unit-tests
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+
 if ( ! function_exists( 'str_starts_with' ) ) {
 	/**
 	 * Polyfill for `str_starts_with()` function added in PHP 8.0.
