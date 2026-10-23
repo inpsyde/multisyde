@@ -1,6 +1,8 @@
 <?php
 /**
  * Throwaway mu-plugin for the rest-sites-blackbox skill. Never commit into wp-content.
+ *
+ * @package multisyde
  */
 
 add_action(
@@ -14,12 +16,25 @@ add_action(
 				'type'         => 'array',
 				'show_in_rest' => array( 'schema' => array( 'items' => array( 'type' => 'string' ) ) ),
 			),
-			'rest_test_multi'   => array( 'type' => 'string', 'single' => false ),
-			'rest_test_hidden'  => array( 'type' => 'string', 'show_in_rest' => false ),
+			'rest_test_multi'   => array(
+				'type'   => 'string',
+				'single' => false,
+			),
+			'rest_test_hidden'  => array(
+				'type'         => 'string',
+				'show_in_rest' => false,
+			),
 		);
 
 		foreach ( $keys as $key => $args ) {
-			register_meta( 'blog', $key, $args + array( 'single' => true, 'show_in_rest' => true ) );
+			register_meta(
+				'blog',
+				$key,
+				$args + array(
+					'single'       => true,
+					'show_in_rest' => true,
+				)
+			);
 		}
 	}
 );
