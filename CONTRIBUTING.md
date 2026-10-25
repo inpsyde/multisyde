@@ -124,6 +124,14 @@ If you run into bugs or want to suggest an improvement:
 We follow the WordPress Community Code of Conduct.
 Be respectful and inclusive in all your interactions.
 
+## Releasing
+
+Releases are built and published by the **Release** workflow. Nothing is published by pushing a tag.
+1. On `dev/main`, bump `Version:` in `multisyde.php`, plus `Stable tag` and the changelog in `readme.txt`, and merge.
+2. Run **Release** from `dev/main` with that version as `VERSION`. `DRY_RUN` is on by default: the run builds `main`, runs Plugin Check on the built package, tags it, and uploads the would-be SVN trunk as an artifact without committing to WordPress.org. Review it, then run **Release** again with `DRY_RUN` off to publish. The GitHub release is created only by that publishing run.
+
+A failing Plugin Check on the built package stops the release before anything is tagged. `VERSION` must be `MAJOR.MINOR.PATCH`. Every run, including a dry run, tags the built `main` with `VERSION`. A later run reuses that tag only while `dev/main` is unchanged; otherwise delete the tag first.
+
 ---
 
 Thanks for helping improve MultiSyde! ❤️
