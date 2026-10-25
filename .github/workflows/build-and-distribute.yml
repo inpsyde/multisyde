@@ -1,0 +1,56 @@
+name: Build and distribute
+on:
+  push:
+    branches: ['dev/**']
+    paths-ignore: ['docs/**', '**.md']
+  workflow_dispatch:
+    inputs:
+      PACKAGE_VERSION:
+        description: 'Package version (empty = derive from latest release)'
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    uses: inpsyde/reusable-workflows/.github/workflows/build-and-distribute.yml@main
+    with:
+      PHP_VERSION: '7.4'   # lowest supported PHP; the --no-dev install must resolve on it
+      NODE_VERSION: 'lts/krypton'   # npm ci runs the preinstall engines check; matches upstream CI
+      PACKAGE_VERSION: ${{ inputs.PACKAGE_VERSION }}
+    secrets:
+      GITHUB_USER_EMAIL: ${{ secrets.DEPLOYBOT_EMAIL }}
+      GITHUB_USER_NAME: ${{ secrets.DEPLOYBOT_USER }}
+      GITHUB_USER_SSH_KEY: ${{ secrets.DEPLOYBOT_SSH_PRIVATE_KEY }}
+      GITHUB_USER_SSH_PUBLIC_KEY: ${{ secrets.DEPLOYBOT_SSH_PUBLIC_KEY }}
+
+  # The build changes what ships (.distignore, --no-dev vendor), so check the built package, not the source.
+  plugin-check-built:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact }}
+          path: dist
+      - name: Verify built package
+        run: |
+          grep -E '^ \* (Version|SHA):' dist/multisyde/multisyde.php
+          grep -qF "SHA: ${{ github.sha }}" dist/multisyde/multisyde.php
+          test -f dist/multisyde/vendor/autoload.php
+          for d in .github tests docs bin node_modules .wordpress-org; do
+            if [ -e "dist/multisyde/$d" ]; then echo "::error::$d must not ship"; exit 1; fi
+          done
+          ls -A dist/multisyde
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: './dist/multisyde'
+          exclude-files: 'modules/**/patches/*.php'
+          # Snapshot builds carry a non-release version (e.g. 0.0.0+main.<sha>), which never matches
+          # the readme Stable tag. The release workflow checks these two codes strictly.
+          ignore-codes: 'plugin_header_invalid_plugin_version,stable_tag_mismatch'
