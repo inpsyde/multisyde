@@ -1,0 +1,27 @@
+name: WordPress.org plugin page
+on:
+  workflow_dispatch:
+    inputs:
+      SYNC_README: { type: boolean, default: true, description: 'Sync readme.txt to stable tag and trunk' }
+      SYNC_ASSETS: { type: boolean, default: true, description: 'Mirror .wordpress-org/ to SVN /assets' }
+      DRY_RUN:     { type: boolean, default: true, description: 'Preview only, commit nothing' }
+permissions:
+  contents: read
+concurrency:
+  group: wordpress-org-svn
+  cancel-in-progress: false
+jobs:
+  sync:
+    # Publish only what is merged; a feature branch must not reach the WordPress.org page.
+    if: github.ref == 'refs/heads/dev/main'
+    # TODO: re-pin to the merge commit of inpsyde/reusable-workflows#296 once it is merged (pinned to its head for now)
+    uses: inpsyde/reusable-workflows/.github/workflows/wordpress-org-plugin-page.yml@5f6631624f456519cad02088afabcec7bb45ea4d
+    with:
+      SVN_PLUGIN_SLUG: multisyde
+      GIT_REF: ${{ github.sha }}   # the dispatched ref; never free text
+      SYNC_README: ${{ inputs.SYNC_README }}
+      SYNC_ASSETS: ${{ inputs.SYNC_ASSETS }}
+      DRY_RUN: ${{ inputs.DRY_RUN }}
+    secrets:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
