@@ -18,6 +18,7 @@
         "npm": ">=11.16.0"
     },
     "scripts": {
+        "build": "echo \"No assets to build\"",
         "preinstall": "npx check-node-version --package",
         "prewp-env": "npx check-node-version --package",
         "wp-env": "wp-env",
