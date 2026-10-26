@@ -1,69 +1,70 @@
 {
-    "name": "syde/multisyde",
-    "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
-    "type": "project",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Syde",
-            "email": "hello@syde.com",
-            "homepage": "https://syde.com",
-            "role": "Company"
-        },
-        {
-            "name": "Dennis Ploetner",
-            "email": "re@lloc.de",
-            "role": "Developer"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Syde\\MultiSyde\\": "src/",
-            "Syde\\MultiSyde\\Modules\\": "modules/"
-        }
+  "name": "syde/multisyde",
+  "description": "A WordPress plugin that explores potential improvements for WordPress Multisite.",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Syde",
+      "email": "hello@syde.com",
+      "homepage": "https://syde.com",
+      "role": "Company"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Syde\\MultiSydeUnitTests\\": "tests/php/unit/",
-            "Syde\\MultiSydeIntegrationTests\\": "tests/php/integration/"
-        }
-    },
-    "minimum-stability": "stable",
-    "platform": {
-        "php": ">=7.4"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true,
-            "lloc/composer-i18n-scripts": true
-        }
-    },
-    "require-dev": {
-        "wp-coding-standards/wpcs": "^3.0",
-        "szepeviktor/phpstan-wordpress": "^2.0",
-        "phpstan/extension-installer": "^1.4",
-        "phpunit/phpunit": "^9.6",
-        "brain/monkey": "^2.0@dev",
-        "phpstan/phpstan-mockery": "^2.0",
-        "lloc/composer-i18n-scripts": "^1.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "yoast/phpunit-polyfills": "^4.0"
-    },
-    "scripts": {
-        "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
-        "tests:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
-        "phpcs": "vendor/bin/phpcs .",
-        "phpcbf": "./vendor/bin/phpcbf .",
-        "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
-        "qa": [
-            "@phpcs",
-            "@phpstan"
-        ],
-        "git-release": "bin/git-release.sh",
-        "build": [
-            "@composer install --no-dev",
-            "@git-release"
-        ]
+    {
+      "name": "Dennis Ploetner",
+      "email": "re@lloc.de",
+      "role": "Developer"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Syde\\MultiSyde\\": "src/",
+      "Syde\\MultiSyde\\Modules\\": "modules/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Syde\\MultiSydeUnitTests\\": "tests/php/unit/",
+      "Syde\\MultiSydeIntegrationTests\\": "tests/php/integration/"
+    }
+  },
+  "minimum-stability": "stable",
+  "platform": {
+    "php": ">=7.4"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true,
+      "lloc/composer-i18n-scripts": true
+    }
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0",
+    "szepeviktor/phpstan-wordpress": "^2.0",
+    "phpstan/extension-installer": "^1.4",
+    "phpunit/phpunit": "^9.6",
+    "brain/monkey": "^2.0@dev",
+    "phpstan/phpstan-mockery": "^2.0",
+    "lloc/composer-i18n-scripts": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "yoast/phpunit-polyfills": "^4.0"
+  },
+  "scripts": {
+    "tests": "./vendor/bin/phpunit -c ./phpunit.xml.dist",
+    "tests:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-html ./tests/coverage",
+    "phpcs": "vendor/bin/phpcs .",
+    "phpcbf": "./vendor/bin/phpcbf .",
+    "phpstan": "./vendor/bin/phpstan analyse --memory-limit=1G",
+    "qa": [
+      "@phpcs",
+      "@phpstan"
+    ],
+    "git-release": "bin/git-release.sh",
+    "build": [
+      "@composer install --no-dev",
+      "@git-release"
+    ]
+  },
+  "version": "1.2.0+main.f5676e9"
 }
