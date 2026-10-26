@@ -1812,9 +1812,14 @@ class WP_Test_REST_Sites_Controller extends WP_Test_REST_Controller_Testcase {
 	 * @covers ::create_item
 	 * @group ms-required
 	 * @dataProvider data_path_validation
+	 * @dataProvider data_path_validation_on_nested_network
 	 */
-	public function test_create_item_path_validation( $path, $is_valid ) {
+	public function test_create_item_path_validation( $path, $is_valid, $network_path = '/' ) {
 		wp_set_current_user( self::$superadmin_id );
+
+		$network       = get_network();
+		$orig_base     = $network->path;
+		$network->path = $network_path;
 
 		$request = new WP_REST_Request( 'POST', '/wp/v2/sites' );
 		// A domain distinct from WP_TESTS_DOMAIN, so a root path doesn't collide with the network's main site.
@@ -1822,6 +1827,8 @@ class WP_Test_REST_Sites_Controller extends WP_Test_REST_Controller_Testcase {
 		$request->set_param( 'path', $path );
 
 		$response = rest_get_server()->dispatch( $request );
+
+		$network->path = $orig_base;
 
 		if ( $is_valid ) {
 			$this->assertEquals( 201, $response->get_status(), "path '{$path}' should have been accepted." );
@@ -1871,12 +1878,25 @@ class WP_Test_REST_Sites_Controller extends WP_Test_REST_Controller_Testcase {
 	}
 
 	/**
+	 * Data provider for the `path` validation tests on a network at /parent/.
+	 *
+	 * @return array
+	 */
+	public function data_path_validation_on_nested_network() {
+		return array(
+			'reserved name after base'    => array( '/parent/wp-json/', false, '/parent/' ),
+			'reserved name outside base'  => array( '/wp-json/', false, '/parent/' ),
+			'reserved name deeper nested' => array( '/parent/child/wp-json/', true, '/parent/' ),
+		);
+	}
+
+	/**
 	 * Data provider for the `path` format validation tests.
 	 *
 	 * @return array
 	 */
 	public function data_path_validation() {
-		return array(
+		$data = array(
 			'root path'                => array( '/', true ),
 			'single segment'           => array( '/tempor/', true ),
 			'nested segments'          => array( '/parent/child/', true ),
@@ -1891,10 +1911,24 @@ class WP_Test_REST_Sites_Controller extends WP_Test_REST_Controller_Testcase {
 			'path with a query string' => array( '/with?query/', false ),
 			'path with a fragment'     => array( '/with#fragment/', false ),
 			'path with a double quote' => array( '/with"quote/', false ),
+			// A site on these paths would take over the REST API or the login page of the whole network.
+			'reserved name, uppercase' => array( '/WP-JSON/', false ),
+			'reserved name as parent'  => array( '/wp-admin/child/', false ),
+			'reserved name nested'     => array( '/parent/wp-json/', true ),
+			'login file'               => array( '/wp-login.php/', false ),
+			'php file, uppercase'      => array( '/XMLRPC.PHP/', false ),
+			'php file nested'          => array( '/parent/wp-login.php/', false ),
+			'php in the middle'        => array( '/my.php.site/', true ),
 			// The wp_blogs.path column is varchar(100).
 			'path at max length'       => array( '/' . str_repeat( 'a', 98 ) . '/', true ),
 			'path over max length'     => array( '/' . str_repeat( 'a', 99 ) . '/', false ),
 		);
+
+		foreach ( get_subdirectory_reserved_names() as $name ) {
+			$data[ "reserved name {$name}" ] = array( "/{$name}/", false );
+		}
+
+		return $data;
 	}
 
 	/**
