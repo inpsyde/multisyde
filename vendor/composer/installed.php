@@ -3,7 +3,7 @@
         'name' => 'syde/multisyde',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '1d72c0d569ee025d909fb1b57f2c699b39e86713',
+        'reference' => '8cee3d0c95f9413a128cac7737c9bd961fac06bd',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'syde/multisyde' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '1d72c0d569ee025d909fb1b57f2c699b39e86713',
+            'reference' => '8cee3d0c95f9413a128cac7737c9bd961fac06bd',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
