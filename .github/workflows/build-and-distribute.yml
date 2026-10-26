@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    uses: inpsyde/reusable-workflows/.github/workflows/build-and-distribute.yml@main
+    uses: inpsyde/reusable-workflows/.github/workflows/build-and-distribute.yml@47877d3342b79def152fb5e800c5ee6fef48dc67 # main as of 2026-10-26
     with:
       PHP_VERSION: '7.4'   # lowest supported PHP; the --no-dev install must resolve on it
       NODE_VERSION: 'lts/krypton'   # npm ci runs the preinstall engines check; matches upstream CI
