@@ -14,8 +14,8 @@ jobs:
   sync:
     # Publish only what is merged; a feature branch must not reach the WordPress.org page.
     if: github.ref == 'refs/heads/dev/main'
-    # TODO: re-pin to the merge commit of inpsyde/reusable-workflows#296 once it is merged (pinned to its head for now)
-    uses: inpsyde/reusable-workflows/.github/workflows/wordpress-org-plugin-page.yml@5f6631624f456519cad02088afabcec7bb45ea4d
+    # TODO: re-pin to main once inpsyde/reusable-workflows#296 is merged (pinned to its head for now)
+    uses: inpsyde/reusable-workflows/.github/workflows/wordpress-org-plugin-page.yml@173fdd99f853345260904cba54400146cd88fbac # PR #296 head as of 2026-10-30
     with:
       SVN_PLUGIN_SLUG: multisyde
       GIT_REF: ${{ github.sha }}   # the dispatched ref; never free text
