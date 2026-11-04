@@ -31,6 +31,7 @@ class About implements ShareableInformation {
 			),
 			array(
 				'https://core.trac.wordpress.org/ticket/40365',
+				'https://github.com/WordPress/wordpress-develop/pull/13055',
 			)
 		);
 	}

@@ -457,6 +457,56 @@ class WP_Test_REST_Site_Meta_Fields extends WP_Test_REST_TestCase {
 	}
 
 	/**
+	 * Invalid meta must not leave a half-created site behind.
+	 *
+	 * @covers ::create_item
+	 */
+	public function test_create_item_with_invalid_meta_creates_no_site() {
+		$this->grant_write_permission();
+
+		$request = new WP_REST_Request( 'POST', '/wp/v2/sites' );
+		$request->set_param( 'domain', WP_TESTS_DOMAIN );
+		$request->set_param( 'path', '/invalid-meta/' );
+		$request->set_param(
+			'meta',
+			array(
+				'test_single'        => 'valid',
+				'test_custom_schema' => 'not a number',
+			)
+		);
+
+		$response = rest_get_server()->dispatch( $request );
+
+		$this->assertErrorResponse( 'rest_invalid_type', $response, 400 );
+		$this->assertNull( domain_exists( WP_TESTS_DOMAIN, '/invalid-meta/' ) );
+	}
+
+	/**
+	 * Invalid meta must not leave a half-updated site behind.
+	 *
+	 * @covers ::update_item
+	 */
+	public function test_update_item_with_invalid_meta_changes_nothing() {
+		$this->grant_write_permission();
+
+		$request = new WP_REST_Request( 'PUT', sprintf( '/wp/v2/sites/%d', self::$site_id ) );
+		$request->set_param( 'archived', true );
+		$request->set_param(
+			'meta',
+			array(
+				'test_single'              => 'valid',
+				'test_custom_schema_multi' => array( 'not a number' ),
+			)
+		);
+
+		$response = rest_get_server()->dispatch( $request );
+
+		$this->assertErrorResponse( 'rest_invalid_type', $response, 400 );
+		$this->assertSame( '0', get_site( self::$site_id )->archived );
+		$this->assertSame( '', get_site_meta( self::$site_id, 'test_single', true ) );
+	}
+
+	/**
 	 * @depends test_get_value
 	 * @covers ::update_item
 	 */
@@ -482,18 +532,16 @@ class WP_Test_REST_Site_Meta_Fields extends WP_Test_REST_TestCase {
 	}
 
 	/**
-	 * Registered site meta may hold sensitive data, so site members reading
-	 * their own site in the view context do not get it.
+	 * Registered site meta may hold sensitive data, so it is left out of the
+	 * view context.
 	 *
 	 * @ticket 40365
 	 * @covers WP_REST_Sites_Controller::prepare_item_for_response
 	 */
-	public function test_site_member_does_not_see_meta_in_view_context() {
+	public function test_meta_is_not_in_view_context() {
 		update_site_meta( self::$site_id, 'test_single', 'testvalue' );
 
-		$member_id = self::factory()->user->create();
-		add_user_to_blog( self::$site_id, $member_id, 'subscriber' );
-		wp_set_current_user( $member_id );
+		wp_set_current_user( self::$superadmin_id );
 
 		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/sites/%d', self::$site_id ) );
 		$response = rest_get_server()->dispatch( $request );
