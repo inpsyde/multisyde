@@ -137,81 +137,29 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			return $multisite_support;
 		}
 
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+		return $this->check_read_permission();
+	}
 
-		$can_edit = $this->check_edit_permission();
-		$is_own   = $this->is_own_user_filter( $request );
-
-		if ( 'edit' === $context && ! $can_edit ) {
-			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to edit sites.' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
-		// Only users who can manage sites may list the sites of another user.
-		if ( ! empty( $request['user'] ) && ! $is_own && ! $can_edit ) {
-			return new WP_Error( 'rest_forbidden_user', __( 'Sorry, you are not allowed to list the sites of other users.' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
-		// Fields outside the view context must not be inferable through filters or ordering either.
-		if ( ! $can_edit && $this->has_edit_only_filter( $request ) ) {
-			return new WP_Error( 'rest_forbidden_param', __( 'Sorry, you are not allowed to filter or order sites by these parameters.' ), array( 'status' => 403 ) );
-		}
-
-		// A user may list their own sites from any site, but only in the view context.
-		if ( 'view' === $context && $is_own ) {
-			return true;
-		}
-
+	/**
+	 * Checks that the request is served by the main site and the user can manage sites.
+	 *
+	 * Sites are only readable from the main site, so the request runs with the
+	 * same plugins as the network admin.
+	 *
+	 * @since 7.2.0
+	 *
+	 * @return true|WP_Error True if the request has read access, error object otherwise.
+	 */
+	protected function check_read_permission() {
 		if ( ! is_main_site() ) {
 			return new WP_Error( 'rest_cannot_view_not_on_main_site', __( 'Sorry, sites can only be viewed from the main site.' ), array( 'status' => 403 ) );
 		}
 
-		if ( $can_edit ) {
-			return true;
+		if ( ! $this->check_edit_permission() ) {
+			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to view sites.' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
-		return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to view sites.' ), array( 'status' => rest_authorization_required_code() ) );
-	}
-
-	/**
-	 * Checks whether the request filters or orders by fields outside the view context.
-	 *
-	 * Users listing only their own sites do not see these fields, so filtering
-	 * or ordering by them would give their values away.
-	 *
-	 * @since 7.2.0
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return bool Whether the request uses a filter that needs the edit context.
-	 */
-	protected function has_edit_only_filter( $request ) {
-		$params = array( 'archived', 'mature', 'spam', 'deleted', 'lang_id', 'lang_id_exclude', 'before', 'after' );
-
-		foreach ( $params as $param ) {
-			// The language filters default to an empty list, which does not filter.
-			if ( isset( $request[ $param ] ) && array() !== $request[ $param ] ) {
-				return true;
-			}
-		}
-
-		return in_array( $request['orderby'], array( 'registered', 'last_updated' ), true );
-	}
-
-	/**
-	 * Checks whether the request is limited to the sites of the current user.
-	 *
-	 * @since 7.2.0
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return bool Whether the request asks for the current user's own sites.
-	 */
-	protected function is_own_user_filter( $request ) {
-		$user = $request['user'];
-
-		if ( empty( $user ) ) {
-			return false;
-		}
-
-		return is_user_logged_in() && get_current_user_id() === $this->get_user_id_from_param( $user );
+		return true;
 	}
 
 	/**
@@ -501,21 +449,9 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		}
 
 		// Check capabilities before looking up the site, so unauthorized users can't probe which site IDs exist.
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-
-		if ( 'edit' === $context && ! $this->check_edit_permission() ) {
-			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to edit sites.' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
-		$is_member = 'view' === $context && is_user_member_of_blog( get_current_user_id(), (int) $request['id'] );
-
-		// Members may read their own sites from any site, everything else needs the main site.
-		if ( ! $is_member && ! is_main_site() ) {
-			return new WP_Error( 'rest_cannot_view_not_on_main_site', __( 'Sorry, sites can only be viewed from the main site.' ), array( 'status' => 403 ) );
-		}
-
-		if ( ! $is_member && ! $this->check_edit_permission() ) {
-			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to view sites.' ), array( 'status' => rest_authorization_required_code() ) );
+		$read_permission = $this->check_read_permission();
+		if ( is_wp_error( $read_permission ) ) {
+			return $read_permission;
 		}
 
 		$site = $this->get_site( $request['id'] );
@@ -615,6 +551,11 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_site_exists', __( 'Cannot create existing site.' ), array( 'status' => 400 ) );
 		}
 
+		$meta_check = $this->check_meta( $request );
+		if ( is_wp_error( $meta_check ) ) {
+			return $meta_check;
+		}
+
 		$prepared_site = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $prepared_site ) ) {
 			return $prepared_site;
@@ -663,18 +604,7 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		 */
 		do_action( 'rest_insert_site', $site, $request, true );
 
-		$schema = $this->get_item_schema();
-
 		if ( isset( $request['meta'] ) ) {
-			if ( empty( $schema['properties']['meta'] ) ) {
-				return new WP_Error(
-					'rest_site_meta_not_supported',
-					/* translators: %s: database table name */
-					sprintf( __( 'The %s table is not installed. Please run the network database upgrade.' ), $GLOBALS['wpdb']->blogmeta ),
-					array( 'status' => 400 )
-				);
-			}
-
 			$meta_update = $this->meta->update_value( $request['meta'], $site_id );
 
 			if ( is_wp_error( $meta_update ) ) {
@@ -731,6 +661,16 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_unable_update_from_network', __( 'Sorry, you are not allowed to edit sites on another network.' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
+		// Archiving, spamming, deleting or moving the main site takes the whole network down.
+		if ( get_main_site_id( (int) $site->site_id ) === (int) $site->blog_id ) {
+			$takes_down = ! empty( $request['archived'] ) || ! empty( $request['spam'] ) || ! empty( $request['deleted'] );
+			$moves      = ( isset( $request['domain'] ) && $request['domain'] !== $site->domain ) || ( isset( $request['path'] ) && $request['path'] !== $site->path );
+
+			if ( $takes_down || $moves ) {
+				return new WP_Error( 'rest_cannot_edit_main_site', __( 'Sorry, the main site of a network cannot be archived, spammed, deleted or moved.' ), array( 'status' => 403 ) );
+			}
+		}
+
 		return true;
 	}
 
@@ -750,6 +690,11 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 
 		$id = (int) $site->blog_id;
 
+		$meta_check = $this->check_meta( $request );
+		if ( is_wp_error( $meta_check ) ) {
+			return $meta_check;
+		}
+
 		$prepared_args = $this->prepare_item_for_database( $request );
 
 		if ( is_wp_error( $prepared_args ) ) {
@@ -763,6 +708,18 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 
 				return $result;
 			}
+
+			// Move home and siteurl along with the domain and path, as Network Admin does,
+			// unless they point elsewhere on purpose, e.g. to a mapped domain.
+			$new_site = get_site( $id );
+			$old_url  = untrailingslashit( $site->domain . $site->path );
+			$new_url  = untrailingslashit( $new_site->domain . $new_site->path );
+			foreach ( array( 'home', 'siteurl' ) as $option ) {
+				$url = (string) get_blog_option( $id, $option );
+				if ( untrailingslashit( (string) preg_replace( '#^https?://#i', '', $url ) ) === $old_url ) {
+					update_blog_option( $id, $option, wp_parse_url( $url, PHP_URL_SCHEME ) . '://' . $new_url );
+				}
+			}
 		}
 
 		$site = get_site( $id );
@@ -770,18 +727,7 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		/** This action is documented in wp-includes/rest-api/endpoints/class-wp-rest-sites-controller.php */
 		do_action( 'rest_insert_site', $site, $request, false );
 
-		$schema = $this->get_item_schema();
-
 		if ( isset( $request['meta'] ) ) {
-			if ( empty( $schema['properties']['meta'] ) ) {
-				return new WP_Error(
-					'rest_site_meta_not_supported',
-					/* translators: %s: database table name */
-					sprintf( __( 'The %s table is not installed. Please run the network database upgrade.' ), $GLOBALS['wpdb']->blogmeta ),
-					array( 'status' => 400 )
-				);
-			}
-
 			$meta_update = $this->meta->update_value( $request['meta'], $id );
 
 			if ( is_wp_error( $meta_update ) ) {
@@ -1287,7 +1233,8 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			return $valid;
 		}
 
-		if ( $this->is_valid_path( $value ) ) {
+		// Arguments are validated before the permission check, and the path check needs the multisite functions.
+		if ( ! is_multisite() || $this->is_valid_path( $value ) ) {
 			return true;
 		}
 
@@ -1327,7 +1274,8 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		}
 
 		// Sites are looked up case-insensitively, so /WP-JSON/ would take over /wp-json/ too.
-		$path = strtolower( $path );
+		// The server decodes the URL to find a file, so /wp-login%2ephp/ would take over /wp-login.php too.
+		$path = strtolower( rawurldecode( $path ) );
 
 		// Reserved names apply to the first segment after the network's base path, e.g. /parent/wp-json/ on a network at /parent/.
 		$base = strtolower( get_network()->path );
@@ -1381,6 +1329,50 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		// The domain and path may only belong to the site being updated.
 		if ( $existing_site_id && (int) $existing_site_id !== $id ) {
 			return new WP_Error( 'rest_site_taken', __( 'Sorry, that site already exists!' ), array( 'status' => 400 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks the `meta` parameter before anything is written, so an invalid
+	 * value doesn't leave a half-created or half-updated site behind.
+	 *
+	 * @since 7.2.0
+	 *
+	 * @param WP_REST_Request $request The current request.
+	 * @return true|WP_Error True if the meta can be written, WP_Error otherwise.
+	 */
+	protected function check_meta( $request ) {
+		if ( ! isset( $request['meta'] ) ) {
+			return true;
+		}
+
+		$schema = $this->get_item_schema();
+
+		if ( empty( $schema['properties']['meta'] ) ) {
+			return new WP_Error(
+				'rest_site_meta_not_supported',
+				/* translators: %s: database table name */
+				sprintf( __( 'The %s table is not installed. Please run the network database upgrade.' ), $GLOBALS['wpdb']->blogmeta ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$properties = $schema['properties']['meta']['properties'];
+
+		foreach ( (array) $request['meta'] as $name => $value ) {
+			// Null deletes the value, and update_value() ignores unregistered names.
+			if ( null === $value || ! isset( $properties[ $name ] ) ) {
+				continue;
+			}
+
+			$valid = rest_validate_value_from_schema( $value, $properties[ $name ], 'meta.' . $name );
+			if ( is_wp_error( $valid ) ) {
+				$valid->add_data( array( 'status' => 400 ) );
+
+				return $valid;
+			}
 		}
 
 		return true;
@@ -1540,7 +1532,7 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		if ( is_site_meta_supported() ) {
 			$schema['properties']['meta'] = $this->meta->get_field_schema();
 
-			// Registered site meta may hold sensitive data, so it is not shown to site members.
+			// Registered site meta may hold sensitive data, so it is only in the edit context.
 			$schema['properties']['meta']['context'] = array( 'edit' );
 		}
 

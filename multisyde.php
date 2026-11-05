@@ -3,8 +3,8 @@
  * Plugin Name:       MultiSyde
  * Plugin URI:        https://github.com/inpsyde/multisyde
  * Description:       A WordPress plugin that explores potential improvements for WordPress Multisite.
- * Version: 1.2.0+main.c8b4800
- * SHA: c8b48006a798edf6ff8c0a46d54d181955190e77
+ * Version: 1.2.0+main.9279c56
+ * SHA: 9279c56decfb9091df165325eb90fe7bb9f9dbff
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Syde
