@@ -56,6 +56,12 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		$create_args         = $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE );
 		$create_args['user'] = $this->get_user_param_schema( __( 'The site administrator, set when the site is created. Accepts a user ID or "me".' ) );
 
+		// In a subdirectory install the path names the site, and the default "/" always belongs to the main site.
+		if ( is_multisite() && ! is_subdomain_install() ) {
+			unset( $create_args['path']['default'] );
+			$create_args['path']['required'] = true;
+		}
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
@@ -87,8 +93,9 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the object.' ),
-						'type'        => 'integer',
+						'description'       => __( 'Unique identifier for the object.' ),
+						'type'              => 'integer',
+						'validate_callback' => array( $this, 'validate_id' ),
 					),
 				),
 				array(
@@ -815,27 +822,11 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		);
 
 		if ( ! (bool) $request['force'] ) {
-			/** This action is documented in wp-includes/ms-site.php */
-			do_action_deprecated( 'delete_blog', array( $blog_id, false ), '5.1.0' );
-
-			$users = get_users(
-				array(
-					'blog_id' => $blog_id,
-					'fields'  => 'ids',
-				)
-			);
-
-			// Remove users from this blog.
-			if ( ! empty( $users ) ) {
-				foreach ( $users as $user_id ) {
-					remove_user_from_blog( $user_id, $blog_id );
-				}
-			}
+			// Flag the site for deletion like Network Admin does. The users stay, so it can be undone.
+			/** This action is documented in wp-admin/network/sites.php */
+			do_action( 'deactivate_blog', $blog_id );
 
 			update_blog_status( $blog_id, 'deleted', '1' );
-
-			/** This action is documented in wp-includes/ms-site.php */
-			do_action_deprecated( 'deleted_blog', array( $blog_id, false ), '5.1.0' );
 		} else {
 
 			$result = wp_delete_site( $request['id'] );
@@ -1088,7 +1079,8 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		}
 
 		if ( isset( $request['path'] ) ) {
-			$prepared_site['path'] = $request['path'];
+			// Lowercased like Add New Site in Network Admin does.
+			$prepared_site['path'] = strtolower( $request['path'] );
 		}
 
 		if ( isset( $request['domain'] ) ) {
@@ -1240,7 +1232,12 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 
 		return new WP_Error(
 			'rest_invalid_param',
-			__( 'path must be a valid site path, starting and ending with a forward slash.' ),
+			sprintf(
+				/* translators: 1: Parameter name, 2: Example site path. */
+				__( '%1$s must be "/" or a site name of letters, numbers and hyphens below the network path, such as %2$s, and must not be a reserved name.' ),
+				$param,
+				get_network()->path . 'my-site/'
+			),
 			array(
 				'status' => 400,
 				'param'  => $param,
@@ -1249,15 +1246,14 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Checks whether a string is a valid site path: a forward slash, or a
-	 * sequence of `/`-delimited segments each starting and ending with a
-	 * forward slash, made up of characters allowed in a URL path segment
-	 * (RFC 3986 `pchar`).
+	 * Checks whether a string is a valid path for a new site.
 	 *
-	 * A site's path takes precedence over the files and routes beneath it, so
-	 * the first segment after the network's base path must not be a reserved
-	 * name such as `wp-json`, and no
-	 * segment may name a PHP file such as `wp-login.php`.
+	 * Follows Add New Site in Network Admin: a site name of letters, numbers
+	 * and hyphens below the network's base path, e.g. `/my-site/`. That leaves
+	 * no room for encoded characters, dot segments or file names such as
+	 * `wp-login.php` or `robots.txt`, which a site's path would take over.
+	 * Routes like `/wp-json/` are excluded as reserved names. The root path
+	 * `/` is valid too, for a site on its own domain.
 	 *
 	 * @since 7.2.0
 	 *
@@ -1265,28 +1261,17 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 	 * @return bool True if `$path` is a valid site path, otherwise false.
 	 */
 	private function is_valid_path( $path ) {
-		if ( ! is_string( $path ) || '' === $path ) {
+		if ( '/' === $path ) {
+			return true;
+		}
+
+		$base = preg_quote( strtolower( get_network()->path ), '#' );
+
+		if ( 1 !== preg_match( '#^' . $base . '([a-z0-9-]+)/$#', strtolower( $path ), $matches ) ) {
 			return false;
 		}
 
-		if ( 1 !== preg_match( '#^/(?:(?:[A-Za-z0-9._~!$&\'()*+,;=:@-]|%[0-9A-Fa-f]{2})+/)*$#', $path ) ) {
-			return false;
-		}
-
-		// Sites are looked up case-insensitively, so /WP-JSON/ would take over /wp-json/ too.
-		// The server decodes the URL to find a file, so /wp-login%2ephp/ would take over /wp-login.php too.
-		$path = strtolower( rawurldecode( $path ) );
-
-		// Reserved names apply to the first segment after the network's base path, e.g. /parent/wp-json/ on a network at /parent/.
-		$base = strtolower( get_network()->path );
-		if ( str_starts_with( $path, $base ) ) {
-			$path = substr( $path, strlen( $base ) );
-		}
-
-		$segments = explode( '/', trim( $path, '/' ) );
-
-		// Every segment ends with a slash, so a segment naming a PHP file shows up as ".php/".
-		return ! in_array( $segments[0], get_subdirectory_reserved_names(), true ) && 1 !== preg_match( '#\.php/#i', $path );
+		return ! in_array( $matches[1], get_subdirectory_reserved_names(), true );
 	}
 
 	/**
@@ -1329,6 +1314,38 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 		// The domain and path may only belong to the site being updated.
 		if ( $existing_site_id && (int) $existing_site_id !== $id ) {
 			return new WP_Error( 'rest_site_taken', __( 'Sorry, that site already exists!' ), array( 'status' => 400 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validates the `id` parameter of the single site route.
+	 *
+	 * A body or query `id` takes precedence over the URL, so without this check
+	 * a request to one site could read, change or delete another one.
+	 *
+	 * @since 7.2.0
+	 *
+	 * @param mixed           $value   The merged `id` parameter.
+	 * @param WP_REST_Request $request The current request.
+	 * @param string          $param   The parameter name.
+	 * @return true|WP_Error True if the ID is valid and matches the URL, WP_Error otherwise.
+	 */
+	public function validate_id( $value, $request, $param ) {
+		$valid = rest_validate_request_arg( $value, $request, $param );
+		if ( is_wp_error( $valid ) ) {
+			return $valid;
+		}
+
+		$url_params = $request->get_url_params();
+
+		if ( (int) $url_params['id'] !== (int) $value ) {
+			return new WP_Error(
+				'rest_site_id_mismatch',
+				__( 'The site ID must match the ID in the URL.' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		return true;
