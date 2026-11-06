@@ -1267,7 +1267,7 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 
 		$base = preg_quote( strtolower( get_network()->path ), '#' );
 
-		if ( 1 !== preg_match( '#^' . $base . '([a-z0-9-]+)/$#', strtolower( $path ), $matches ) ) {
+		if ( 1 !== preg_match( '#^' . $base . '([a-z0-9-]+)/$#D', strtolower( $path ), $matches ) ) {
 			return false;
 		}
 
@@ -1428,7 +1428,7 @@ class WP_REST_Sites_Controller extends WP_REST_Controller {
 					'description' => __( 'Site domain.' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'default'     => '',
+					'required'    => true,
 					// The wp_blogs.domain column is varchar(200), port included.
 					'maxLength'   => 200,
 					'arg_options' => array(
