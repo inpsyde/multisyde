@@ -5,7 +5,7 @@ Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,10 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
 
 == Changelog ==
+
+= 1.3.0 =
+* Enhancement: Added [REST API Endpoint for Sites](https://github.com/inpsyde/multisyde/blob/main/modules/RestSitesEndpoint/README.md "MultiSyde REST Sites Endpoint Module") (`wp/v2/sites`) to list, create, update and delete sites, including site meta (Trac #40365).
+* Fix: Site Active Plugins now ignores request parameters sent as arrays instead of strings when deactivating a plugin across sites.
 
 = 1.2.0 =
 * Enhancement: Added [Permalink Cleanup](https://github.com/inpsyde/multisyde/blob/main/modules/PermalinkCleanup/README.md "MultiSyde Permalink Cleanup Module") to automatically remove the `/blog` prefix from the main site's permalink structure in multisite networks.
