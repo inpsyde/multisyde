@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Syde
+# Copyright (C) 2026 Syde
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: MultiSyde 1.1.0\n"
+"Project-Id-Version: MultiSyde 1.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/multisyde\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-05T07:55:11+00:00\n"
+"POT-Creation-Date: 2026-11-12T09:13:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: multisyde\n"
@@ -71,6 +71,22 @@ msgstr ""
 msgid "—"
 msgstr ""
 
+#: modules/PermalinkCleanup/About.php:27
+msgid "Permalink Cleanup"
+msgstr ""
+
+#: modules/PermalinkCleanup/About.php:28
+msgid "Handles permalink structure modifications for multisite installations. Removes /blog prefix from the base permalink structure."
+msgstr ""
+
+#: modules/RestSitesEndpoint/About.php:27
+msgid "REST API endpoint for sites (`wp/v2/sites`)"
+msgstr ""
+
+#: modules/RestSitesEndpoint/About.php:28
+msgid "Adds the `wp/v2/sites` REST API endpoint to list, create, update and delete sites in a multisite network, including site meta. It is the foundation for modern Network Admin screens built with DataViews and DataForm."
+msgstr ""
+
 #: modules/SiteActivePlugins/About.php:27
 msgid "Site Active Plugins"
 msgstr ""
@@ -80,28 +96,28 @@ msgid "Displays which plugins are active on each site in the network. Adds a “
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Number of sites.
-#: modules/SiteActivePlugins/Feature.php:88
+#: modules/SiteActivePlugins/Feature.php:91
 msgid "The plugin \"%1$s\" has been deactivated on %2$d site."
 msgid_plural "The plugin \"%1$s\" has been deactivated on %2$d sites."
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/SiteActivePlugins/Feature.php:231
+#: modules/SiteActivePlugins/Feature.php:236
 msgid "Select the sites where you want to deactivate this plugin. Clicking on a site name will open the plugin screen for that site."
 msgstr ""
 
-#: modules/SiteActivePlugins/Feature.php:256
+#: modules/SiteActivePlugins/Feature.php:261
 msgid "Deactivate on selected sites"
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Number of sites.
-#: modules/SiteActivePlugins/Feature.php:277
+#: modules/SiteActivePlugins/Feature.php:282
 msgid "\"%1$s\" is active in %2$d site"
 msgid_plural "\"%1$s\" is active in %2$d sites"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/SiteActivePlugins/Feature.php:289
+#: modules/SiteActivePlugins/Feature.php:294
 msgid "Sites deactivate"
 msgstr ""
 
@@ -115,6 +131,16 @@ msgstr ""
 
 #: modules/SiteActiveTheme/Feature.php:42
 msgid "Active Theme"
+msgstr ""
+
+#. translators: 1: Theme Version
+#: modules/SiteActiveTheme/Feature.php:72
+msgid "Version %1$s"
+msgstr ""
+
+#. translators: 1: Parent Theme Name
+#: modules/SiteActiveTheme/Feature.php:81
+msgid "Child theme of %1$s"
 msgstr ""
 
 #: src/Presenter.php:75
@@ -137,7 +163,7 @@ msgstr ""
 msgid "Tickets"
 msgstr ""
 
-#. translators: 1: dashicon, 2: opening HTML tag for a link, 3: closing HTML tags for a link.
+#. translators: 1: Dashicon, 2: Opening HTML tag for a link, 3: Closing HTML tags for a link.
 #: src/Presenter.php:128
 msgid "Made with %1$s by %2$sSyde%3$s."
 msgstr ""
