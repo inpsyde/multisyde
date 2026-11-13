@@ -10,6 +10,26 @@ const config = window.MS_ADD_SITE_DATA || {};
 
 setupApiFetch( config.nonce );
 
+/**
+ * Turn the Site Address input into the `domain`/`path` pair the sites
+ * endpoint expects, like `wp-admin/network/site-new.php` does.
+ *
+ * @param {string} slug Subdomain or path segment entered by the user.
+ * @return {{domain: string, path: string}} Site address.
+ */
+const slugToAddress = ( slug ) => {
+	const domain = config.networkDomain || '';
+	const path = config.networkPath || '/';
+	const clean = String( slug || '' ).trim().toLowerCase();
+
+	return config.isSubdomain
+		? {
+				domain: `${ clean.replace( /[^a-z0-9-]+/g, '' ).replace( /^-+|-+$/g, '' ) }.${ domain.replace( /^www\./, '' ) }`,
+				path,
+		  }
+		: { domain, path: `${ path }${ clean.replace( /[^a-z0-9_-]+/g, '' ) }/` };
+};
+
 const App = () => {
 	const [ data, setData ] = useState( defaults );
 	const [ isSaving, setIsSaving ] = useState( false );
@@ -27,8 +47,8 @@ const App = () => {
 			const result = await createSite( {
 				restNs: config.restNs,
 				data: {
-					slug: data.blogname,
-					title: data.title,
+					...slugToAddress( data.slug ),
+					blogname: data.blogname,
 					email: data.email,
 					locale: data.locale || '',
 				},

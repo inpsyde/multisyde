@@ -20,13 +20,13 @@ const blogNamePlaceholder = config.isSubdomain
 
 export const fields = [
 	{
-		id: 'title',
+		id: 'blogname',
 		label: __( 'Site Title', 'multisyde' ),
 		type: 'text',
 		isValid: { required: true },
 	},
 	{
-		id: 'blogname',
+		id: 'slug',
 		label: config.isSubdomain
 			? __( 'Site Address (subdomain)', 'multisyde' )
 			: __( 'Site Address (path)', 'multisyde' ),
@@ -61,7 +61,7 @@ export const form = {
 		{
 			id: 'site-details',
 			label: __( 'Site Details', 'multisyde' ),
-			children: [ 'blogname', 'title', 'email' ],
+			children: [ 'slug', 'blogname', 'email' ],
 			layout: {
 				type: 'card',
 				withHeader: true,
@@ -82,8 +82,8 @@ export const form = {
 };
 
 export const defaults = {
+	slug: '',
 	blogname: '',
-	title: '',
 	email: '',
 	locale: config.defaultLanguage || '',
 };
