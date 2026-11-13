@@ -69,31 +69,20 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function maybe_show_notice(): void {
-		if ( ! is_network_admin() ) {
-			return;
-		}
-
-		if ( ! isset( $_GET['_wpnonce'] ) || ! is_string( $_GET['_wpnonce'] ) ) {
-			return;
-		}
-
-		$notice = isset( $_GET['notice'] ) && is_string( $_GET['notice'] )
-			? sanitize_key( wp_unslash( $_GET['notice'] ) )
-			: '';
-
 		if (
+			! is_network_admin() ||
+			! isset( $_GET['_wpnonce'] ) ||
+			! is_string( $_GET['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
-			self::NOTICE_DEACTIVATION !== $notice
+			! isset( $_GET['notice'] ) ||
+			! is_string( $_GET['notice'] ) ||
+			self::NOTICE_DEACTIVATION !== sanitize_key( wp_unslash( $_GET['notice'] ) )
 		) {
 			return;
 		}
 
-		$plugin_file = isset( $_GET['plugin_file'] ) && is_string( $_GET['plugin_file'] )
-			? sanitize_text_field( wp_unslash( $_GET['plugin_file'] ) )
-			: '';
-		$site_count  = isset( $_GET['site_count'] ) && is_numeric( $_GET['site_count'] )
-			? absint( $_GET['site_count'] )
-			: 0;
+		$plugin_file = isset( $_GET['plugin_file'] ) && is_string( $_GET['plugin_file'] ) ? sanitize_text_field( wp_unslash( $_GET['plugin_file'] ) ) : '';
+		$site_count  = isset( $_GET['site_count'] ) && is_string( $_GET['site_count'] ) ? absint( $_GET['site_count'] ) : 0;
 		if ( '' === $plugin_file || 0 === $site_count ) {
 			return;
 		}
@@ -124,36 +113,20 @@ final class Feature implements LoadableFeature {
 	 * @return void
 	 */
 	public static function bulk_deactivate(): void {
-		if ( ! current_user_can( 'manage_network_plugins' ) ) {
-			return;
-		}
-
-		if ( ! isset( $_POST['_wpnonce'] ) || ! is_string( $_POST['_wpnonce'] ) ) {
-			return;
-		}
-
-		$action = isset( $_POST['action'] ) && is_string( $_POST['action'] )
-			? sanitize_text_field( wp_unslash( $_POST['action'] ) )
-			: '';
-
 		if (
+			! current_user_can( 'manage_network_plugins' ) ||
+			! isset( $_POST['_wpnonce'] ) ||
+			! is_string( $_POST['_wpnonce'] ) ||
 			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), self::ACTION_DEACTIVATION ) ||
-			self::ACTION_DEACTIVATION !== $action
+			! isset( $_POST['action'] ) ||
+			! is_string( $_POST['action'] ) ||
+			self::ACTION_DEACTIVATION !== sanitize_text_field( wp_unslash( $_POST['action'] ) )
 		) {
 			return;
 		}
 
-		$plugin_file = isset( $_POST['plugin_file'] ) && is_string( $_POST['plugin_file'] )
-			? sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) )
-			: '';
-
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each element is sanitized with absint() inside the closure below.
-		$site_ids_raw = isset( $_POST['site_ids'] ) && is_array( $_POST['site_ids'] ) ? wp_unslash( $_POST['site_ids'] ) : array();
-		$site_ids     = array_map(
-			static fn ( $id ): int => is_numeric( $id ) ? absint( $id ) : 0,
-			$site_ids_raw
-		);
-
+		$plugin_file = isset( $_POST['plugin_file'] ) && is_string( $_POST['plugin_file'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) ) : '';
+		$site_ids    = isset( $_POST['site_ids'] ) && is_array( $_POST['site_ids'] ) ? wp_parse_id_list( wp_unslash( $_POST['site_ids'] ) ) : array();
 		if ( '' === $plugin_file || empty( $site_ids ) ) {
 			return;
 		}

@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Syde\MultiSyde\Modules;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Syde\MultiSyde\Modules\GetSiteBy\Feature as GetSiteBy;
 use Syde\MultiSyde\Modules\GetSiteBy\About as GetSiteByInformation;
 use Syde\MultiSyde\Modules\SiteActivePlugins\Feature as SiteActivePlugins;
@@ -17,6 +21,8 @@ use Syde\MultiSyde\Modules\LastUserLogin\Feature as LastUserLogin;
 use Syde\MultiSyde\Modules\LastUserLogin\About as LastUserLoginInformation;
 use Syde\MultiSyde\Modules\PermalinkCleanup\Feature as PermalinkCleanup;
 use Syde\MultiSyde\Modules\PermalinkCleanup\About as PermalinkCleanupInformation;
+use Syde\MultiSyde\Modules\RestSitesEndpoint\Feature as RestSitesEndpoint;
+use Syde\MultiSyde\Modules\RestSitesEndpoint\About as RestSitesEndpointInformation;
 use Syde\MultiSyde\Modules\SiteActiveTheme\Feature as SiteActiveTheme;
 use Syde\MultiSyde\Modules\SiteActiveTheme\About as SiteActiveThemeInformation;
 use Syde\MultiSyde\Modules\SiteNewDataForm\Feature as SiteNewDataForm;
@@ -28,6 +34,7 @@ return array(
 	GetSiteBy::class         => GetSiteByInformation::class,
 	LastUserLogin::class     => LastUserLoginInformation::class,
 	PermalinkCleanup::class  => PermalinkCleanupInformation::class,
+	RestSitesEndpoint::class => RestSitesEndpointInformation::class,
 	SiteActivePlugins::class => SiteActivePluginsInformation::class,
 	SiteActiveTheme::class   => SiteActiveThemeInformation::class,
 	SitesDataViews::class    => SitesDataViewsInformation::class,

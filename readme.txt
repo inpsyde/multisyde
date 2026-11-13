@@ -3,9 +3,9 @@
 Contributors: syde, realloc
 Tags: multisite, network admin, enhancements, usability, admin tools
 Requires at least: 6.8
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,8 @@ MultiSyde follows a modular architecture where each feature addresses specific p
 **Site Active Theme** - Displays the active theme for each site in the Network Admin dashboard, making it easier to manage themes across the network (addresses Trac [#56458](https://core.trac.wordpress.org/ticket/56458/ "WordPress Trac Ticket #56458"))
 
 **Permalink Cleanup** - Automatically removes the `/blog` prefix from the main site's permalink structure in multisite networks for cleaner URLs (addresses GitHub issue [#24](https://github.com/inpsyde/multisyde/issues/24 "MultiSyde GitHub Issue #24"))
+
+**REST API Endpoint for Sites** - Adds the `wp/v2/sites` REST API endpoint to list, create, update and delete sites, including site meta (addresses Trac [#40365](https://core.trac.wordpress.org/ticket/40365/ "WordPress Trac Ticket #40365"))
 
 The feature set continues to expand based on community contributions and real-world needs.
 
@@ -137,6 +139,10 @@ Many features in MultiSyde address specific WordPress Trac tickets, serving as w
 Update for the latest enhancements and improvements. MultiSyde evolves continuously based on community feedback.
 
 == Changelog ==
+
+= 1.3.0 =
+* Enhancement: Added [REST API Endpoint for Sites](https://github.com/inpsyde/multisyde/blob/main/modules/RestSitesEndpoint/README.md "MultiSyde REST Sites Endpoint Module") (`wp/v2/sites`) to list, create, update and delete sites, including site meta (Trac #40365).
+* Fix: Site Active Plugins now ignores request parameters sent as arrays instead of strings when deactivating a plugin across sites.
 
 = 1.2.0 =
 * Enhancement: Added [Permalink Cleanup](https://github.com/inpsyde/multisyde/blob/main/modules/PermalinkCleanup/README.md "MultiSyde Permalink Cleanup Module") to automatically remove the `/blog` prefix from the main site's permalink structure in multisite networks.

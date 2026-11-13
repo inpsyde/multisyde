@@ -61,7 +61,12 @@ final class Feature implements LoadableFeature {
 		$theme = wp_get_theme();
 		restore_current_blog();
 
-		echo '<strong>', esc_html( $theme->get( 'Name' ) ), '</strong>&nbsp;';
+		$name = $theme->get( 'Name' );
+		if ( ! is_string( $name ) || '' === $name ) {
+			$name = $theme->get_stylesheet();
+		}
+
+		echo '<strong>', esc_html( $name ), '</strong>&nbsp;';
 
 		/* translators: 1: Theme Version */
 		$format = __( 'Version %1$s', 'multisyde' );

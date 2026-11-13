@@ -1,0 +1,144 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: 'Version to release (MAJOR.MINOR.PATCH), equal to Version: and Stable tag on dev/main'
+        required: true
+        type: string
+      DRY_RUN:
+        description: 'Validate and upload the would-be trunk as an artifact, commit nothing to WordPress.org'
+        type: boolean
+        default: true
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require dev/main and a MAJOR.MINOR.PATCH version
+        env:
+          VERSION: ${{ inputs.VERSION }}
+        run: |
+          if [ "${{ github.ref }}" != 'refs/heads/dev/main' ]; then
+            echo "::error::Release runs from dev/main only, not ${{ github.ref }}"; exit 1
+          fi
+          # Fail before build and tag, not only in wporg after the tag is pushed.
+          if [[ ! "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::VERSION must be MAJOR.MINOR.PATCH, got '$VERSION'"; exit 1
+          fi
+
+  build:
+    needs: guard
+    uses: inpsyde/reusable-workflows/.github/workflows/build-and-distribute.yml@47877d3342b79def152fb5e800c5ee6fef48dc67 # main as of 2026-10-26
+    with:
+      PHP_VERSION: '7.4'   # lowest supported PHP; the --no-dev install must resolve on it
+      NODE_VERSION: 'lts/krypton'   # npm ci runs the preinstall engines check; matches upstream CI
+      PACKAGE_VERSION: ${{ inputs.VERSION }}   # stamps Version: on main, which wporg requires
+    secrets:
+      GITHUB_USER_EMAIL: ${{ secrets.DEPLOYBOT_EMAIL }}
+      GITHUB_USER_NAME: ${{ secrets.DEPLOYBOT_USER }}
+      GITHUB_USER_SSH_KEY: ${{ secrets.DEPLOYBOT_SSH_PRIVATE_KEY }}
+      GITHUB_USER_SSH_PUBLIC_KEY: ${{ secrets.DEPLOYBOT_SSH_PUBLIC_KEY }}
+
+  # Blocks the release: tag and wporg need it. No ignore-codes, so Version/Stable tag are checked strictly.
+  plugin-check-built:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ${{ needs.build.outputs.artifact }}
+          path: dist
+      - name: Verify built package
+        run: |
+          grep -E '^ \* (Version|SHA):' dist/multisyde/multisyde.php
+          grep -qF "SHA: ${{ github.sha }}" dist/multisyde/multisyde.php
+          test -f dist/multisyde/vendor/autoload.php
+          for d in .github tests docs bin node_modules .wordpress-org; do
+            if [ -e "dist/multisyde/$d" ]; then echo "::error::$d must not ship"; exit 1; fi
+          done
+          ls -A dist/multisyde
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
+        with:
+          build-dir: './dist/multisyde'
+          exclude-files: 'modules/**/patches/*.php'
+
+  tag:
+    needs: [build, plugin-check-built]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.VERSION }}
+    steps:
+      - name: Check out built main
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: main
+          ssh-key: ${{ secrets.DEPLOYBOT_SSH_PRIVATE_KEY }}
+      - name: Verify main is this build
+        run: |
+          grep -E '^ \* (Version|SHA):' multisyde.php
+          grep -qF " * SHA: ${{ github.sha }}" multisyde.php || { echo "::error::main is not built from ${{ github.sha }}"; exit 1; }
+          grep -qE "^ \* Version: +${VERSION//./\\.}\s*$" multisyde.php || { echo "::error::main Version: is not $VERSION"; exit 1; }
+      - name: Tag built main
+        run: |
+          # A dry run already tags; the publishing run after it reuses the tag if it is on this build.
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
+            git fetch --no-tags origin "refs/tags/$VERSION:refs/tags/$VERSION"
+            if [ "$(git rev-parse "$VERSION^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo "::error::Tag $VERSION exists on another commit"; exit 1
+            fi
+            echo "Tag $VERSION already points to this build, reusing it"
+          else
+            git tag "$VERSION"
+            git push origin "refs/tags/$VERSION"
+          fi
+
+  wporg:
+    needs: tag
+    concurrency:
+      group: wordpress-org-svn
+      cancel-in-progress: false
+    uses: inpsyde/reusable-workflows/.github/workflows/wordpress-org-release.yml@47877d3342b79def152fb5e800c5ee6fef48dc67 # main as of 2026-10-26
+    with:
+      SVN_PLUGIN_SLUG: multisyde
+      PLUGIN_VERSION: ${{ inputs.VERSION }}
+      GIT_REF: ${{ inputs.VERSION }}
+      UPDATE_TRUNK_ONLY: false   # always a full release; DRY_RUN is the preview (a trunk-only run fails the strict Stable tag check)
+      DRY_RUN: ${{ inputs.DRY_RUN }}
+    secrets:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+  # Only after a real WordPress.org release: dry runs create no GitHub Release.
+  # The attestation compares our zip with the one WordPress.org serves for VERSION; it waits up to 60 minutes for it.
+  github-release:
+    needs: [build, wporg]
+    if: github.server_url == 'https://github.com' && !inputs.DRY_RUN
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download built package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ${{ needs.build.outputs.artifact }}
+          path: dist
+      - name: Zip built package
+        run: cd dist && zip -qr ../multisyde.zip multisyde
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ inputs.VERSION }}
+        run: gh release view "$VERSION" >/dev/null 2>&1 || gh release create "$VERSION" --verify-tag --generate-notes multisyde.zip
+      - name: Attest build provenance
+        uses: johnbillion/action-wordpress-plugin-attestation@b749ddf48d76c82d31a12c8ef336bd76af0a901b # 0.7.1
+        with:
+          zip-path: multisyde.zip
+          plugin: multisyde
+          version: ${{ inputs.VERSION }}

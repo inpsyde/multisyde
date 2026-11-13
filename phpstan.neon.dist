@@ -7,5 +7,5 @@ parameters:
         - multisyde.php
     excludePaths:
         analyse:
-            - modules/GetSiteBy/patches/40180.php
-            - modules/SitesDataViews/lib/
+            - modules/RestSitesEndpoint/patches/*
+            - modules/*/tests/core/*

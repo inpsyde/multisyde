@@ -5,6 +5,10 @@
  * @package multisyde
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Retrieves a site by a given field and value.
  *
@@ -58,7 +62,7 @@ function get_site_by( $field, $value, $network_id = null ) {
 				}
 
 				$parts = wp_parse_url( $value );
-				if ( ! $parts ) {
+				if ( ! $parts || empty( $parts['host'] ) ) {
 					return null;
 				}
 

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/network/admin.php?page=multisyde",
+	"preferredVersions": {
+		"php": "latest",
+		"wp": "latest"
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "multisyde"
+			}
+		},
+		{
+			"step": "enableMultisite"
+		},
+		{
+			"step": "wp-cli",
+			"command": "wp plugin activate multisyde --network"
+		}
+	]
+}
